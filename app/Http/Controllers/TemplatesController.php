@@ -105,4 +105,11 @@ class TemplatesController extends Controller
     {
         //
     }
+
+    public function iframe($id)
+    {
+        $template = $this->templateRepository->find($id);
+
+        return view('templates.partials.iframe', compact('template'))->render();
+    }
 }
