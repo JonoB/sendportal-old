@@ -29,7 +29,7 @@ class TemplatesController extends Controller
      */
     public function index()
     {
-        $templates = $this->templateRepository->paginate('email');
+        $templates = $this->templateRepository->paginate('name');
 
         return view('templates.index', compact('templates'));
     }

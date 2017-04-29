@@ -1,12 +1,12 @@
 @extends('common.template')
 
 @section('heading')
-    Edit Template : {{ $temaplte->name }}
+    Edit Template : {{ $template->name }}
 @stop
 
 @section('content')
 
-    {!! Form::model($contact, array('method' => 'put', 'route' => array('templates.update', $contact->id))) !!}
+    {!! Form::model($template, array('method' => 'put', 'route' => array('templates.update', $template->id))) !!}
 
     @include('templates.partials.form')
 

@@ -5,7 +5,12 @@
 
 {!! Form::textField('name', 'Template Name') !!}
 
-<textarea id="code" name="code"></textarea>
+<ul class="nav nav-pills">
+    <li role="presentation" class="active"><a href="#">Edit</a></li>
+    <li role="presentation"><a href="#">Preview</a></li>
+</ul>
+
+{!! Form::textareaField('content') !!}
 
 {!! Form::submitButton() !!}
 
@@ -17,7 +22,7 @@
 
     <script>
         $(document).ready(function() {
-            var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+            var editor = CodeMirror.fromTextArea(document.getElementById("id-field-content"), {
                 lineNumbers: true,
                 //styleActiveLine: true,
                 //matchBrackets: true,
