@@ -10,5 +10,4 @@
 
     @include('contacts.partials.form')
 
-    {!! Form::close() !!}
 @stop

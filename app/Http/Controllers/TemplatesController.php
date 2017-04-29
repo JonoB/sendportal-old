@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ContactRequest;
-use App\Interfaces\ContactRepositoryInterface;
-use Illuminate\Http\Request;
+use App\Http\Requests\TemplateRequest;
+use App\Interfaces\TemplateRepositoryInterface;
 
-class ContactsController extends Controller
+class TemplatesController extends Controller
 {
     /**
-     * @var ContactRepositoryInterface
+     * @var TemplateRepositoryInterface
      */
-    protected $contactRepository;
+    protected $templateRepository;
 
     /**
-     * ContactsController constructor.
+     * TemplatesController constructor.
      *
-     * @param ContactRepositoryInterface $contactRepository
+     * @param TemplateRepositoryInterface $templateRepository
      */
-    public function __construct(ContactRepositoryInterface $contactRepository)
+    public function __construct(TemplateRepositoryInterface $templateRepository)
     {
-        $this->contactRepository = $contactRepository;
+        $this->templateRepository = $templateRepository;
     }
 
     /**
@@ -30,9 +29,9 @@ class ContactsController extends Controller
      */
     public function index()
     {
-        $contacts = $this->contactRepository->paginate('email');
+        $templates = $this->templateRepository->paginate('email');
 
-        return view('contacts.index', compact('contacts'));
+        return view('templates.index', compact('templates'));
     }
 
     /**
@@ -42,7 +41,7 @@ class ContactsController extends Controller
      */
     public function create()
     {
-        return view('contacts.create');
+        return view('templates.create');
     }
 
     /**
@@ -51,11 +50,11 @@ class ContactsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ContactRequest $request)
+    public function store(TemplateRequest $request)
     {
-        $this->contactRepository->store($request->all());
+        $this->templateRepository->store($request->all());
 
-        return redirect()->route('contacts.index');
+        return redirect()->route('templates.index');
     }
 
     /**
@@ -66,7 +65,7 @@ class ContactsController extends Controller
      */
     public function show($id)
     {
-        return view('contacts.show');
+        return view('templates.show');
     }
 
     /**
@@ -77,9 +76,9 @@ class ContactsController extends Controller
      */
     public function edit($id)
     {
-        $contact = $this->contactRepository->find($id);
+        $template = $this->templateRepository->find($id);
 
-        return view('contacts.edit', compact('contact'));
+        return view('templates.edit', compact('template'));
     }
 
     /**
@@ -89,11 +88,11 @@ class ContactsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ContactRequest $request, $id)
+    public function update(TemplateRequest $request, $id)
     {
-        $this->contactRepository->update($id, $request->all());
+        $this->templateRepository->update($id, $request->all());
 
-        return redirect()->route('contacts.index');
+        return redirect()->route('templates.index');
     }
 
     /**

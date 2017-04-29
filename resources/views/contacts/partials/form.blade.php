@@ -4,3 +4,4 @@
 
 {!! Form::submitButton() !!}
 
+{!! Form::close() !!}

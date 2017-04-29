@@ -21,6 +21,8 @@
     <!-- Date Picker -->
     <link rel="stylesheet" href="{{ asset('css/datepicker3.css') }}">
 
+    @yield('css')
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -69,7 +71,7 @@
 <!-- <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>--»
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
-    $.widget.bridge('uibutton', $.ui.button);
+    //$.widget.bridge('uibutton', $.ui.button);
 </script>
 
 <!-- Bootstrap 3.3.6 -->

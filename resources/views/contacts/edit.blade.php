@@ -6,9 +6,8 @@
 
 @section('content')
 
-    {!! Form::model($contact, array('method' => 'put', 'route' => array('admin.contacts.update', $contacts->id))) !!}
+    {!! Form::model($contact, array('method' => 'put', 'route' => array('contacts.update', $contact->id))) !!}
 
     @include('contacts.partials.form')
 
-    {!! Form::close() !!}}
 @stop
