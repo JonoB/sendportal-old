@@ -16,6 +16,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/skin-blue.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
     <!-- Date Picker -->
     <link rel="stylesheet" href="{{ asset('css/datepicker3.css') }}">
@@ -39,7 +40,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                @yield('h1')
+                @yield('heading')
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -47,7 +48,10 @@
             </ol>
         </section>
 
-        @yield('content')
+        <section class="content">
+            @include('common.messages')
+            @yield('content')
+        </section>
 
     </div>
     <!-- /.content-wrapper -->

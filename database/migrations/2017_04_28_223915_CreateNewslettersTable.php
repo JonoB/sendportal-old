@@ -19,13 +19,13 @@ class CreateNewslettersTable extends Migration
             $table->unsignedInteger('template_id');
             $table->unsignedInteger('newsletter_status_id');
             $table->string('name');
-            $table->string('subject');
-            $table->text('content');
-            $table->string('from_name');
-            $table->string('from_email');
-            $table->boolean('track_opens');
-            $table->boolean('track_links');
-            $table->timestamp('scheduled_at');
+            $table->string('subject')->nullable();
+            $table->text('content')->nullable();
+            $table->string('from_name')->nullable();
+            $table->string('from_email')->nullable();
+            $table->boolean('track_opens')->default(1);
+            $table->boolean('track_links')->default(1);
+            $table->timestamp('scheduled_at')->nullable();
             $table->timestamps();
         });
     }
