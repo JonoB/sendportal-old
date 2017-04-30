@@ -146,7 +146,7 @@ class NewslettersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function dispatch(Request $request, $id)
+    public function send(Request $request, $id)
     {
         $this->newsletterRepository->update($id, $request->only('content'));
 

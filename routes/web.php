@@ -17,7 +17,7 @@ Route::get('newsletters/{id}/design', ['as' => 'newsletters.design', 'uses' => '
 Route::put('newsletters/{id}/design', ['as' => 'newsletters.design.update', 'uses' => 'NewslettersController@updateDesign']);
 
 Route::get('newsletters/{id}/confirm', ['as' => 'newsletters.confirm', 'uses' => 'NewslettersController@confirm']);
-Route::put('newsletters/{id}/confirm', ['as' => 'newsletters.dispatch', 'uses' => 'NewslettersController@dispatch']);
+Route::put('newsletters/{id}/send', ['as' => 'newsletters.send', 'uses' => 'NewslettersController@send']);
 
 
 Route::resource('templates', 'TemplatesController');
