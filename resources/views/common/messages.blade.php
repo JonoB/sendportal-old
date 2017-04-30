@@ -1,5 +1,5 @@
 @if (isset($errors) and count($errors) > 0)
-    <div class="callout callout-danger">
+    <div class="alert alert-danger">
         <?php $allErrors = $errors->getMessages(); ?>
         <ul>
             @foreach ($allErrors as $error)
