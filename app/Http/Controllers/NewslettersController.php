@@ -122,7 +122,35 @@ class NewslettersController extends Controller
     {
         $this->newsletterRepository->update($id, $request->only('content'));
 
-        return redirect()->route('newsletters.confirm');
+        return redirect()->route('newsletters.confirm', $id);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function confirm($id)
+    {
+        $newsletter = $this->newsletterRepository->find($id);
+        $template = $this->templateRepository->find($newsletter->template_id);
+
+        return view('newsletters.confirm', compact('newsletter', 'template'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function dispatch(Request $request, $id)
+    {
+        $this->newsletterRepository->update($id, $request->only('content'));
+
+        return redirect()->route('newsletters.confirm', $id);
     }
 
     /**
