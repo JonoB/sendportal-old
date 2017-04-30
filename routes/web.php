@@ -9,4 +9,3 @@ Route::resource('autoresponders', 'AutorespondersController');
 Route::resource('contacts', 'ContactsController');
 Route::resource('newsletters', 'NewslettersController');
 Route::resource('templates', 'TemplatesController');
-Route::get('templates/{id}/iframe', ['as' => 'templates.iframe', 'uses' => 'TemplatesController@iframe']);

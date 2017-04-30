@@ -3,22 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TemplateRequest;
+use App\Interfaces\NewsletterRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 
-class TemplatesController extends Controller
+class NewslettersController extends Controller
 {
+    /**
+     * @var NewsletterRepositoryInterface
+     */
+
+    protected $newsletterRepository;
     /**
      * @var TemplateRepositoryInterface
      */
     protected $templateRepository;
 
     /**
-     * TemplatesController constructor.
+     * NewslettersController constructor.
      *
-     * @param TemplateRepositoryInterface $templateRepository
+     * @param NewsletterRepositoryInterface $newsletterRepository
+     * @param TemplateRepositoryInterface $newsletterRepository#
      */
-    public function __construct(TemplateRepositoryInterface $templateRepository)
+    public function __construct(
+        NewsletterRepositoryInterface $newsletterRepository,
+        TemplateRepositoryInterface $templateRepository
+    )
     {
+        $this->newsletterRepository = $newsletterRepository;
         $this->templateRepository = $templateRepository;
     }
 
@@ -29,9 +40,9 @@ class TemplatesController extends Controller
      */
     public function index()
     {
-        $templates = $this->templateRepository->paginate('name');
+        $newsletters = $this->newsletterRepository->paginate('created_atDesc');
 
-        return view('templates.index', compact('templates'));
+        return view('newsletters.index', compact('newsletters'));
     }
 
     /**
@@ -41,20 +52,20 @@ class TemplatesController extends Controller
      */
     public function create()
     {
-        return view('templates.create');
+        return view('newsletters.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
      */
     public function store(TemplateRequest $request)
     {
-        $this->templateRepository->store($request->all());
+        $this->newsletterRepository->store($request->all());
 
-        return redirect()->route('templates.index');
+        return redirect()->route('newsletters.index');
     }
 
     /**
@@ -65,7 +76,7 @@ class TemplatesController extends Controller
      */
     public function show($id)
     {
-        return view('templates.show');
+        return view('newsletters.show');
     }
 
     /**
@@ -76,9 +87,9 @@ class TemplatesController extends Controller
      */
     public function edit($id)
     {
-        $template = $this->templateRepository->find($id);
+        $newsletter = $this->newsletterRepository->find($id);
 
-        return view('templates.edit', compact('template'));
+        return view('newsletters.edit', compact('newsletter'));
     }
 
     /**
@@ -86,13 +97,13 @@ class TemplatesController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
      */
     public function update(TemplateRequest $request, $id)
     {
-        $this->templateRepository->update($id, $request->all());
+        $this->newsletterRepository->update($id, $request->all());
 
-        return redirect()->route('templates.index');
+        return redirect()->route('newsletters.index');
     }
 
     /**
@@ -104,5 +115,12 @@ class TemplatesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function iframe($id)
+    {
+        $newsletter = $this->newsletterRepository->find($id);
+
+        return view('newsletters.partials.iframe', compact('newsletter'))->render();
     }
 }

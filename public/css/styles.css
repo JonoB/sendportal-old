@@ -1,3 +1,43 @@
 .actions-container {
     margin-bottom: 10px;
 }
+
+.template-item {
+    margin-bottom: 40px;
+}
+
+.template-item h4 {
+    margin: 0 0 5px 0;
+}
+
+.template-panel {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 24px;
+    min-height: 24px;
+    padding: 0;
+    position: relative;
+}
+
+.template-preview {
+    background-color: #fff;
+    background-size: 16px 16px;
+    background-position: 0 0,8px 8px;
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+.template-preview iframe {
+    -webkit-transform: scale(.5);
+    -moz-transform: scale(.5);
+    -ms-transform: scale(.5);
+    -o-transform: scale(.5);
+    transform: scale(.5);
+    -webkit-transform-origin: top left;
+    -moz-transform-origin: top left;
+    -ms-transform-origin: top left;
+    -o-transform-origin: top left;
+    transform-origin: top left;
+    width: 200%;
+}
