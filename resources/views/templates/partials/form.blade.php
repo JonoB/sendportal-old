@@ -3,18 +3,28 @@
     <link rel="stylesheet" href="{{ asset('css/codemirror/themes/monokai.css') }}">
 @endsection
 
-{!! Form::textField('name', 'Template Name') !!}
+<div class="row">
+    <div class="col-sm-6">
+        {!! Form::textField('name', 'Template Name') !!}
+    </div>
+</div>
 
-<ul class="nav nav-pills">
-    <li role="presentation" class="active"><a href="#">Edit</a></li>
-    <li role="presentation"><a href="#">Preview</a></li>
-</ul>
+<div class="row template-editor-container">
+    <div class="col-sm-6">
 
-{!! Form::textareaField('content') !!}
+        {!! Form::textareaField('content') !!}
 
-{!! Form::submitButton() !!}
+        {!! Form::submitButton() !!}
 
-{!! Form::close() !!}
+        {!! Form::close() !!}
+    </div>
+
+    <div class="col-sm-6">
+        <div class="" style="border: 1px solid #ddd; height: 600px">
+            <iframe id="js-template-iframe" class="embed-responsive-item"  src="" frameborder="0" style="height: 100%; width: 100%"></iframe>
+        </div>
+    </div>
+</div>
 
 @section('js')
     <script src="{{ asset('js/codemirror/codemirror.js') }}"></script>
@@ -22,13 +32,25 @@
 
     <script>
         $(document).ready(function() {
-            var editor = CodeMirror.fromTextArea(document.getElementById("id-field-content"), {
+            editor = CodeMirror.fromTextArea(document.getElementById('id-field-content'), {
                 lineNumbers: true,
-                //styleActiveLine: true,
-                //matchBrackets: true,
                 mode: 'xml',
                 theme: 'monokai'
+
             });
-        })
+
+            editor.on('change', function(editor, change) {
+                copyEditorToIframe(editor.getValue());
+            });
+
+            copyEditorToIframe(editor.getValue());
+        });
+
+        function copyEditorToIframe(html) {
+            var iframe = document.getElementById('js-template-iframe');
+            var iframedoc = iframe.contentDocument || iframe.contentWindow.document;
+
+            iframedoc.body.innerHTML = html;
+        }
     </script>
 @endsection

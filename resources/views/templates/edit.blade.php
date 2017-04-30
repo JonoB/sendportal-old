@@ -8,10 +8,7 @@
 
     {!! Form::model($template, array('method' => 'put', 'route' => array('templates.update', $template->id))) !!}
 
-    @include('templates.partials.form')
 
-    <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item"  src="{{ route('templates.iframe', $template->id) }}" frameborder="0"></iframe>
-    </div>
+    @include('templates.partials.form')
 
 @stop
