@@ -120,7 +120,6 @@ class NewslettersController extends Controller
      */
     public function updateDesign(Request $request, $id)
     {
-        dd($request->only('content'));
         $this->newsletterRepository->update($id, $request->only('content'));
 
         return redirect()->route('newsletters.confirm');
