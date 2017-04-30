@@ -41,7 +41,7 @@ interface BaseEloquentInterface extends BaseInterface
      * @param string $fieldId
      * @return mixed
      */
-    public function lists($fieldName = 'name', $fieldId = 'id');
+    public function pluck($fieldName = 'name', $fieldId = 'id');
 
     /**
      * List records limited by a certain field
@@ -52,7 +52,7 @@ interface BaseEloquentInterface extends BaseInterface
      * @param string $listFieldId
      * @return mixed
      */
-    public function listBy($field, $value, $listFieldName = 'name', $listFieldId = 'id');
+    public function pluckBy($field, $value, $listFieldName = 'name', $listFieldId = 'id');
 
     /**
      * Find a single item

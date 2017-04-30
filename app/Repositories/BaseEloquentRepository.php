@@ -112,13 +112,13 @@ abstract class BaseEloquentRepository extends BaseRepository
      * @param string $fieldId
      * @return mixed
      */
-    public function lists($fieldName = 'name', $fieldId = 'id')
+    public function pluck($fieldName = 'name', $fieldId = 'id')
     {
         $instance = $this->getQueryBuilder();
 
         return $instance
             ->orderBy($fieldName)
-            ->lists($fieldName, $fieldId)
+            ->pluck($fieldName, $fieldId)
             ->all();
     }
 
@@ -131,7 +131,7 @@ abstract class BaseEloquentRepository extends BaseRepository
      * @param string $listFieldId
      * @return mixed
      */
-    public function listBy($field, $value, $listFieldName = 'name', $listFieldId = 'id')
+    public function pluckBy($field, $value, $listFieldName = 'name', $listFieldId = 'id')
     {
         $instance = $this->getQueryBuilder();
 
@@ -143,7 +143,7 @@ abstract class BaseEloquentRepository extends BaseRepository
         return $instance
             ->whereIn($field, $value)
             ->orderBy($listFieldName)
-            ->lists($listFieldName, $listFieldId)
+            ->pluck($listFieldName, $listFieldId)
             ->all();
     }
 

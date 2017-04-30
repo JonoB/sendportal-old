@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TemplateRequest;
+use App\Http\Requests\NewsletterRequest;
 use App\Interfaces\NewsletterRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
+use Illuminate\Http\Request;
 
 class NewslettersController extends Controller
 {
@@ -40,7 +41,7 @@ class NewslettersController extends Controller
      */
     public function index()
     {
-        $newsletters = $this->newsletterRepository->paginate('created_atDesc');
+        $newsletters = $this->newsletterRepository->paginate('created_atDesc', ['template']);
 
         return view('newsletters.index', compact('newsletters'));
     }
@@ -61,11 +62,11 @@ class NewslettersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TemplateRequest $request)
+    public function store(NewsletterRequest $request)
     {
         $this->newsletterRepository->store($request->all());
 
-        return redirect()->route('newsletters.index');
+        return redirect()->route('newsletters.template');
     }
 
     /**
@@ -74,9 +75,55 @@ class NewslettersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function template($id)
     {
-        return view('newsletters.show');
+        $newsletter = $this->newsletterRepository->find($id);
+        $templates = $this->templateRepository->pluck();
+
+        return view('newsletters.template', compact('newsletter', 'templates'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateTemplate(Request $request, $id)
+    {
+        $this->newsletterRepository->update($id, $request->only('template_id'));
+
+        return redirect()->route('newsletters.design', $id);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function design($id)
+    {
+        $newsletter = $this->newsletterRepository->find($id);
+        $template = $this->templateRepository->find($newsletter->template_id);
+
+        return view('newsletters.design', compact('newsletter', 'template'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateDesign(Request $request, $id)
+    {
+        dd($request->only('content'));
+        $this->newsletterRepository->update($id, $request->only('content'));
+
+        return redirect()->route('newsletters.confirm');
     }
 
     /**
@@ -99,7 +146,7 @@ class NewslettersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(TemplateRequest $request, $id)
+    public function update(NewsletterRequest $request, $id)
     {
         $this->newsletterRepository->update($id, $request->all());
 
@@ -117,10 +164,5 @@ class NewslettersController extends Controller
         //
     }
 
-    public function iframe($id)
-    {
-        $newsletter = $this->newsletterRepository->find($id);
 
-        return view('newsletters.partials.iframe', compact('newsletter'))->render();
-    }
 }
