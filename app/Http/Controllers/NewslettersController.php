@@ -64,9 +64,9 @@ class NewslettersController extends Controller
      */
     public function store(NewsletterRequest $request)
     {
-        $this->newsletterRepository->store($request->all());
+        $newsletter = $this->newsletterRepository->store($request->all());
 
-        return redirect()->route('newsletters.template');
+        return redirect()->route('newsletters.template', $newsletter->id);
     }
 
     /**
