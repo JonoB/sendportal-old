@@ -1,14 +1,14 @@
 @extends('common.template')
 
 @section('heading')
-    Edit Template : {{ $template->name }}
+    Edit Newsletter
 @stop
 
 @section('content')
 
-    {!! Form::model($template, array('method' => 'put', 'route' => array('templates.update', $template->id))) !!}
+    {!! Form::model($newsletter, array('method' => 'put', 'route' => array('newsletters.update', $newsletter->id))) !!}
 
 
-    @include('templates.partials.form')
+    @include('newsletters.partials.form')
 
 @stop

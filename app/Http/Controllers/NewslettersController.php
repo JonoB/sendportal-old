@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\NewsletterRequest;
+use App\Interfaces\ContactListRepositoryInterface;
 use App\Interfaces\NewsletterRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use Illuminate\Http\Request;
@@ -12,8 +13,13 @@ class NewslettersController extends Controller
     /**
      * @var NewsletterRepositoryInterface
      */
+    protected $contactListRepository;
 
+    /**
+     * @var NewsletterRepositoryInterface
+     */
     protected $newsletterRepository;
+
     /**
      * @var TemplateRepositoryInterface
      */
@@ -26,10 +32,12 @@ class NewslettersController extends Controller
      * @param TemplateRepositoryInterface $newsletterRepository#
      */
     public function __construct(
+        ContactListRepositoryInterface $contactListRepository,
         NewsletterRepositoryInterface $newsletterRepository,
         TemplateRepositoryInterface $templateRepository
     )
     {
+        $this->contactListRepository = $contactListRepository;
         $this->newsletterRepository = $newsletterRepository;
         $this->templateRepository = $templateRepository;
     }
@@ -92,7 +100,16 @@ class NewslettersController extends Controller
      */
     public function updateTemplate(Request $request, $id)
     {
-        $this->newsletterRepository->update($id, $request->only('template_id'));
+        $templateId = $request->get('template_id');
+        $template = $this->templateRepository->find($templateId);
+
+        // @todo at this point we're just over-writing the newsletter
+        // content with the template content, but we need to cater for the
+        // case when the user doesn't actually want to overwrite the newsletter content
+        $this->newsletterRepository->update($id, [
+            'content' => $template->content,
+            'template_id' => $templateId,
+        ]);
 
         return redirect()->route('newsletters.design', $id);
     }
@@ -135,8 +152,9 @@ class NewslettersController extends Controller
     {
         $newsletter = $this->newsletterRepository->find($id);
         $template = $this->templateRepository->find($newsletter->template_id);
+        $contactLists = $this->contactListRepository->all();
 
-        return view('newsletters.confirm', compact('newsletter', 'template'));
+        return view('newsletters.confirm', compact('newsletter', 'template', 'contactLists'));
     }
 
     /**
@@ -148,6 +166,7 @@ class NewslettersController extends Controller
      */
     public function send(Request $request, $id)
     {
+        dd($request->all());
         $this->newsletterRepository->update($id, $request->only('content'));
 
         return redirect()->route('newsletters.confirm', $id);
@@ -163,6 +182,9 @@ class NewslettersController extends Controller
     {
         $newsletter = $this->newsletterRepository->find($id);
 
+        // @todo we need to check newsletter status here and
+        // redirect if its not in draft
+
         return view('newsletters.edit', compact('newsletter'));
     }
 
@@ -175,9 +197,12 @@ class NewslettersController extends Controller
      */
     public function update(NewsletterRequest $request, $id)
     {
-        $this->newsletterRepository->update($id, $request->all());
+        // @todo we need to check newsletter status here and
+        // redirect if its not in draft
 
-        return redirect()->route('newsletters.index');
+        $newsletter = $this->newsletterRepository->update($id, $request->all());
+
+        return redirect()->route('newsletters.template', $newsletter->id);
     }
 
     /**
@@ -188,6 +213,8 @@ class NewslettersController extends Controller
      */
     public function destroy($id)
     {
+        // @todo we need to check newsletter status here and
+        // redirect if its not in draft
         //
     }
 

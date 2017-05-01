@@ -8,11 +8,9 @@
 
     {!! Form::model($newsletter, array('method' => 'put', 'route' => array('newsletters.design.update', $newsletter->id))) !!}
 
-    <textarea name="content" id="" cols="30" rows="10">
-        {!! $newsletter->content ?: $template->content !!}
-    </textarea>
+    @include('templates.partials.editor')
 
-    {!! Form::submitButton() !!}
+    {!! Form::submitButton('Save and continue') !!}
     {!! Form::close() !!}
 
 @stop

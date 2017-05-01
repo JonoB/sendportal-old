@@ -8,7 +8,6 @@
 
     {!! Form::model($template, array('method' => 'put', 'route' => array('templates.update', $template->id))) !!}
 
-
     @include('templates.partials.form')
 
 @stop

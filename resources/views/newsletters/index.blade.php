@@ -23,7 +23,14 @@
                 <tbody>
                 @foreach($newsletters as $newsletter)
                     <tr>
-                        <td>{{ $newsletter->name }}</td>
+                        <td>
+                            {{ $newsletter->name }}
+                            <span class="pull-right">
+                                @if($newsletter->newsletter_status_id == \App\Models\Newsletter::STATUS_DRAFT)
+                                    <a href="{{ route('newsletters.edit', $newsletter->id) }}">Edit</a>
+                                @endif
+                            </span>
+                        </td>
                         <td>{{ $newsletter->template->name or '' }}</td>
                         <td>
                             @if($newsletter->newsletter_status_id == \App\Models\Newsletter::STATUS_DRAFT)
