@@ -19,5 +19,7 @@ Route::put('newsletters/{id}/design', ['as' => 'newsletters.design.update', 'use
 Route::get('newsletters/{id}/confirm', ['as' => 'newsletters.confirm', 'uses' => 'NewslettersController@confirm']);
 Route::put('newsletters/{id}/send', ['as' => 'newsletters.send', 'uses' => 'NewslettersController@send']);
 
-
 Route::resource('templates', 'TemplatesController');
+
+Route::get('tracker/opens/{contactId}/{newsletterId}', ['as' => 'tracker.open', 'uses' => 'TrackerController@open']);
+Route::get('tracker/clicks/{contactId}/{newsletterId}/{newsletterLinkId}', ['as' => 'tracker.click', 'uses' => 'TrackerController@click']);
