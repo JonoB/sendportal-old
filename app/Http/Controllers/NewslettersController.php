@@ -185,7 +185,7 @@ class NewslettersController extends Controller
         // @todo validation that at least one segment has been selected
         $newsletter = $this->newsletterRepository->update($id, [
             'scheduled_at' => Carbon::now(),
-            'status_id' => NewsletterStatus::STATUS_SENDING,
+            'status_id' => NewsletterStatus::STATUS_QUEUED,
         ]);
 
         $newsletter->segments()->attach($request->get('segments'));

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContactsTable extends Migration
+class CreateContactSegmentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateContactsTable extends Migration
      */
     public function up()
     {
-        Schema::create('contacts', function (Blueprint $table) {
+        Schema::create('contact_segment', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('email')->index();
-            $table->string('first_name');
-            $table->string('last_name')->nullable();
-            $table->json('meta')->nullable();
+            $table->unsignedInteger('contact_id');
+            $table->unsignedInteger('segment_id');
             $table->timestamps();
+
+            $table->foreign('contact_id')->references('id')->on('contacts');
+            $table->foreign('segment_id')->references('id')->on('segments');
         });
     }
 

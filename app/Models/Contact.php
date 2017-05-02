@@ -9,4 +9,9 @@ class Contact extends BaseModel
         'first_name',
         'last_name',
     ];
+
+    public function segments()
+    {
+        return $this->belongsToMany(Segment::class);
+    }
 }

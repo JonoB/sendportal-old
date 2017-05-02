@@ -8,6 +8,7 @@ Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@ind
 Route::resource('autoresponders', 'AutorespondersController');
 
 Route::resource('contacts', 'ContactsController');
+Route::resource('segments', 'SegmentsController');
 
 Route::resource('newsletters', 'NewslettersController');
 Route::get('newsletters/{id}/template', ['as' => 'newsletters.template', 'uses' => 'NewslettersController@template']);

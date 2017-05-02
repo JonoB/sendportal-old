@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ContactRequest;
 use App\Interfaces\ContactRepositoryInterface;
+use App\Interfaces\SegmentRepositoryInterface;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ContactsController extends Controller
@@ -14,13 +16,22 @@ class ContactsController extends Controller
     protected $contactRepository;
 
     /**
+     * @var SegmentRepositoryInterface
+     */
+    protected $segmentRepository;
+
+    /**
      * ContactsController constructor.
      *
      * @param ContactRepositoryInterface $contactRepository
      */
-    public function __construct(ContactRepositoryInterface $contactRepository)
+    public function __construct(
+        ContactRepositoryInterface $contactRepository,
+        SegmentRepositoryInterface $segmentRepository
+    )
     {
         $this->contactRepository = $contactRepository;
+        $this->segmentRepository = $segmentRepository;
     }
 
     /**
@@ -30,7 +41,7 @@ class ContactsController extends Controller
      */
     public function index()
     {
-        $contacts = $this->contactRepository->paginate('email');
+        $contacts = $this->contactRepository->paginate('email', ['segments']);
 
         return view('contacts.index', compact('contacts'));
     }
@@ -42,18 +53,21 @@ class ContactsController extends Controller
      */
     public function create()
     {
-        return view('contacts.create');
+        $segments = $this->segmentRepository->all();
+
+        return view('contacts.create', compact('segments'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  ContactRequest $request
+     * @return RedirectResponse
      */
     public function store(ContactRequest $request)
     {
-        $this->contactRepository->store($request->all());
+        $contact = $this->contactRepository->store($request->all());
+        $this->contactRepository->syncSegments($contact, $request->get('segments'));
 
         return redirect()->route('contacts.index');
     }
@@ -77,21 +91,28 @@ class ContactsController extends Controller
      */
     public function edit($id)
     {
-        $contact = $this->contactRepository->find($id);
+        $contact = $this->contactRepository->find($id, ['segments']);
 
-        return view('contacts.edit', compact('contact'));
+        $data = [
+            'contact' => $contact,
+            'segments' => $this->segmentRepository->all(),
+            'selectedSegments' => selectedOptions('segments', $contact),
+        ];
+
+        return view('contacts.edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param ContactRequest $request
+     * @param int $id
+     * @return RedirectResponse
      */
     public function update(ContactRequest $request, $id)
     {
-        $this->contactRepository->update($id, $request->all());
+        $contact = $this->contactRepository->update($id, $request->all());
+        $this->contactRepository->syncSegments($contact, $request->get('segments'));
 
         return redirect()->route('contacts.index');
     }

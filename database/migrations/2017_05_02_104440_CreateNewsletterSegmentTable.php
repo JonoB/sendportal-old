@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNewsletterListTable extends Migration
+class CreateNewsletterSegmentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateNewsletterListTable extends Migration
      */
     public function up()
     {
-        Schema::create('list_newsletter', function (Blueprint $table) {
+        Schema::create('newsletter_segment', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('list_id')->nullable();
-            $table->unsignedInteger('newsletter_id')->nullable();
+            $table->unsignedInteger('segment_id');
+            $table->unsignedInteger('newsletter_id');
             $table->timestamps();
 
-            $table->foreign('list_id')->references('id')->on('lists');
+            $table->foreign('segment_id')->references('id')->on('segments');
             $table->foreign('newsletter_id')->references('id')->on('newsletters');
         });
     }

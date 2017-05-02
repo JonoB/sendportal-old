@@ -34,9 +34,9 @@ if ( ! function_exists('selectedOptions'))
     {
         $result = [];
 
-        if (\Input::old($relation))
+        if (request()->old($relation))
         {
-            foreach (Input::old($relation) as $item)
+            foreach (request()->old($relation) as $item)
             {
                 $result[] = $item;
             }

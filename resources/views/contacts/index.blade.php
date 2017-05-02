@@ -18,6 +18,8 @@
                         <th>Email</th>
                         <th>First Name</th>
                         <th>Last Name</th>
+                        <th>Segments</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,6 +28,12 @@
                             <td>{{ $contact->email }}</td>
                             <td>{{ $contact->first_name }}</td>
                             <td>{{ $contact->last_name }}</td>
+                            <td>
+                                @foreach($contact->segments as $segment)
+                                    <span class="label label-default">{{ $segment->name }}</span>
+                                @endforeach
+                            </td>
+                            <td><a href="{{ route('contacts.edit', $contact->id) }}">Edit</a></td>
                         </tr>
                     @endforeach
                 </tbody>
