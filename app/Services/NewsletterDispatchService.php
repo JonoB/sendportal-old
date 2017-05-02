@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Interfaces\NewsletterOpenRepositoryInterface;
 use App\Models\Contact;
 use App\Models\Newsletter;
 use Aws\Ses\SesClient;
@@ -14,18 +15,14 @@ class NewsletterDispatchService
     protected $sesClient;
 
     /**
-     * @var Newsletter
+     * @var NewsletterOpenRepositoryInterface
      */
-    protected $newsletter;
-
-    /**
-     * @var Contact
-     */
-    protected $contact;
+    protected $newsletterOpenRepositoryInterface;
 
     public function __construct()
     {
         $this->sesClient = $this->createSesClient();
+        $this->newsletterOpenRepositoryInterface = app()->make(NewsletterOpenRepositoryInterface::class);
     }
 
     /**
@@ -33,15 +30,24 @@ class NewsletterDispatchService
      *
      * @param Newsletter $newsletter
      * @param Contact $contact
-     * @return \Aws\Result
+     * @return \Aws\Result|bool
      */
     public function send(Newsletter $newsletter, Contact $contact)
     {
-        $result = $this->dispatch($newsletter, $contact);
+        try
+        {
+            $result = $this->dispatch($newsletter, $contact);
 
-        \Log::info(json_encode($result));
+            $this->insertOpenTrackingRecord($newsletter, $contact);
 
-        return $result;
+            return $result;
+        }
+        catch (\Exception $e)
+        {
+            //@todo catch it!
+
+            return false;
+        }
     }
 
     /**
@@ -70,6 +76,21 @@ class NewsletterDispatchService
                     ],
                 ),
             ],
+        ]);
+    }
+
+    /**
+     * Create tracking record
+     *
+     * @param Newsletter $newsletter
+     * @param Contact $contact
+     * @return void
+     */
+    protected function insertOpenTrackingRecord(Newsletter $newsletter, Contact $contact)
+    {
+        $this->newsletterOpenRepositoryInterface->store([
+            'newsletter_id' => $newsletter->id,
+            'contact_id' => $contact->id,
         ]);
     }
 

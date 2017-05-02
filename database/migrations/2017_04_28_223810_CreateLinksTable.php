@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLinkTrackingTable extends Migration
+class CreateLinksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateLinkTrackingTable extends Migration
      */
     public function up()
     {
-        Schema::create('click_trackings', function (Blueprint $table) {
+        Schema::create('links', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('contact_id');
-            $table->string('newsletter_id');
-            $table->string('newsletter_link_id');
+            $table->increments('newsletter_id');
+            $table->string('original_link');
+            $table->string('tracking_link');
+            $table->string('counter');
             $table->timestamps();
         });
     }

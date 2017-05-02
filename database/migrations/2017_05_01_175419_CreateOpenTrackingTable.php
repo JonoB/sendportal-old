@@ -13,11 +13,15 @@ class CreateOpenTrackingTable extends Migration
      */
     public function up()
     {
-        Schema::create('open_trackings', function (Blueprint $table) {
+        Schema::create('newsletter_opens', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('newsletter_id');
-            $table->string('contact_id');
+            $table->unsignedInteger('contact_id');
+            $table->unsignedInteger('newsletter_id');
+            $table->smallInteger('counter')->nullable()->default(0);
             $table->timestamps();
+
+            $table->foreign('contact_id')->references('id')->on('contacts');
+            $table->foreign('newsletter_id')->references('id')->on('newsletters');
         });
     }
 
