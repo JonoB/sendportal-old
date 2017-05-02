@@ -10,6 +10,6 @@
     </div>
 @endforeach
 
-{!! Form::submitButton() !!}
+{!! Form::submitButton('Save Contact') !!}
 
 {!! Form::close() !!}

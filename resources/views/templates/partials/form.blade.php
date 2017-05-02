@@ -6,6 +6,6 @@
 
 @include('templates.partials.editor')
 
-{!! Form::submitButton('Save and continue') !!}
+{!! Form::submitButton('Save Template') !!}
 
 {!! Form::close() !!}

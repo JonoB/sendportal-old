@@ -14,7 +14,7 @@
 
         @foreach($segments as $segment)
             <div class="checkbox">
-                <label><input name="segments[]" type="checkbox" value="{{ $segment->id }}">{{ $segment->name }} (show count)</label>
+                <label><input name="segments[]" type="checkbox" value="{{ $segment->id }}">{{ $segment->name }} ( (show count)</label>
             </div>
         @endforeach
 
