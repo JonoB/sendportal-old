@@ -6,6 +6,7 @@ use App\Interfaces\NewsletterRepositoryInterface;
 use App\Models\Newsletter;
 use App\Models\NewsletterStatus;
 use App\Models\Segment;
+use App\Services\NewsletterDispatchService;
 use Illuminate\Console\Command;
 
 class NewslettersDispatchCommand extends Command
@@ -25,6 +26,7 @@ class NewslettersDispatchCommand extends Command
     protected $description = 'Dispatch all newsletters waiting in the queue';
 
     protected $newsletterRepo;
+    protected $newsletterDispatchService;
     /**
      * Create a new command instance.
      *
@@ -35,6 +37,7 @@ class NewslettersDispatchCommand extends Command
         parent::__construct();
 
         $this->newsletterRepo = app()->make(NewsletterRepositoryInterface::class);
+        $this->newsletterDispatchService = app()->make(NewsletterDispatchService::class);
     }
 
     /**
@@ -56,27 +59,83 @@ class NewslettersDispatchCommand extends Command
 
         foreach ($newsletters as $newsletter)
         {
-
+            $this->handleNewsletter($newsletter);
         }
     }
 
+    /**
+     * Handle a single newsletter
+     *
+     * @param Newsletter $newsletter
+     */
     protected function handleNewsletter(Newsletter $newsletter)
     {
+        $this->info('Handing Newsletter:' . $newsletter->name);
+
+        if ( ! $this->checkNewsletterStatus($newsletter->id))
+        {
+            $this->error('Newsletter status is not queued, skipping');
+
+            return;
+        }
+
+        $this->markNewsletterAsSending($newsletter->id);
+
         foreach ($newsletter->segments as $segment)
         {
-
+            $this->handleSegment($newsletter, $segment);
         }
+
+        $this->markNewsletterAsSent($newsletter->id);
     }
 
-    protected function handleSegment(Segment $segment)
+    /**
+     * Handle a segment from a newsletter
+     *
+     * @param Newsletter $newsletter
+     * @param Segment $segment
+     */
+    protected function handleSegment(Newsletter $newsletter, Segment $segment)
     {
-        foreach ($segment->contacts as $contact) {
+        $this->info('Handing Newsletter Segment:' . $segment->name . ' with ' . count($segment->contacts) . ' contacts');
 
+        foreach ($segment->contacts as $contact)
+        {
+            $this->info('Handing Contact:' . $contact->email);
+
+            $this->newsletterDispatchService->send($newsletter, $contact);
         }
     }
 
     protected function getQueuedNewsletters()
     {
-        return $this->newsletterRepo->findBy('status_id', NewsletterStatus::STATUS_QUEUED, ['segments']);
+        return $this->newsletterRepo->getBy('status_id', NewsletterStatus::STATUS_QUEUED, ['segments']);
+    }
+
+    /**
+     * Check that the status of the newsletter is still queued
+     *
+     * @param int $newsletterId
+     * @return bool
+     */
+    protected function checkNewsletterStatus($newsletterId)
+    {
+        $newsletter = $this->newsletterRepo->find($newsletterId);
+
+        return $newsletter->status_id == NewsletterStatus::STATUS_QUEUED;
+    }
+
+    protected function markNewsletterAsSending($newsletterId)
+    {
+        $this->newsletterRepo->update($newsletterId, [
+            'status_id' => NewsletterStatus::STATUS_SENDING
+        ]);
+    }
+
+    protected function markNewsletterAsSent($newsletterId)
+    {
+        $this->newsletterRepo->update($newsletterId, [
+            'status_id' => NewsletterStatus::STATUS_SENT
+        ]);
     }
 }

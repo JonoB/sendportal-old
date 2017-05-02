@@ -7,6 +7,7 @@
     "require": {
         "php": ">=5.6.4",
         "aws/aws-sdk-php": "^3.26",
+        "aws/aws-sdk-php-laravel": "^3.1",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.3.0",

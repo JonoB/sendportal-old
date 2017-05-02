@@ -70,7 +70,7 @@ class NewslettersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param NewsletterRequest $request
      * @return RedirectResponse
      */
     public function store(NewsletterRequest $request)
@@ -83,7 +83,7 @@ class NewslettersController extends Controller
     /**
      * Display a list of templates for selection.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function template($id)
@@ -97,8 +97,8 @@ class NewslettersController extends Controller
     /**
      * Update the template.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request  $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function updateTemplate(Request $request, $id)
@@ -120,7 +120,7 @@ class NewslettersController extends Controller
     /**
      * Display the template for design.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function design($id)
@@ -134,8 +134,8 @@ class NewslettersController extends Controller
     /**
      * Update the design.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request  $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function updateDesign(Request $request, $id)
@@ -148,7 +148,7 @@ class NewslettersController extends Controller
     /**
      * Display the confirmation view.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function confirm($id)
@@ -161,7 +161,7 @@ class NewslettersController extends Controller
         }
 
         $template = $this->templateRepository->find($newsletter->template_id);
-        $segments = $this->segmentRepository->all();
+        $segments = $this->segmentRepository->all('name', ['contactsCount']);
 
         return view('newsletters.confirm', compact('newsletter', 'template', 'segments'));
     }
@@ -169,8 +169,8 @@ class NewslettersController extends Controller
     /**
      * Dispatch the newsletter.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request  $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function send(Request $request, $id)
@@ -196,7 +196,7 @@ class NewslettersController extends Controller
     /**
      * Display the status view.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function status($id)
@@ -209,7 +209,7 @@ class NewslettersController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -225,9 +225,9 @@ class NewslettersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request  $request
+     * @param int  $id
+     * @return RedirectResponse
      */
     public function update(NewsletterRequest $request, $id)
     {
@@ -252,7 +252,7 @@ class NewslettersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

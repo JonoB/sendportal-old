@@ -31,8 +31,10 @@
                             @if($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_DRAFT)
                                 <span class="label label-default">{{ $newsletter->status->name }}</span>
                                 <a href="{{ route('newsletters.edit', $newsletter->id) }}">Edit</a>
-                            @elseif($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_SENDING)
+                            @elseif($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_QUEUED)
                                 <span class="label label-warning">{{ $newsletter->status->name }}</span>
+                            @elseif($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_SENDING)
+                                <span class="label label-info">{{ $newsletter->status->name }}</span>
                             @elseif($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_SENT)
                                 <span class="label label-success">{{ $newsletter->status->name }}</span>
                             @endif

@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-
-
 use App\Models\Contact;
 use App\Models\Newsletter;
 use Aws\Ses\SesClient;
@@ -82,9 +80,6 @@ class NewsletterDispatchService
      */
     protected function createSesClient()
     {
-       return new SesClient([
-           'version' => 'latest',
-           'region'  => env('aws.region'),
-       ]);
+       return app()->make('aws')->createClient('ses');
     }
 }
