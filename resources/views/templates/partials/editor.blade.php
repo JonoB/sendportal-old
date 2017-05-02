@@ -12,7 +12,7 @@
 
     <div class="col-sm-6">
         <div style="border: 1px solid #ddd; height: 600px">
-            <iframe id="js-template-iframe" class="embed-responsive-item"  src="" frameborder="0" style="height: 100%; width: 100%"></iframe>
+            <iframe id="js-template-iframe" class="embed-responsive-item" frameborder="0" style="height: 100%; width: 100%"></iframe>
         </div>
     </div>
 </div>

@@ -4,13 +4,9 @@ namespace App\Models;
 
 class Newsletter extends BaseModel
 {
-    const STATUS_DRAFT = 1;
-    const STATUS_SENDING = 2;
-    const STATUS_SENT = 3;
-
     protected $fillable = [
         'template_id',
-        'newsletter_status_id',
+        'status_id',
         'name',
         'subject',
         'content',
@@ -21,14 +17,25 @@ class Newsletter extends BaseModel
         'scheduled_at',
     ];
 
-    protected $booleanFields = [
-        'track_opens',
-        'track_clicks',
-    ];
+    // we can't use boolean fields on this model because
+    // we have multiple points to update from the controller
+    protected $booleanFields = [];
+
+    public function segments()
+    {
+        return $this->belongsToMany(Segment::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(NewsletterStatus::class, 'status_id');
+    }
 
     public function template()
     {
         return $this->belongsTo(Template::class)
             ->select('id', 'name');
     }
+
+
 }

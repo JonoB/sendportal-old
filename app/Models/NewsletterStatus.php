@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Models;
+
+class NewsletterStatus extends BaseModel
+{
+    const STATUS_DRAFT = 1;
+    const STATUS_QUEUED = 2;
+    const STATUS_SENDING = 3;
+    const STATUS_SENT = 4;
+}

@@ -10,6 +10,7 @@
 
     @include('templates.partials.editor')
 
+    <a href="{{ route('newsletters.template', $newsletter->id) }}" class="btn btn-default">Back</a>
     {!! Form::submitButton('Save and continue') !!}
     {!! Form::close() !!}
 

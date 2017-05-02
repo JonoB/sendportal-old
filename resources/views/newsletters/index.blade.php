@@ -25,20 +25,16 @@
                     <tr>
                         <td>
                             {{ $newsletter->name }}
-                            <span class="pull-right">
-                                @if($newsletter->newsletter_status_id == \App\Models\Newsletter::STATUS_DRAFT)
-                                    <a href="{{ route('newsletters.edit', $newsletter->id) }}">Edit</a>
-                                @endif
-                            </span>
                         </td>
                         <td>{{ $newsletter->template->name or '' }}</td>
                         <td>
-                            @if($newsletter->newsletter_status_id == \App\Models\Newsletter::STATUS_DRAFT)
-                                <span class="label label-default">Draft</span>
-                            @elseif($newsletter->newsletter_status_id == \App\Models\Newsletter::STATUS_SENDING)
-                                <span class="label label-warning">Sending</span>
-                            @elseif($newsletter->newsletter_status_id == \App\Models\Newsletter::STATUS_SENT)
-                                <span class="label label-success">Sent</span>
+                            @if($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_DRAFT)
+                                <span class="label label-default">{{ $newsletter->status->name }}</span>
+                                <a href="{{ route('newsletters.edit', $newsletter->id) }}">Edit</a>
+                            @elseif($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_SENDING)
+                                <span class="label label-warning">{{ $newsletter->status->name }}</span>
+                            @elseif($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_SENT)
+                                <span class="label label-success">{{ $newsletter->status->name }}</span>
                             @endif
                         </td>
                     </tr>

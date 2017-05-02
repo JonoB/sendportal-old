@@ -13,6 +13,7 @@ class NewsletterStatusSeeder extends Seeder
     {
         DB::table('newsletter_statuses')->insert([
             ['name' => 'Draft'],
+            ['name' => 'Queued'],
             ['name' => 'Sending'],
             ['name' => 'Sent'],
         ]);

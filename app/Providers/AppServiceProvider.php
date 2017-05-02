@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use App\Interfaces\ContactListRepositoryInterface;
+use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\ContactRepositoryInterface;
 use App\Interfaces\NewsletterRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Repositories\ContactEloquentRepository;
-use App\Repositories\ContactListEloquentRepository;
+use App\Repositories\SegmentEloquentRepository;
 use App\Repositories\NewsletterEloquentRepository;
 use App\Repositories\TemplateEloquentRepository;
 use Illuminate\Support\ServiceProvider;
@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(ContactRepositoryInterface::class, ContactEloquentRepository::class);
-        $this->app->bind(ContactListRepositoryInterface::class, ContactListEloquentRepository::class);
+        $this->app->bind(SegmentRepositoryInterface::class, SegmentEloquentRepository::class);
         $this->app->bind(NewsletterRepositoryInterface::class, NewsletterEloquentRepository::class);
         $this->app->bind(TemplateRepositoryInterface::class, TemplateEloquentRepository::class);
     }

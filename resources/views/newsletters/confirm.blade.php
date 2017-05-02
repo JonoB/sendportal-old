@@ -12,9 +12,9 @@
 
         {!! Form::model($newsletter, array('method' => 'put', 'route' => array('newsletters.send', $newsletter->id))) !!}
 
-        @foreach($contactLists as $contactList)
+        @foreach($segments as $segment)
             <div class="checkbox">
-                <label><input name="contact_lists[]" type="checkbox" value="{{ $contactList->id }}">{{ $contactList->name }} (show count)</label>
+                <label><input name="segments[]" type="checkbox" value="{{ $segment->id }}">{{ $segment->name }} (show count)</label>
             </div>
         @endforeach
 
@@ -32,6 +32,7 @@
             </label>
         </div>
 
+        <a href="{{ route('newsletters.design', $newsletter->id) }}" class="btn btn-default">Back</a>
         {!! Form::submitButton('Send newsletter') !!}
         {!! Form::close() !!}
     </div>
@@ -48,6 +49,10 @@
                 <div class="col-sm-10">
                     <p class="form-control-static">{{ $newsletter->subject }}</p>
                 </div>
+            </div>
+
+            <div style="border: 1px solid #ddd; height: 600px">
+                <iframe id="js-template-iframe" srcdoc="{{ $newsletter->content }}" class="embed-responsive-item" frameborder="0" style="height: 100%; width: 100%"></iframe>
             </div>
 
         </form>

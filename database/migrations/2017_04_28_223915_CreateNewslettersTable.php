@@ -15,9 +15,8 @@ class CreateNewslettersTable extends Migration
     {
         Schema::create('newsletters', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('list_id')->nullable();
             $table->unsignedInteger('template_id')->nullable();
-            $table->unsignedInteger('newsletter_status_id')->default(1);
+            $table->unsignedInteger('status_id')->default(1);
             $table->string('name');
             $table->string('subject')->nullable();
             $table->text('content')->nullable();
