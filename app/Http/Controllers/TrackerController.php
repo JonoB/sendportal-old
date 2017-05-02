@@ -27,28 +27,24 @@ class TrackerController extends Controller
      * Track email opens
      *
      * @param Request $request
-     * @param int $contactId
      * @param int $newsletterId
+     * @param int $contactId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function opens(Request $request, $contactId, $newsletterId)
+    public function opens(Request $request, $newsletterId, $contactId)
     {
-        $contacts = $this->contactRepository->paginate('email');
 
-        return view('contacts.index', compact('contacts'));
     }
 
     /**
      * Track email clicks
      *
      * @param Request $request
-     * @param int $contactId
      * @param int $newsletterId
-     * @param int $newsletterLinkId
+     * @param int $linkId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function clicks(Request $request, $contactId, $newsletterId, $newsletterLinkId)
+    public function clicks(Request $request, $newsletterId, $linkId)
     {
-        return view('contacts.create');
     }
  }
