@@ -16,8 +16,8 @@
                 <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Template</th>
                     <th>Status</th>
+                    <th>Template</th>
                     <th>Sent</th>
                     <th>Opened</th>
                     <th>Clicked</th>
@@ -27,13 +27,15 @@
                 @foreach($newsletters as $newsletter)
                     <tr>
                         <td>
-                            {{ $newsletter->name }}
+                            @if (\App\Models\NewsletterStatus::STATUS_DRAFT)
+                                <a href="{{ route('newsletters.edit', $newsletter->id) }}">{{ $newsletter->name }}</a>
+                            @else
+                                <a href="{{ route('newsletters.report', $newsletter->id) }}">{{ $newsletter->name }}</a>
+                            @endif
                         </td>
-                        <td>{{ $newsletter->template->name or '' }}</td>
                         <td>
                             @if($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_DRAFT)
                                 <span class="label label-default">{{ $newsletter->status->name }}</span>
-                                <a href="{{ route('newsletters.edit', $newsletter->id) }}">Edit</a>
                             @elseif($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_QUEUED)
                                 <span class="label label-warning">{{ $newsletter->status->name }}</span>
                             @elseif($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_SENDING)
@@ -42,6 +44,7 @@
                                 <span class="label label-success">{{ $newsletter->status->name }}</span>
                             @endif
                         </td>
+                        <td>{{ $newsletter->template->name or '' }}</td>
                         <td>{{ formatValue($newsletter->sent_count) }}</td>
                         <td>{{ number_format($newsletter->open_ratio * 100, 1) . '%' }}</td>
                         <td></td>

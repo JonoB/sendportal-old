@@ -250,6 +250,29 @@ class NewslettersController extends Controller
     }
 
     /**
+     * Show newsletter report view
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|RedirectResponse|\Illuminate\View\View
+     */
+    public function report($id)
+    {
+        $newsletter = $this->newsletterRepository->find($id);
+
+        if ($newsletter->status_id = NewsletterStatus::STATUS_DRAFT)
+        {
+            return redirect()->route('newsletters.edit', $id);
+        }
+
+        if ($newsletter->status_id != NewsletterStatus::STATUS_SENT)
+        {
+            return redirect()->route('newsletters.status', $id);
+        }
+
+        return view('newsletters.report', compact('newsletter'));
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param int $id
