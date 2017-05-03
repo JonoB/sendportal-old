@@ -45,6 +45,8 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
      */
     public function send(Newsletter $newsletter, Contact $contact)
     {
+
+        dd($this->generateContent($newsletter, $contact));
         try
         {
             $result = $this->dispatch($newsletter, $contact);
@@ -114,7 +116,9 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
      */
     protected function generateContent(Newsletter $newsletter, Contact $contact)
     {
-        return $this->embedOpenTrackingImage($newsletter, $contact);
+        $content = $this->embedOpenTrackingImage($newsletter, $contact);
+
+        return $this->mergeTags($content, $contact);
     }
 
     /**
@@ -131,6 +135,30 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
         $image = $this->openTrackingImageService->generate($newsletter, $contact);
 
         return str_replace('</body>', $image . '</body>', $content);
+    }
+
+    /**
+     * Merge tags for the contact
+     *
+     * @param string $content
+     * @param Contact $contact
+     * @return string
+     */
+    protected function mergeTags($content, Contact $contact)
+    {
+        $tags = [
+            '{{ Email }}' => $contact->email,
+            '{{ FirstName }}' => $contact->first_name,
+            '{{ LastName }}' => $contact->last_name,
+        ];
+
+        foreach ($tags as $key => $value)
+        {
+            $pattern = '/{{\s?' . $key . '\s?}}/i';
+            preg_replace($pattern, $value, $content);
+        }
+
+        return $content;
     }
 
     /**
