@@ -147,15 +147,25 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
     protected function mergeTags($content, Contact $contact)
     {
         $tags = [
-            '{{ Email }}' => $contact->email,
-            '{{ FirstName }}' => $contact->first_name,
-            '{{ LastName }}' => $contact->last_name,
+            'Email' => $contact->email,
+            'FirstName' => $contact->first_name,
+            'LastName' => $contact->last_name,
         ];
 
         foreach ($tags as $key => $value)
         {
-            $pattern = '/{{\s?' . $key . '\s?}}/i';
-            preg_replace($pattern, $value, $content);
+            //$pattern = '/{{\s?' . $key . '\s?}}/i';
+
+            //preg_replace($pattern, $value, $content);
+        }
+
+        foreach ($tags as $key => $value)
+        {
+            $search = [
+                '{{' . $key . '}}',
+                '{{ ' . $key . ' }}',
+            ];
+            $content = str_ireplace($search, $value, $content);
         }
 
         return $content;
