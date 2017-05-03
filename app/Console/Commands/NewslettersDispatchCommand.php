@@ -110,6 +110,7 @@ class NewslettersDispatchCommand extends Command
         }
 
         $this->markNewsletterAsSent($newsletter->id);
+
     }
 
     /**
@@ -238,7 +239,8 @@ class NewslettersDispatchCommand extends Command
     protected function markNewsletterAsSent($newsletterId)
     {
         $this->newsletterRepo->update($newsletterId, [
-            'status_id' => NewsletterStatus::STATUS_SENT
+            'status_id' => NewsletterStatus::STATUS_SENT,
+            'sent_count' => count($this->getSentItems())
         ]);
     }
 }

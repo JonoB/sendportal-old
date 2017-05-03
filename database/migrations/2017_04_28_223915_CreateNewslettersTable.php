@@ -24,6 +24,8 @@ class CreateNewslettersTable extends Migration
             $table->string('from_email')->nullable();
             $table->boolean('track_opens')->default(1);
             $table->boolean('track_clicks')->default(1);
+            $table->mediumInteger('sent_count')->nullable()->default(0);
+            $table->mediumInteger('open_count')->nullable()->default(0);
             $table->timestamp('scheduled_at')->nullable();
             $table->timestamps();
         });

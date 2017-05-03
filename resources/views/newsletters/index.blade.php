@@ -42,8 +42,8 @@
                                 <span class="label label-success">{{ $newsletter->status->name }}</span>
                             @endif
                         </td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ formatValue($newsletter->sent_count) }}</td>
+                        <td>{{ number_format($newsletter->open_ratio * 100, 1) . '%' }}</td>
                         <td></td>
                     </tr>
                 @endforeach

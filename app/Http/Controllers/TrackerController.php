@@ -2,25 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ContactRequest;
-use App\Interfaces\ContactRepositoryInterface;
+use App\Interfaces\NewsletterOpenRepositoryInterface;
+use App\Interfaces\NewsletterRepositoryInterface;
 use Illuminate\Http\Request;
 
 class TrackerController extends Controller
 {
     /**
-     * @var ContactRepositoryInterface
+     * @var NewsletterOpenRepositoryInterface
      */
-    protected $contactRepository;
+    protected $newsletterOpenRepository;
 
     /**
-     * ContactsController constructor.
-     *
-     * @param ContactRepositoryInterface $contactRepository
+     * @var NewsletterRepositoryInterface
      */
-    public function __construct(ContactRepositoryInterface $contactRepository)
+    protected $newsletterRepository;
+
+    /**
+     * TrackerController constructor.
+     *
+     * @param NewsletterOpenRepositoryInterface $newsletterOpenRepository
+     * @param NewsletterRepositoryInterface $newsletterRepository
+     */
+    public function __construct(
+        NewsletterOpenRepositoryInterface $newsletterOpenRepository,
+        NewsletterRepositoryInterface $newsletterRepository
+    )
     {
-        $this->contactRepository = $contactRepository;
+        $this->newsletterOpenRepository = $newsletterOpenRepository;
+        $this->newsletterRepository = $newsletterRepository;
     }
 
     /**
@@ -29,17 +39,17 @@ class TrackerController extends Controller
      * @param Request $request
      * @param int $newsletterId
      * @param int $contactId
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return void
      */
     public function opens(Request $request, $newsletterId, $contactId)
     {
-        \DB::table('newsletter_opens')
-            ->where('newsletter_id', $newsletterId)
-            ->where('contact_id', $contactId)
-            ->update([
-                'counter' => \DB::raw('counter + 1'),
-                'ip' => $request->ip(),
-            ]);
+        $this->newsletterOpenRepository->storeOpenTrack($newsletterId, $contactId, $request->ip());
+
+        $openCount = $this->newsletterOpenRepository->getOpenCount($newsletterId);
+
+        $this->newsletterRepository->update($newsletterId, [
+            'open_count' => $openCount,
+        ]);
     }
 
     /**

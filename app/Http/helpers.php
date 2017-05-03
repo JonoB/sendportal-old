@@ -53,6 +53,30 @@ if ( ! function_exists('selectedOptions'))
     }
 }
 
+if ( ! function_exists('formatValue'))
+{
+    /**
+     * Format a value to return short notation
+     *
+     * @param float $value
+     * @return string
+     */
+    function formatValue($value)
+    {
+        if ($value > 9999 && $value <= 999999)
+        {
+            return round($value / 1000) . 'k';
+        }
+
+        if ($value > 999999)
+        {
+            return round($value / 1000000) . 'k';
+        }
+
+        return $result = $value;
+    }
+}
+
 /**
  * Convert an array to a CSV download
  */

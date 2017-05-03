@@ -14,12 +14,24 @@ class Newsletter extends BaseModel
         'from_email',
         'track_opens',
         'track_clicks',
+        'sent_count',
+        'open_count',
         'scheduled_at',
     ];
 
     // we can't use boolean fields on this model because
     // we have multiple points to update from the controller
     protected $booleanFields = [];
+
+    public function getOpenRatioAttribute()
+    {
+        if ($this->attributes['sent_count'])
+        {
+            return $this->attributes['open_count'] / $this->attributes['sent_count'];
+        }
+
+        return 0;
+    }
 
     public function segments()
     {

@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Aws\Laravel\AwsServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
 
     ],
