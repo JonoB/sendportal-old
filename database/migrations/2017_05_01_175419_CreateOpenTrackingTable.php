@@ -17,6 +17,7 @@ class CreateOpenTrackingTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('contact_id');
             $table->unsignedInteger('newsletter_id');
+            $table->string('ip')->nullable();
             $table->smallInteger('counter')->nullable()->default(0);
             $table->timestamps();
 

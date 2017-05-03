@@ -18,6 +18,9 @@
                     <th>Name</th>
                     <th>Template</th>
                     <th>Status</th>
+                    <th>Sent</th>
+                    <th>Opened</th>
+                    <th>Clicked</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,6 +42,9 @@
                                 <span class="label label-success">{{ $newsletter->status->name }}</span>
                             @endif
                         </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 @endforeach
                 </tbody>
