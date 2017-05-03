@@ -33,7 +33,13 @@ class TrackerController extends Controller
      */
     public function opens(Request $request, $newsletterId, $contactId)
     {
-
+        \DB::table('newsletter_opens')
+            ->where('newsletter_id', $newsletterId)
+            ->where('contact_id', $contactId)
+            ->update([
+                'counter' => \DB::raw('counter + 1'),
+                'ip' => $request->ip(),
+            ]);
     }
 
     /**

@@ -43,6 +43,15 @@ class NewslettersDispatchCommand extends Command
     protected $newsletterDispatchService;
 
     /**
+     * Store sent items for this newsletter so
+     * that we don't send to the same person
+     * more than once
+     *
+     * @var array
+     */
+    protected $sentItems = [];
+
+    /**
      * NewslettersDispatchCommand constructor.
      */
     public function __construct()
@@ -84,7 +93,7 @@ class NewslettersDispatchCommand extends Command
      */
     protected function handleNewsletter(Newsletter $newsletter)
     {
-        $this->info('Handing Newsletter:' . $newsletter->name);
+        $this->info('Handing Newsletter ID:' . $newsletter->id . ' (' . $newsletter->name . ')');
 
         if ( ! $this->checkNewsletterStatus($newsletter->id))
         {
@@ -111,17 +120,20 @@ class NewslettersDispatchCommand extends Command
      */
     protected function handleSegment(Newsletter $newsletter, Segment $segment)
     {
-        $this->info('-Handing Newsletter Segment:' . $segment->name);
+        $this->info('-Handing Newsletter Segment ID:' . $segment->id . ' (' . $segment->name . ')');
 
         $contacts = $this->getSegmentContacts($segment);
 
         foreach ($contacts as $contact)
         {
-            //@todo - here we should check that we haven't already
-            // sent to this contact. For example, the same contact
-            // could be in more than one segment and we want to
-            // prevent that
-            $this->info('--Handing Contact:' . $contact->email);
+            if ( ! $this->canSentToContact($newsletter->id, $contact->id))
+            {
+                $this->info('--Skipping Contact ID:' . $contact->id . ' (' . $contact->email . ')');
+
+                continue;
+            }
+
+            $this->info('--Handing Contact ID:' . $contact->id . ' (' . $contact->email . ')');
 
             $this->newsletterDispatchService->send($newsletter, $contact);
         }
@@ -162,6 +174,48 @@ class NewslettersDispatchCommand extends Command
         $newsletter = $this->newsletterRepo->find($newsletterId);
 
         return $newsletter->status_id == NewsletterStatus::STATUS_QUEUED;
+    }
+
+    /**
+     * Check if we can send to this contact
+     * @todo check how this would impact on memory with 200k contacts?
+     *
+     * @param int $newsletterId
+     * @param int $contactId
+     * @return bool
+     */
+    protected function canSentToContact($newsletterId, $contactId)
+    {
+        $key = $newsletterId . ':' . $contactId;
+
+        if (in_array($key, $this->getSentItems()))
+        {
+            return false;
+        }
+
+        $this->appendSentItem($key);
+
+        return true;
+    }
+
+    /**
+     * Append a value to the sentItems
+     *
+     * @param $value
+     */
+    protected function appendSentItem($value)
+    {
+        $this->sentItems[] = $value;
+    }
+
+    /**
+     * Get all sentItems
+     *
+     * @return array
+     */
+    protected function getSentItems()
+    {
+        return $this->sentItems;
     }
 
     /**

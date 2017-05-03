@@ -21,5 +21,5 @@ Route::get('newsletters/{id}/status', ['as' => 'newsletters.status', 'uses' => '
 
 Route::resource('templates', 'TemplatesController');
 
-Route::get('tracker/opens/{newsletterId}/{contactId}', ['as' => 'tracker.open', 'uses' => 'TrackerController@open']);
-Route::get('tracker/clicks/{newsletterId}/{linkId}', ['as' => 'tracker.click', 'uses' => 'TrackerController@click']);
+Route::get('tracker/opens/{newsletterId}/{contactId}', ['as' => 'tracker.opens', 'uses' => 'TrackerController@opens']);
+Route::get('tracker/clicks/{newsletterId}/{linkId}', ['as' => 'tracker.clicks', 'uses' => 'TrackerController@click']);

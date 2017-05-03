@@ -45,7 +45,6 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
      */
     public function send(Newsletter $newsletter, Contact $contact)
     {
-        dd($this->generateContent($newsletter, $contact));
         try
         {
             $result = $this->dispatch($newsletter, $contact);
@@ -115,8 +114,6 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
      */
     protected function generateContent(Newsletter $newsletter, Contact $contact)
     {
-
-        dd($this->embedOpenTrackingImage($newsletter, $contact));
         return $this->embedOpenTrackingImage($newsletter, $contact);
     }
 
