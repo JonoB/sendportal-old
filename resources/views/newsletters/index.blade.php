@@ -27,7 +27,7 @@
                 @foreach($newsletters as $newsletter)
                     <tr>
                         <td>
-                            @if (\App\Models\NewsletterStatus::STATUS_DRAFT)
+                            @if ($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_DRAFT)
                                 <a href="{{ route('newsletters.edit', $newsletter->id) }}">{{ $newsletter->name }}</a>
                             @else
                                 <a href="{{ route('newsletters.report', $newsletter->id) }}">{{ $newsletter->name }}</a>

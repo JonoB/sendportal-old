@@ -26,6 +26,7 @@ class CreateNewslettersTable extends Migration
             $table->boolean('track_clicks')->default(1);
             $table->mediumInteger('sent_count')->nullable()->default(0);
             $table->mediumInteger('open_count')->nullable()->default(0);
+            $table->mediumInteger('click_count')->nullable()->default(0);
             $table->timestamp('scheduled_at')->nullable();
             $table->timestamps();
         });

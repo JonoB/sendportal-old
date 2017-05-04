@@ -33,6 +33,16 @@ class Newsletter extends BaseModel
         return 0;
     }
 
+    public function getClickRatioAttribute()
+    {
+        if ($this->attributes['click_count'])
+        {
+            return $this->attributes['click_count'] / $this->attributes['sent_count'];
+        }
+
+        return 0;
+    }
+
     public function segments()
     {
         return $this->belongsToMany(Segment::class);
