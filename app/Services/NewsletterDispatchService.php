@@ -152,6 +152,8 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
             'LastName' => $contact->last_name,
         ];
 
+        // regex doesn't seem to work here - I think it
+        // may be due to all the tags and inverted commas in html?
         foreach ($tags as $key => $value)
         {
             //$pattern = '/{{\s?' . $key . '\s?}}/i';
