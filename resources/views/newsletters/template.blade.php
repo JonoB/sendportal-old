@@ -34,6 +34,7 @@
     {{ $templates->links() }}
 
     <a href="{{ route('newsletters.edit', $newsletter->id) }}" class="btn btn-default">Back</a>
+    {!! Form::submitButton('Save and continue') !!}
     {!! Form::close() !!}
 
 @stop
