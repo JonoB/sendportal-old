@@ -1,5 +1,5 @@
 {!! Form::textField('email', 'Email') !!}
-{!! Form::textField('first_name', 'FirstName') !!}
+{!! Form::textField('first_name', 'First Name') !!}
 {!! Form::textField('last_name', 'Last Name') !!}
 
 @foreach($segments as $segment)

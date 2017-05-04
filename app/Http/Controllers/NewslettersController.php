@@ -89,7 +89,9 @@ class NewslettersController extends Controller
     public function template($id)
     {
         $newsletter = $this->newsletterRepository->find($id);
-        $templates = $this->templateRepository->pluck();
+
+        // @todo fix the pagination in the view
+        $templates = $this->templateRepository->paginate();
 
         return view('newsletters.template', compact('newsletter', 'templates'));
     }

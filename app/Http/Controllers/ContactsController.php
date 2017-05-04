@@ -53,9 +53,12 @@ class ContactsController extends Controller
      */
     public function create()
     {
-        $segments = $this->segmentRepository->all();
+        $data = [
+            'segments' => $this->segmentRepository->all(),
+            'selectedSegments' => [],
+        ];
 
-        return view('contacts.create', compact('segments'));
+        return view('contacts.create', $data);
     }
 
     /**
