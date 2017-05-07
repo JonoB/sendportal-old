@@ -14,9 +14,9 @@ class CreateOpenTrackingTable extends Migration
     public function up()
     {
         Schema::create('newsletter_opens', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('contact_id');
-            $table->unsignedInteger('newsletter_id');
+            $table->uuid('id')->primary();
+            $table->char('contact_id', 36);
+            $table->char('newsletter_id', 36);
             $table->string('ip')->nullable();
             $table->smallInteger('counter')->nullable()->default(0);
             $table->timestamps();

@@ -15,8 +15,8 @@ class CreateContactSegmentTable extends Migration
     {
         Schema::create('contact_segment', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('contact_id');
-            $table->unsignedInteger('segment_id');
+            $table->char('contact_id', 36);
+            $table->char('segment_id', 36);
             $table->timestamps();
 
             $table->foreign('contact_id')->references('id')->on('contacts');

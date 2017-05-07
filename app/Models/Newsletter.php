@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\Uuid;
+
 class Newsletter extends BaseModel
 {
+    use Uuid;
+
     protected $fillable = [
         'template_id',
         'status_id',

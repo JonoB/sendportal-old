@@ -14,9 +14,9 @@ class CreateNewsletterSegmentTable extends Migration
     public function up()
     {
         Schema::create('newsletter_segment', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('segment_id');
-            $table->unsignedInteger('newsletter_id');
+            $table->uuid('id')->primary();
+            $table->char('segment_id', 36);
+            $table->char('newsletter_id', 36);
             $table->timestamps();
 
             $table->foreign('segment_id')->references('id')->on('segments');

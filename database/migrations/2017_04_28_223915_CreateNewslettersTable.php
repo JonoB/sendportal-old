@@ -14,8 +14,8 @@ class CreateNewslettersTable extends Migration
     public function up()
     {
         Schema::create('newsletters', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('template_id')->nullable();
+            $table->uuid('id')->primary();
+            $table->char('template_id', 36)->nullable();
             $table->unsignedInteger('status_id')->default(1);
             $table->string('name');
             $table->string('subject')->nullable();
@@ -29,6 +29,9 @@ class CreateNewslettersTable extends Migration
             $table->mediumInteger('click_count')->nullable()->default(0);
             $table->timestamp('scheduled_at')->nullable();
             $table->timestamps();
+
+            $table->foreign('template_id')->references('id')->on('templates');
+            $table->foreign('status_id')->references('id')->on('newsletter_statuses');
         });
     }
 

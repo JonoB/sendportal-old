@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\Uuid;
+
 class Contact extends BaseModel
 {
+    use Uuid;
+
     protected $fillable = [
         'email',
         'first_name',

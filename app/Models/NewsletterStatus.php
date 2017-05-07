@@ -4,6 +4,8 @@ namespace App\Models;
 
 class NewsletterStatus extends BaseModel
 {
+    public $incrementing = true;
+
     const STATUS_DRAFT = 1;
     const STATUS_QUEUED = 2;
     const STATUS_SENDING = 3;

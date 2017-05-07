@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class BaseModel extends Model
 {
+    /**
+     * We use the UUID trait in most models by default, so
+     * incrementing is set to false by default
+     *
+     * @var bool
+     */
+    public $incrementing = false;
 
     /**
      * Store which fields are boolean in the model
