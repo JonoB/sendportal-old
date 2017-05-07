@@ -128,11 +128,14 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
      */
     protected function embedOpenTrackingImage(Newsletter $newsletter, Contact $contact)
     {
-        $content = $newsletter->content;
+        if ( ! $newsletter->track_opens)
+        {
+            return $newsletter->content;
+        }
 
         $image = $this->openTrackingImageService->generate($newsletter, $contact);
 
-        return str_replace('</body>', $image . '</body>', $content);
+        return str_replace('</body>', $image . '</body>', $newsletter->content);
     }
 
     /**

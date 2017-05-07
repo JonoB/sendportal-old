@@ -125,7 +125,10 @@ class NewslettersDispatchCommand extends Command
 
         $this->markNewsletterAsSending($newsletter->id);
 
-        $newsletter->content = $this->replaceUrls($newsletter);
+        if ($newsletter->track_clicks)
+        {
+            $newsletter->content = $this->replaceUrls($newsletter);
+        }
 
         foreach ($newsletter->segments as $segment)
         {
@@ -186,6 +189,12 @@ class NewslettersDispatchCommand extends Command
         return $segment->contacts;
     }
 
+    /**
+     * Replace all urls in a newsletter for tracking
+     *
+     * @param Newsletter $newsletter
+     * @return string
+     */
     protected function replaceUrls(Newsletter $newsletter)
     {
         $originalUrls = $this->contentUrlService->extract($newsletter->content);
@@ -202,6 +211,13 @@ class NewslettersDispatchCommand extends Command
         return $this->contentUrlService->replaceUrls($newsletter->content, $originalUrls, $replaceUrls);
     }
 
+    /**
+     * Store a newsletter tracking url
+     *
+     * @param $newsletterId
+     * @param $link
+     * @return mixed
+     */
     protected function storeNewsletterUrl($newsletterId, $link)
     {
         return $this->newsletterUrlsRepo->store([
