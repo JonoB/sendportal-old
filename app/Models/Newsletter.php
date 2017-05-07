@@ -16,6 +16,7 @@ class Newsletter extends BaseModel
         'track_clicks',
         'sent_count',
         'open_count',
+        'click_count',
         'scheduled_at',
     ];
 

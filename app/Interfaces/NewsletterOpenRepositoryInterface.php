@@ -21,5 +21,5 @@ interface NewsletterOpenRepositoryInterface extends BaseEloquentInterface
      * @param int $newsletterId
      * @return int
      */
-    public function getOpenCount($newsletterId);
+    public function getUniqueOpenCount($newsletterId);
 }

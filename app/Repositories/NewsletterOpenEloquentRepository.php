@@ -34,7 +34,7 @@ class NewsletterOpenEloquentRepository extends BaseEloquentRepository implements
      * @param int $newsletterId
      * @return int
      */
-    public function getOpenCount($newsletterId)
+    public function getUniqueOpenCount($newsletterId)
     {
         return $this->getNewInstance()
             ->where('newsletter_id', $newsletterId)

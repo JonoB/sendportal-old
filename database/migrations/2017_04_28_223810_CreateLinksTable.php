@@ -13,11 +13,10 @@ class CreateLinksTable extends Migration
      */
     public function up()
     {
-        Schema::create('links', function (Blueprint $table) {
+        Schema::create('newsletter_urls', function (Blueprint $table) {
             $table->increments('id');
             $table->increments('newsletter_id');
-            $table->string('original_link');
-            $table->string('tracking_link');
+            $table->string('original_url');
             $table->string('counter');
             $table->timestamps();
         });
