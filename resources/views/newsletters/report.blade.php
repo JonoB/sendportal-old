@@ -7,18 +7,7 @@
 @section('content')
 
     <div class="row">
-        <div class="col-lg-2 col-sm-4 col-xs-12">
-            <div class="info-box">
-                <!-- Apply any bg-* class to to the icon to color it -->
-                <span class="info-box-icon bg-aqua"><i class="fa fa-envelope-o"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Emails Sent</span>
-                    <span class="info-box-number">{{ $newsletter->sent_count }}</span>
-                </div><!-- /.info-box-content -->
-            </div><!-- /.info-box -->
-        </div>
-
-        <div class="col-lg-2 col-sm-4 col-xs-12">
+        <div class="col-lg-3 col-sm-4 col-xs-12">
             <!-- small box -->
             <div class="small-box bg-aqua">
                 <div class="inner">
