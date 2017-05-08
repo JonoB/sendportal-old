@@ -71,7 +71,7 @@ class TrackerController extends Controller
      */
     public function clicks(Request $request, $newsletterId, $urlId)
     {
-        $this->newsletterUrlsRepository->storeClickTrack($newsletterId, $urlId);
+        $this->newsletterUrlsRepository->storeClickTrack($urlId);
 
         $clickCount = $this->newsletterUrlsRepository->getTotalClickCount($newsletterId);
 

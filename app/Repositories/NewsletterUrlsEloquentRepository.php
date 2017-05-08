@@ -12,14 +12,12 @@ class NewsletterUrlsEloquentRepository extends BaseEloquentRepository implements
     /**
      * Track an open record
      *
-     * @param int $newsletterId
-     * @param int $contactId
+     * @param string $urlId
      * @return mixed
      */
-    public function storeClickTrack($newsletterId, $urlId)
+    public function storeClickTrack($urlId)
     {
         return $this->getNewInstance()
-            ->where('newsletter_id', $newsletterId)
             ->where('id', $urlId)
             ->increment('counter');
     }
@@ -27,14 +25,12 @@ class NewsletterUrlsEloquentRepository extends BaseEloquentRepository implements
     /**
      * Return the click count for a single link
      *
-     * @param int $newsletterId
-     * @param int $urlId
+     * @param string $urlId
      * @return int
      */
-    public function getUrlClickCount($newsletterId, $urlId)
+    public function getUrlClickCount($urlId)
     {
         return $this->getNewInstance()
-            ->where('newsletter_id', $newsletterId)
             ->where('id', $urlId)
             ->sum('counter');
     }

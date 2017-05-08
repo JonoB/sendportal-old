@@ -47,7 +47,7 @@
                         <td>{{ $newsletter->template->name or '' }}</td>
                         <td>{{ formatValue($newsletter->sent_count) }}</td>
                         <td>{{ number_format($newsletter->open_ratio * 100, 1) . '%' }}</td>
-                        <td>{{ number_format($newsletter->click_ratioØ * 100, 1) . '%' }}</td>
+                        <td>{{ number_format($newsletter->click_ratio * 100, 1) . '%' }}</td>
                     </tr>
                 @endforeach
                 </tbody>

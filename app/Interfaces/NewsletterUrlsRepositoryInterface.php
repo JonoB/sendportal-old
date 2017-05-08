@@ -7,21 +7,19 @@ interface NewsletterUrlsRepositoryInterface extends BaseEloquentInterface
     /**
      * Track an open record
      *
-     * @param int $newsletterId
-     * @param int $contactId
+     * @param string $urlId
      * @param string $ipAddress
      * @return mixed
      */
-    public function storeClickTrack($newsletterId, $urlId);
+    public function storeClickTrack($urlId);
 
     /**
      * Return the click count for a single link
      *
-     * @param int $newsletterId
-     * @param int $urlId
+     * @param string $urlId
      * @return int
      */
-    public function getUrlClickCount($newsletterId, $urlId);
+    public function getUrlClickCount($urlId);
 
     /**
      * Return the total click count for a newsletter
