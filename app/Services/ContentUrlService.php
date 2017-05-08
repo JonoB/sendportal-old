@@ -66,10 +66,17 @@ class ContentUrlService implements ContentUrlServiceInterface
             return;
         }
 
-        if (stripos($url, 'http') !== false)
+        if (filter_var($url, FILTER_VALIDATE_URL) === false)
         {
-            $this->appendUrl($url);
+            return;
         }
+
+        if (stripos($url, 'http') === false)
+        {
+            return;
+        }
+
+        $this->appendUrl($url);
     }
 
     /**
