@@ -23,19 +23,6 @@ class ContentUrlService implements ContentUrlServiceInterface
     }
 
     /**
-     * Replace selected links in content
-     *
-     * @param string $content
-     * @param array $from
-     * @param array $to
-     * @return string
-     */
-    public function replaceUrls($content, array $from = [], array $to = [])
-    {
-        return str_ireplace($from, $to, $content);
-    }
-
-    /**
      * Extract all urls from the dom
      *
      * @param string $content

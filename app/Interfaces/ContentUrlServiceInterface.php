@@ -12,12 +12,4 @@ interface ContentUrlServiceInterface
      */
     public function extract($content);
 
-    /**
-     * Replace selected links in content
-     *
-     * @param array $from
-     * @param array $to
-     * @return string
-     */
-    public function replaceUrls($content, array $from = [], array $to = []);
 }

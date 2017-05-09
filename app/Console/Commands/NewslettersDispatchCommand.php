@@ -211,20 +211,6 @@ class NewslettersDispatchCommand extends Command
         return $this->contentUrlService->replaceUrls($newsletter->content, $originalUrls, $replaceUrls);
     }
 
-    /**
-     * Store a newsletter tracking url
-     *
-     * @param $newsletterId
-     * @param $link
-     * @return mixed
-     */
-    protected function storeNewsletterUrl($newsletterId, $link)
-    {
-        return $this->newsletterUrlsRepo->store([
-            'newsletter_id' => $newsletterId,
-            'original_url' => $link,
-        ]);
-    }
 
     /**
      * Check that the status of the newsletter is still queued

@@ -52,6 +52,10 @@ class TrackerController extends Controller
      */
     public function opens(Request $request, $newsletterId, $contactId)
     {
+
+        header('Content-Type: image/gif');
+        readfile(public_path('img/tracking.gif'));
+
         $this->contactNewsletterRepo->incrementOpenCount($newsletterId, $contactId, $request->ip());
 
         $totalOpenCount = $this->contactNewsletterRepo->getUniqueOpenCount($newsletterId);
