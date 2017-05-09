@@ -17,7 +17,7 @@ class CreateLinksTable extends Migration
             $table->uuid('id')->primary();
             $table->char('newsletter_id', 36);
             $table->string('original_url');
-            $table->string('counter');
+            $table->mediumInteger('counter')->default(0);
             $table->timestamps();
 
             $table->foreign('newsletter_id')->references('id')->on('newsletters');

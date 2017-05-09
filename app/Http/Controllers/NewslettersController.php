@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\NewsletterRequest;
+use App\Interfaces\ContactNewsletterRepositoryInterface;
 use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\NewsletterRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
@@ -14,19 +15,24 @@ use Illuminate\Http\Request;
 class NewslettersController extends Controller
 {
     /**
-     * @var NewsletterRepositoryInterface
+     * @var ContactNewsletterRepositoryInterface
      */
-    protected $segmentRepository;
+    protected $contactNewsletterRepo;
 
     /**
      * @var NewsletterRepositoryInterface
      */
-    protected $newsletterRepository;
+    protected $segmentRepo;
+
+    /**
+     * @var NewsletterRepositoryInterface
+     */
+    protected $newsletterRepo;
 
     /**
      * @var TemplateRepositoryInterface
      */
-    protected $templateRepository;
+    protected $templateRepo;
 
     /**
      * NewslettersController constructor.
@@ -37,12 +43,14 @@ class NewslettersController extends Controller
     public function __construct(
         SegmentRepositoryInterface $segmentRepository,
         NewsletterRepositoryInterface $newsletterRepository,
+        ContactNewsletterRepositoryInterface $contactNewsletterRepo,
         TemplateRepositoryInterface $templateRepository
     )
     {
-        $this->segmentRepository = $segmentRepository;
-        $this->newsletterRepository = $newsletterRepository;
-        $this->templateRepository = $templateRepository;
+        $this->contactNewsletterRepo = $contactNewsletterRepo;
+        $this->segmentRepo = $segmentRepository;
+        $this->newsletterRepo = $newsletterRepository;
+        $this->templateRepo = $templateRepository;
     }
 
     /**
@@ -52,7 +60,7 @@ class NewslettersController extends Controller
      */
     public function index()
     {
-        $newsletters = $this->newsletterRepository->paginate('created_atDesc', ['status', 'template']);
+        $newsletters = $this->newsletterRepo->paginate('created_atDesc', ['status', 'template']);
 
         return view('newsletters.index', compact('newsletters'));
     }
@@ -75,7 +83,7 @@ class NewslettersController extends Controller
      */
     public function store(NewsletterRequest $request)
     {
-        $newsletter = $this->newsletterRepository->store($request->all());
+        $newsletter = $this->newsletterRepo->store($request->all());
 
         return redirect()->route('newsletters.template', $newsletter->id);
     }
@@ -88,10 +96,10 @@ class NewslettersController extends Controller
      */
     public function template($id)
     {
-        $newsletter = $this->newsletterRepository->find($id);
+        $newsletter = $this->newsletterRepo->find($id);
 
         // @todo fix the pagination in the view
-        $templates = $this->templateRepository->paginate();
+        $templates = $this->templateRepo->paginate();
 
         return view('newsletters.template', compact('newsletter', 'templates'));
     }
@@ -106,12 +114,12 @@ class NewslettersController extends Controller
     public function updateTemplate(Request $request, $id)
     {
         $templateId = $request->get('template_id');
-        $template = $this->templateRepository->find($templateId);
+        $template = $this->templateRepo->find($templateId);
 
         // @todo at this point we're just over-writing the newsletter
         // content with the template content, but we need to cater for the
         // case when the user doesn't actually want to overwrite the newsletter content
-        $this->newsletterRepository->update($id, [
+        $this->newsletterRepo->update($id, [
             'content' => $template->content,
             'template_id' => $templateId,
         ]);
@@ -127,8 +135,8 @@ class NewslettersController extends Controller
      */
     public function design($id)
     {
-        $newsletter = $this->newsletterRepository->find($id);
-        $template = $this->templateRepository->find($newsletter->template_id);
+        $newsletter = $this->newsletterRepo->find($id);
+        $template = $this->templateRepo->find($newsletter->template_id);
 
         return view('newsletters.design', compact('newsletter', 'template'));
     }
@@ -142,7 +150,7 @@ class NewslettersController extends Controller
      */
     public function updateDesign(Request $request, $id)
     {
-        $this->newsletterRepository->update($id, $request->only('content'));
+        $this->newsletterRepo->update($id, $request->only('content'));
 
         return redirect()->route('newsletters.confirm', $id);
     }
@@ -155,15 +163,15 @@ class NewslettersController extends Controller
      */
     public function confirm($id)
     {
-        $newsletter = $this->newsletterRepository->find($id);
+        $newsletter = $this->newsletterRepo->find($id);
 
         if ($newsletter->status_id > 1)
         {
             return redirect()->route('newsletters.status', $id);
         }
 
-        $template = $this->templateRepository->find($newsletter->template_id);
-        $segments = $this->segmentRepository->all('name', ['contactsCount']);
+        $template = $this->templateRepo->find($newsletter->template_id);
+        $segments = $this->segmentRepo->all('name', ['contactsCount']);
 
         return view('newsletters.confirm', compact('newsletter', 'template', 'segments'));
     }
@@ -177,7 +185,7 @@ class NewslettersController extends Controller
      */
     public function send(Request $request, $id)
     {
-        $newsletter = $this->newsletterRepository->find($id);
+        $newsletter = $this->newsletterRepo->find($id);
 
         if ($newsletter->status_id > 1)
         {
@@ -185,7 +193,7 @@ class NewslettersController extends Controller
         }
 
         // @todo validation that at least one segment has been selected
-        $newsletter = $this->newsletterRepository->update($id, [
+        $newsletter = $this->newsletterRepo->update($id, [
             'scheduled_at' => Carbon::now(),
             'status_id' => NewsletterStatus::STATUS_QUEUED,
         ]);
@@ -203,7 +211,7 @@ class NewslettersController extends Controller
      */
     public function status($id)
     {
-        $newsletter = $this->newsletterRepository->find($id, ['status']);
+        $newsletter = $this->newsletterRepo->find($id, ['status']);
 
         return view('newsletters.status', compact('newsletter'));
     }
@@ -216,7 +224,7 @@ class NewslettersController extends Controller
      */
     public function edit($id)
     {
-        $newsletter = $this->newsletterRepository->find($id);
+        $newsletter = $this->newsletterRepo->find($id);
 
         // @todo we need to check newsletter status here and
         // redirect if its not in draft
@@ -246,7 +254,7 @@ class NewslettersController extends Controller
         $update['track_opens'] = $request->get('track_opens', 0);
         $update['track_clicks'] = $request->get('track_clicks', 0);
 
-        $newsletter = $this->newsletterRepository->update($id, $updateData);
+        $newsletter = $this->newsletterRepo->update($id, $updateData);
 
         return redirect()->route('newsletters.template', $newsletter->id);
     }
@@ -259,7 +267,7 @@ class NewslettersController extends Controller
      */
     public function report($id)
     {
-        $newsletter = $this->newsletterRepository->find($id);
+        $newsletter = $this->newsletterRepo->find($id);
 
         if ($newsletter->status_id == NewsletterStatus::STATUS_DRAFT)
         {
@@ -282,7 +290,7 @@ class NewslettersController extends Controller
      */
     public function recipients($id)
     {
-        $newsletter = $this->newsletterRepository->find($id);
+        $newsletter = $this->newsletterRepo->find($id);
 
         if ($newsletter->status_id == NewsletterStatus::STATUS_DRAFT)
         {
@@ -291,8 +299,9 @@ class NewslettersController extends Controller
 
         if ($newsletter->status_id == NewsletterStatus::STATUS_SENT)
         {
-            //$recipients = $this->news
-            return view('newsletters.recipients', compact('newsletter'));
+            $recipients = $this->contactNewsletterRepo->paginate('created_at', [], 50, ['newsletter_id' => $id]);
+
+            return view('newsletters.recipients', compact('newsletter', $recipients));
         }
 
         return redirect()->route('newsletters.status', $id);

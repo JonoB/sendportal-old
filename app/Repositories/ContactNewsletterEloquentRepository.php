@@ -53,7 +53,7 @@ class ContactNewsletterEloquentRepository extends BaseEloquentRepository impleme
     {
         return $this->getNewInstance()
             ->where('newsletter_id', $newsletterId)
-            ->where('counter', '>', 0)
+            ->where('open_count', '>', 0)
             ->count();
     }
 }
