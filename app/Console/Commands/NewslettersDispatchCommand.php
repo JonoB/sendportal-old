@@ -205,7 +205,7 @@ class NewslettersDispatchCommand extends Command
         {
             $newsletterUrl = $this->storeNewsletterUrl($newsletter->id, $url);
 
-            $replaceUrls[] = route('tracker.clicks', [$newsletter->id, $newsletterUrl->id]);
+            $replaceUrls[] = route('tracker.clicks', [$newsletter->id, 'replace-this-with-contact-id', $newsletterUrl->id]);
         }
 
         return $this->contentUrlService->replaceUrls($newsletter->content, $originalUrls, $replaceUrls);

@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Interfaces\ContactNewsletterRepositoryInterface;
 use App\Interfaces\GenerateOpenTrackingImageInterface;
 use App\Interfaces\NewsletterDispatchInterface;
-use App\Interfaces\NewsletterOpenRepositoryInterface;
 use App\Models\Contact;
 use App\Models\Newsletter;
 use Aws\Ses\SesClient;
@@ -17,9 +17,9 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
     protected $sesClient;
 
     /**
-     * @var NewsletterOpenRepositoryInterface
+     * @var ContactNewsletterRepositoryInterface
      */
-    protected $newsletterOpenRepositoryInterface;
+    protected $ContactNewsletterRepo;
 
     /**
      * @var GenerateOpenTrackingImageInterface
@@ -32,7 +32,7 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
     public function __construct()
     {
         $this->sesClient = $this->createSesClient();
-        $this->newsletterOpenRepositoryInterface = app()->make(NewsletterOpenRepositoryInterface::class);
+        $this->ContactNewsletterRepo = app()->make(ContactNewsletterRepositoryInterface::class);
         $this->openTrackingImageService = app()->make(GenerateOpenTrackingImageInterface::class);
     }
 
@@ -99,7 +99,7 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
      */
     protected function createDatabaseRecord(Newsletter $newsletter, Contact $contact)
     {
-        $this->newsletterOpenRepositoryInterface->store([
+        $this->ContactNewsletterRepo->store([
             'newsletter_id' => $newsletter->id,
             'contact_id' => $contact->id,
         ]);
@@ -155,12 +155,12 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
 
         // regex doesn't seem to work here - I think it
         // may be due to all the tags and inverted commas in html?
-        foreach ($tags as $key => $value)
+        /*foreach ($tags as $key => $value)
         {
-            //$pattern = '/{{\s?' . $key . '\s?}}/i';
+            $pattern = '/{{\s?' . $key . '\s?}}/i';
 
-            //preg_replace($pattern, $value, $content);
-        }
+            preg_replace($pattern, $value, $content);
+        }*/
 
         foreach ($tags as $key => $value)
         {
@@ -170,6 +170,9 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
             ];
             $content = str_ireplace($search, $value, $content);
         }
+
+        // merge contact into newsletter url tracking
+        $content = str_ireplace('replace-this-with-contact-id', $contact->id, $content);
 
         return $content;
     }

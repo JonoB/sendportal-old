@@ -19,8 +19,9 @@ Route::get('newsletters/{id}/confirm', ['as' => 'newsletters.confirm', 'uses' =>
 Route::put('newsletters/{id}/send', ['as' => 'newsletters.send', 'uses' => 'NewslettersController@send']);
 Route::get('newsletters/{id}/status', ['as' => 'newsletters.status', 'uses' => 'NewslettersController@status']);
 Route::get('newsletters/{id}/report', ['as' => 'newsletters.report', 'uses' => 'NewslettersController@report']);
+Route::get('newsletters/{id}/recipients', ['as' => 'newsletters.recipients', 'uses' => 'NewslettersController@recipients']);
 
 Route::resource('templates', 'TemplatesController');
 
 Route::get('tracker/opens/{newsletterId}/{contactId}', ['as' => 'tracker.opens', 'uses' => 'TrackerController@opens']);
-Route::get('tracker/clicks/{newsletterId}/{linkId}', ['as' => 'tracker.clicks', 'uses' => 'TrackerController@clicks']);
+Route::get('tracker/clicks/{newsletterId}/{contactId}/{linkId}', ['as' => 'tracker.clicks', 'uses' => 'TrackerController@clicks']);

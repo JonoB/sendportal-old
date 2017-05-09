@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use App\Traits\Uuid;
-
-class NewsletterOpen extends BaseModel
+class ContactNewsletter extends BaseModel
 {
-    use Uuid;
-
     protected $fillable = [
         'contact_id',
         'newsletter_id',
-        'counter',
+        'ip',
+        'open_count',
+        'click_count',
     ];
 }
