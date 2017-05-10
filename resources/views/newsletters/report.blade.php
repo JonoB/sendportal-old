@@ -24,7 +24,7 @@
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <h3>{{ round($newsletter->open_ratio * 100, 1) }}<sup style="font-size: 20px">%</sup></h3>
-                    <p>Open Rate</p>
+                    <p>Unique Open Rate</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>

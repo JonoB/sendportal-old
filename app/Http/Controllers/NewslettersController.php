@@ -198,7 +198,7 @@ class NewslettersController extends Controller
             'status_id' => NewsletterStatus::STATUS_QUEUED,
         ]);
 
-        $newsletter->segments()->attach($request->get('segments'));
+        $newsletter->segments()->sync($request->get('segments'));
 
         return redirect()->route('newsletters.status', $id);
     }

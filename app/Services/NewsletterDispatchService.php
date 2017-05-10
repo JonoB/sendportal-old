@@ -2,11 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\ContactNewsletterRepositoryInterface;
-use App\Interfaces\GenerateOpenTrackingImageInterface;
 use App\Interfaces\NewsletterDispatchInterface;
-use App\Models\Contact;
-use App\Models\Newsletter;
 use Aws\Ses\SesClient;
 
 class NewsletterDispatchService implements NewsletterDispatchInterface
@@ -41,7 +37,7 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
         }
         catch (\Exception $e)
         {
-            //@todo catch it!
+            \Log::error(json_encode($e->getMessage()));
 
             return false;
         }
@@ -71,7 +67,7 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
                 ],
                 'Body' => array(
                     'Html' => [
-                        'Data' => $$content,
+                        'Data' => $content,
                     ],
                 ),
             ],

@@ -15,7 +15,7 @@ class NewsletterUrlsEloquentRepository extends BaseEloquentRepository implements
      * @param string $urlId
      * @return mixed
      */
-    public function storeClickTrack($urlId)
+    public function incrementClickCount($urlId)
     {
         return $this->getNewInstance()
             ->where('id', $urlId)

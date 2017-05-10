@@ -11,7 +11,7 @@ interface NewsletterUrlsRepositoryInterface extends BaseEloquentInterface
      * @param string $ipAddress
      * @return mixed
      */
-    public function storeClickTrack($urlId);
+    public function incrementClickCount($urlId);
 
     /**
      * Return the click count for a single link
