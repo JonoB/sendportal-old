@@ -8,11 +8,13 @@ use App\Models\Newsletter;
 interface NewsletterDispatchInterface
 {
     /**
-     * Invoke the send method
+     * Send the newsletter
      *
-     * @param Newsletter $newsletter
-     * @param Contact $contact
-     * @return \Aws\Result|bool
+     * @param string $fromEmail
+     * @param string $toEmail
+     * @param string $subject
+     * @param string $content
+     * @return mixed
      */
-    public function send(Newsletter $newsletter, Contact $contact);
+    public function send($fromEmail, $toEmail, $subject, $content);
 }

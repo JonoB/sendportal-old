@@ -1,21 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jono
- * Date: 09/05/2017
- * Time: 22:30
- */
 
 namespace App\Services;
 
-
 use App\Interfaces\ContentUrlServiceInterface;
 use App\Interfaces\GenerateOpenTrackingImageInterface;
+use App\Interfaces\NewsletterContentServiceInterface;
 use App\Interfaces\NewsletterUrlsRepositoryInterface;
 use App\Models\Contact;
 use App\Models\Newsletter;
 
-class NewsletterContentService
+class NewsletterContentService implements NewsletterContentServiceInterface
 {
     /**
      * @var Newsletter
@@ -50,6 +44,13 @@ class NewsletterContentService
     protected $newsletterUrlsRepository;
 
     /**
+     * Temporary tag that is replaced when the contact is merged in
+     *
+     * @var string
+     */
+    protected $contactIdReplacementTag = 'replace-this-with-contact-id';
+
+    /**
      * NewsletterContentService constructor.
      *
      * @param GenerateOpenTrackingImageInterface $openTrackingImageService
@@ -65,33 +66,40 @@ class NewsletterContentService
         $this->openTrackingImageService = $openTrackingImageService;
         $this->contentUrlService = $contentUrlsService;
         $this->newsletterUrlsRepository = $newsletterUrlsRepository;
-
-    }
-
-    public function getMergedContent(Contact $contact)
-    {
-
     }
 
     /**
-     * Embed the open tracking image
+     * Set the newsletter and create base content
+     * ready for contact merging
      *
      * @param Newsletter $newsletter
+     * @return void
+     */
+    public function setNewsletter(Newsletter $newsletter)
+    {
+        $this->newsletter = $newsletter;
+
+        $content = $this->createBaseNewsletterContent($newsletter);
+
+        $this->setContent($content);
+    }
+
+    /**
+     * Merge open tracking image and contact tags into the content
+     *
      * @param Contact $contact
      * @return string
      */
-    protected function embedOpenTrackingImage($newsletter, $contact)
+    public function getMergedContent(Contact $contact)
     {
-        $this->setContent($this->getNewsletter()->content);
+        // embed open tracking image
+        $content = $this->embedOpenTrackingImage($this->getContent(), $this->getNewsletter()->id, $contact->id);
 
-        if ($this->trackOpens())
-        {
-            $image = $this->openTrackingImageService->generate($newsletter, $contact);
+        // merge dynamic contact tags like email, name, etc
+        $content = $this->mergeContactTags($content, $contact);
 
-            return str_replace('</body>', $image . '</body>', $newsletter->content);
-        }
+        return $content;
     }
-
 
     /**
      * Replace all urls in a newsletter for tracking
@@ -120,6 +128,63 @@ class NewsletterContentService
     }
 
     /**
+     * Embed the open tracking image
+     *
+     * @param string $content
+     * @param string $newsletterId
+     * @param string $contactId
+     * @return string
+     */
+    protected function embedOpenTrackingImage($content, $newsletterId, $contactId)
+    {
+        if ($this->trackOpens())
+        {
+            $image = $this->openTrackingImageService->generate($newsletterId, $contactId);
+
+            $content = str_replace('</body>', $image . '</body>', $content);
+        }
+
+        return $content;
+    }
+
+   /**
+    * Merge tags for the contact
+    *
+    * @param string $content
+    * @param Contact $contact
+    * @return string
+    */
+    protected function mergeContactTags($content, Contact $contact)
+    {
+        $tags = [
+            'Email' => $contact->email,
+            'FirstName' => $contact->first_name,
+            'LastName' => $contact->last_name,
+        ];
+
+        // regex doesn't seem to work here - I think it
+        // may be due to all the tags and inverted commas in html?
+        /*foreach ($tags as $key => $value)
+        {
+            $pattern = '/{{\s?' . $key . '\s?}}/i';
+
+            preg_replace($pattern, $value, $content);
+        }*/
+
+        foreach ($tags as $key => $value)
+        {
+            $search = [
+                '{{' . $key . '}}',
+                '{{ ' . $key . ' }}',
+            ];
+            $content = str_ireplace($search, $value, $content);
+        }
+
+        // merge contact into newsletter url tracking
+        return str_ireplace($this->contactIdReplacementTag, $contact->id, $content);
+    }
+
+    /**
      * Create an array of replacement urls for tracking clicks
      *
      * @param Newsletter $newsletter
@@ -134,7 +199,9 @@ class NewsletterContentService
         {
             $newsletterUrl = $this->storeNewsletterUrl($newsletter->id, $url);
 
-            $replacementUrls[] = route('tracker.clicks', [$newsletter->id, 'replace-this-with-contact-id', $newsletterUrl->id]);
+            // generate the replacement url, using a temporary tag for the contact. Once the contact
+            // is merged in, then the tag will be replaced with the actual contact_id
+            $replacementUrls[] = route('tracker.clicks', [$newsletter->id, $this->contactIdReplacementTag, $newsletterUrl->id]);
         }
 
         return $replacementUrls;
@@ -165,16 +232,6 @@ class NewsletterContentService
     }
 
     /**
-     * @param Newsletter $newsletter
-     */
-    public function setNewsletter(Newsletter $newsletter)
-    {
-        $this->newsletter = $newsletter;
-
-        $this->setContent($this->createBaseNewsletterContent($newsletter));
-    }
-
-    /**
      * @return Contact
      */
     protected function getContact()
@@ -198,13 +255,24 @@ class NewsletterContentService
         return $this->content = $content;
     }
 
-    protected function trackClicks()
-    {
-        return $this->getNewsletter()->track_clicks;
-    }
-
+    /**
+     * Return if newsletter is tracking opens
+     *
+     * @return bool
+     */
     protected function trackOpens()
     {
-        return $this->getNewsletter()->track_opens;
+        return (bool)$this->getNewsletter()->track_opens;
     }
+
+    /**
+     * Return if newsletter is tracking clicks
+     *
+     * @return bool
+     */
+    protected function trackClicks()
+    {
+        return (bool)$this->getNewsletter()->track_clicks;
+    }
+
 }

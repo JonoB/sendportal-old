@@ -7,5 +7,12 @@ use App\Models\Newsletter;
 
 interface GenerateOpenTrackingImageInterface
 {
-    public function generate(Newsletter $newsletter, Contact $contact);
+    /**
+     * Generate the tracking image for emails
+     *
+     * @param string $newsletterId
+     * @param string $contactId
+     * @return mixed
+     */
+    public function generate($newsletterId, $contactId);
 }

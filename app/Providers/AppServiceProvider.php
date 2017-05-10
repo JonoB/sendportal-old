@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Interfaces\ContactRepositoryInterface;
 use App\Interfaces\ContentUrlServiceInterface;
 use App\Interfaces\GenerateOpenTrackingImageInterface;
+use App\Interfaces\NewsletterContentServiceInterface;
 use App\Interfaces\NewsletterDispatchInterface;
 use App\Interfaces\NewsletterUrlsRepositoryInterface;
 use App\Interfaces\ContactNewsletterRepositoryInterface;
@@ -19,6 +20,7 @@ use App\Repositories\SegmentEloquentRepository;
 use App\Repositories\TemplateEloquentRepository;
 use App\Services\ContentUrlService;
 use App\Services\GenerateOpenTrackingImageService;
+use App\Services\NewsletterContentService;
 use App\Services\NewsletterDispatchService;
 use Illuminate\Support\ServiceProvider;
 
@@ -44,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(ContactRepositoryInterface::class, ContactEloquentRepository::class);
         $this->app->bind(ContactNewsletterRepositoryInterface::class, ContactNewsletterEloquentRepository::class);
+        $this->app->bind(NewsletterContentServiceInterface::class, NewsletterContentService::class);
         $this->app->bind(ContentUrlServiceInterface::class, ContentUrlService::class);
         $this->app->bind(GenerateOpenTrackingImageInterface::class, GenerateOpenTrackingImageService::class);
         $this->app->bind(NewsletterDispatchInterface::class, NewsletterDispatchService::class);

@@ -2,11 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Interfaces\ContactNewsletterRepositoryInterface;
 use App\Interfaces\ContactRepositoryInterface;
 use App\Interfaces\ContentUrlServiceInterface;
+use App\Interfaces\NewsletterContentServiceInterface;
 use App\Interfaces\NewsletterDispatchInterface;
 use App\Interfaces\NewsletterUrlsRepositoryInterface;
 use App\Interfaces\NewsletterRepositoryInterface;
+use App\Models\Contact;
 use App\Models\Newsletter;
 use App\Models\NewsletterStatus;
 use App\Models\Segment;
@@ -40,10 +43,6 @@ class NewslettersDispatchCommand extends Command
      */
     protected $newsletterRepo;
 
-    /**
-     * @var NewsletterUrlsRepositoryInterface
-     */
-    protected $newsletterUrlsRepo;
 
     /**
      * @var NewsletterDispatchService
@@ -53,7 +52,12 @@ class NewslettersDispatchCommand extends Command
     /**
      * @var ContentUrlServiceInterface
      */
-    protected $contentUrlService;
+    protected $newsletterContentService;
+
+    /**
+     * @var ContactNewsletterRepositoryInterface
+     */
+    protected $contactNewsletterRepo;
 
     /**
      * Store sent items for this newsletter so
@@ -68,20 +72,20 @@ class NewslettersDispatchCommand extends Command
      * NewslettersDispatchCommand constructor.
      */
     public function __construct(
+        ContactNewsletterRepositoryInterface $contactNewsletterRepository,
         ContactRepositoryInterface $contactRepository,
         NewsletterRepositoryInterface $newsletterRepository,
-        NewsletterUrlsRepositoryInterface $newsletterUrlsRepository,
         NewsletterDispatchInterface $newsletterDispatchService,
-        ContentUrlServiceInterface $contentUrlsService
+        NewsletterContentServiceInterface $newsletterContentService
     )
     {
         parent::__construct();
 
+        $this->contactNewsletterRepo = $contactNewsletterRepository;
         $this->contactRepo = $contactRepository;
         $this->newsletterRepo = $newsletterRepository;
-        $this->newsletterUrlsRepo = $newsletterUrlsRepository;
         $this->newsletterDispatchService = $newsletterDispatchService;
-        $this->contentUrlService = $contentUrlsService;
+        $this->newsletterContentService = $newsletterContentService;
     }
 
     /**
@@ -125,10 +129,7 @@ class NewslettersDispatchCommand extends Command
 
         $this->markNewsletterAsSending($newsletter->id);
 
-        if ($newsletter->track_clicks)
-        {
-            $newsletter->content = $this->replaceUrls($newsletter);
-        }
+        $this->newsletterContentService->setNewsletter($newsletter);
 
         foreach ($newsletter->segments as $segment)
         {
@@ -150,6 +151,8 @@ class NewslettersDispatchCommand extends Command
 
         $contacts = $this->getSegmentContacts($segment);
 
+        $this->info('-Number of contacts in this segment:' . count($contacts));
+
         foreach ($contacts as $contact)
         {
             if ( ! $this->canSentToContact($newsletter->id, $contact->id))
@@ -161,8 +164,28 @@ class NewslettersDispatchCommand extends Command
 
             $this->info('--Handling Contact ID:' . $contact->id . ' (' . $contact->email . ')');
 
-            $this->newsletterDispatchService->send($newsletter, $contact);
+            $content = $this->newsletterContentService->getMergedContent($contact);
+
+            if ($this->newsletterDispatchService->send($newsletter->from_email, $contact->email, $newsletter->subject, $content))
+            {
+                $this->createDatabaseRecord($newsletter, $contact);
+            }
         }
+    }
+
+    /**
+     * Create tracking record
+     *
+     * @param Newsletter $newsletter
+     * @param Contact $contact
+     * @return void
+     */
+    protected function createDatabaseRecord(Newsletter $newsletter, Contact $contact)
+    {
+        $this->contactNewsletterRepo->store([
+            'newsletter_id' => $newsletter->id,
+            'contact_id' => $contact->id,
+        ]);
     }
 
     /**
@@ -188,29 +211,6 @@ class NewslettersDispatchCommand extends Command
 
         return $segment->contacts;
     }
-
-    /**
-     * Replace all urls in a newsletter for tracking
-     *
-     * @param Newsletter $newsletter
-     * @return string
-     */
-    protected function replaceUrls(Newsletter $newsletter)
-    {
-        $originalUrls = $this->contentUrlService->extract($newsletter->content);
-
-        $replaceUrls = [];
-
-        foreach ($originalUrls as $url)
-        {
-            $newsletterUrl = $this->storeNewsletterUrl($newsletter->id, $url);
-
-            $replaceUrls[] = route('tracker.clicks', [$newsletter->id, 'replace-this-with-contact-id', $newsletterUrl->id]);
-        }
-
-        return $this->contentUrlService->replaceUrls($newsletter->content, $originalUrls, $replaceUrls);
-    }
-
 
     /**
      * Check that the status of the newsletter is still queued
