@@ -51,6 +51,13 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     protected $contactIdReplacementTag = 'replace-this-with-contact-id';
 
     /**
+     * Unsubscribe tag
+     *
+     * @var string
+     */
+    protected $unsubscribeReplacementTag = '{{ unsubscribe_url }}';
+
+    /**
      * NewsletterContentService constructor.
      *
      * @param GenerateOpenTrackingImageInterface $openTrackingImageService
@@ -164,9 +171,9 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     protected function mergeContactTags($content, Contact $contact)
     {
         $tags = [
-            'Email' => $contact->email,
-            'FirstName' => $contact->first_name,
-            'LastName' => $contact->last_name,
+            'email' => $contact->email,
+            'first_name' => $contact->first_name,
+            'last_name' => $contact->last_name,
         ];
 
         // regex doesn't seem to work here - I think it
@@ -191,9 +198,18 @@ class NewsletterContentService implements NewsletterContentServiceInterface
         return str_ireplace($this->contactIdReplacementTag, $contact->id, $content);
     }
 
-    protected function mergeUnsubscribeLink($content, Contact, $contact)
+    /**
+     * Merge in the unsubscribe link
+     *
+     * @param string $content
+     * @param Contact $contact
+     * @return string
+     */
+    protected function mergeUnsubscribeLink($content, Contact $contact)
     {
-        
+        $route = route('subscriptions.unsubscribe', $contact->id);
+
+        return str_ireplace($this->unsubscribeReplacementTag, $route, $content);
     }
 
     /**
