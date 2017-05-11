@@ -8,43 +8,108 @@
 
     <div class="row">
         <div class="col-lg-2 col-sm-4 col-xs-12">
-            <!-- small box -->
-            <div class="small-box bg-aqua">
-                <div class="inner">
-                    <h3>{{ $newsletter->sent_count }}</h3>
-                    <p>Emails Sent</p>
+            <div class="info-box">
+                <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-number">{{ $newsletter->sent_count }}</span>
+                    <span class="info-box-text">Emails Sent</span>
                 </div>
-                <div class="icon">
-                    <i class="ion ion-bag"></i>
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-sm-4 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-number">{{ round($newsletter->open_ratio * 100, 1) }}%</span>
+                    <span class="info-box-text">Unique Open Rate</span>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <div class="col-lg-2 col-sm-4 col-xs-12">
-            <div class="small-box bg-aqua">
-                <div class="inner">
-                    <h3>{{ round($newsletter->open_ratio * 100, 1) }}<sup style="font-size: 20px">%</sup></h3>
-                    <p>Unique Open Rate</p>
+            <div class="info-box">
+                <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-number">{{ round($newsletter->click_ratio * 100, 1) }}%</span>
+                    <span class="info-box-text">Click Rate</span>
                 </div>
-                <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="col-lg-2 col-sm-4 col-xs-12">
-            <div class="small-box bg-aqua">
-                <div class="inner">
-                    <h3>{{ round($newsletter->click_ratio * 100, 1) }}<sup style="font-size: 20px">%</sup></h3>
-                    <p>Click Rate</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
     </div>
 
+    <div class="row">
+
+        <div class="col-lg-6">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Opens Per Hour</h3>
+                </div>
+                <div class="box-body">
+                    <div class="chart">
+                        <canvas id="opensChart" style="height: 230px; width: 755px;" height="230" width="755"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Top Clicked Links</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table">
+                        <tbody>
+                            @foreach($newsletterUrls as $url)
+                                <tr>
+                                    <td>{{ $url->original_url }}</td>
+                                    <td>{{ $url->counter }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+@endsection
+
+@section('js')
+    <script src="{{ asset('js/Chart.bundle.js') }}"></script>
+
+    <script>
+        $(function () {
+            var ctx = document.getElementById("opensChart");
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: {!! $chartData['labels'] !!},
+                    datasets: [{
+                        data: {!! $chartData['data'] !!},
+                        label: "Opens",
+                        backgroundColor: 'rgba(0,115,183,1)'
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines: {
+                                display:false
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }}
+            });
+        });
+</script>
 @endsection

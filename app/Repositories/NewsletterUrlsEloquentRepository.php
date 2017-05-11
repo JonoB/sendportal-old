@@ -9,6 +9,15 @@ class NewsletterUrlsEloquentRepository extends BaseEloquentRepository implements
 {
     protected $modelName = NewsletterUrl::class;
 
+    public function getBy($field, $value, array $relations = [])
+    {
+        return $this->getQueryBuilder()
+            ->with($relations)
+            ->where($field, $value)
+            ->orderBy('counter', 'desc')
+            ->get();
+    }
+
     /**
      * Track an open record
      *

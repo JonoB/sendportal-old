@@ -2,26 +2,28 @@
 
 namespace App\Providers;
 
+use App\Interfaces\ContactNewsletterRepositoryInterface;
 use App\Interfaces\ContactRepositoryInterface;
 use App\Interfaces\ContentUrlServiceInterface;
 use App\Interfaces\GenerateOpenTrackingImageInterface;
 use App\Interfaces\NewsletterContentServiceInterface;
 use App\Interfaces\NewsletterDispatchInterface;
-use App\Interfaces\NewsletterUrlsRepositoryInterface;
-use App\Interfaces\ContactNewsletterRepositoryInterface;
+use App\Interfaces\NewsletterReportServiceInterface;
 use App\Interfaces\NewsletterRepositoryInterface;
+use App\Interfaces\NewsletterUrlsRepositoryInterface;
 use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Repositories\ContactEloquentRepository;
+use App\Repositories\ContactNewsletterEloquentRepository;
 use App\Repositories\NewsletterEloquentRepository;
 use App\Repositories\NewsletterUrlsEloquentRepository;
-use App\Repositories\ContactNewsletterEloquentRepository;
 use App\Repositories\SegmentEloquentRepository;
 use App\Repositories\TemplateEloquentRepository;
 use App\Services\ContentUrlService;
 use App\Services\GenerateOpenTrackingImageService;
 use App\Services\NewsletterContentService;
 use App\Services\NewsletterDispatchService;
+use App\Services\NewsletterReportService;
 use Illuminate\Support\ServiceProvider;
 
 
@@ -46,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(ContactRepositoryInterface::class, ContactEloquentRepository::class);
         $this->app->bind(ContactNewsletterRepositoryInterface::class, ContactNewsletterEloquentRepository::class);
+        $this->app->bind(NewsletterReportServiceInterface::class, NewsletterReportService::class);
         $this->app->bind(NewsletterContentServiceInterface::class, NewsletterContentService::class);
         $this->app->bind(ContentUrlServiceInterface::class, ContentUrlService::class);
         $this->app->bind(GenerateOpenTrackingImageInterface::class, GenerateOpenTrackingImageService::class);

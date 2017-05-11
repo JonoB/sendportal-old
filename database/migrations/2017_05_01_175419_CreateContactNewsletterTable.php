@@ -20,6 +20,7 @@ class CreateContactNewsletterTable extends Migration
             $table->string('ip')->nullable();
             $table->smallInteger('open_count')->default(0);
             $table->smallInteger('click_count')->default(0);
+            $table->timestamp('opened_at')->nullable();
             $table->timestamps();
 
             $table->foreign('contact_id')->references('id')->on('contacts');

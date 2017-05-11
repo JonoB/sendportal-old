@@ -8,6 +8,7 @@ use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\NewsletterRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Models\NewsletterStatus;
+use App\Services\NewsletterReportService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -276,7 +277,8 @@ class NewslettersController extends Controller
 
         if ($newsletter->status_id == NewsletterStatus::STATUS_SENT)
         {
-            return view('newsletters.report', compact('newsletter'));
+
+            return view('newsletters.report', compact('newsletter', 'chartData'));
         }
 
         return redirect()->route('newsletters.status', $id);

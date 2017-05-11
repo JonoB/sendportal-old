@@ -56,4 +56,14 @@ class ContactNewsletterEloquentRepository extends BaseEloquentRepository impleme
             ->where('open_count', '>', 0)
             ->count();
     }
+
+    public function countUniqueOpensPerHour($newsletterId)
+    {
+        return $this->getNewInstance()
+            ->select(\DB::raw('COUNT(open_count) as open_count, DATE_FORMAT(opened_at, "%d-%b %k:00") as opened_at'))
+            ->where('newsletter_id', $newsletterId)
+            ->groupBy(\DB::raw('HOUR(opened_at)'))
+            ->orderBy('opened_at')
+            ->get();
+    }
 }

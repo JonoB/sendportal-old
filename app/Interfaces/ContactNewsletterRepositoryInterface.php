@@ -25,10 +25,10 @@ interface ContactNewsletterRepositoryInterface extends BaseEloquentInterface
     public function incrementClickCount($newsletterId, $contactId);
 
     /**
-     * Return the open count for a newsletter
+     * Return the unique open count per hour
      *
      * @param int $newsletterId
-     * @return int
+     * @return array
      */
-    public function getUniqueOpenCount($newsletterId);
+    public function countUniqueOpensPerHour($newsletterId);
 }

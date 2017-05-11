@@ -102,7 +102,7 @@ abstract class BaseEloquentRepository extends BaseRepository
     {
         $instance = $this->getQueryBuilder();
 
-        return $instance ->with($relations)->where($field, $value)->get();
+        return $instance->with($relations)->where($field, $value)->get();
     }
 
     /**
