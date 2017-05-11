@@ -95,8 +95,8 @@ class NewsletterContentService implements NewsletterContentServiceInterface
         // embed open tracking image
         $content = $this->embedOpenTrackingImage($this->getContent(), $this->getNewsletter()->id, $contact->id);
 
-        // merge dynamic contact tags like email, name, etc
-        $content = $this->mergeContactTags($content, $contact);
+        // merge dynamic contact tags like email, name, unsubscribe link etc
+        $content = $this->mergeTags($content, $contact);
 
         return $content;
     }
@@ -147,6 +147,13 @@ class NewsletterContentService implements NewsletterContentServiceInterface
         return $content;
     }
 
+    protected function mergeTags($content, Contact $contact)
+    {
+        $content = $this->mergeContactTags($content, $contact);
+
+        return $this->mergeUnsubscribeLink($content, $contact);
+    }
+
    /**
     * Merge tags for the contact
     *
@@ -182,6 +189,11 @@ class NewsletterContentService implements NewsletterContentServiceInterface
 
         // merge contact into newsletter url tracking
         return str_ireplace($this->contactIdReplacementTag, $contact->id, $content);
+    }
+
+    protected function mergeUnsubscribeLink($content, Contact, $contact)
+    {
+        
     }
 
     /**

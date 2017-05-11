@@ -1,6 +1,7 @@
 {!! Form::textField('email', 'Email') !!}
 {!! Form::textField('first_name', 'First Name') !!}
 {!! Form::textField('last_name', 'Last Name') !!}
+{!! Form::checkboxField('unsubscribed', 'Unsubscribed') !!}
 
 @foreach($segments as $segment)
     <div class="checkbox">

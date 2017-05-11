@@ -46,8 +46,8 @@ class TrackerController extends Controller
      * Track email opens
      *
      * @param Request $request
-     * @param int $newsletterId
-     * @param int $contactId
+     * @param string $newsletterId
+     * @param string $contactId
      * @return void
      */
     public function opens(Request $request, $newsletterId, $contactId)

@@ -18,6 +18,7 @@ class CreateContactsTable extends Migration
             $table->string('email')->index();
             $table->string('first_name');
             $table->string('last_name')->nullable();
+            $table->tinyInteger('unsubscribed')->default(0);
             $table->jsonb('meta')->nullable();
             $table->timestamps();
         });

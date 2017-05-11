@@ -18,6 +18,7 @@
                         <th>Email</th>
                         <th>First Name</th>
                         <th>Last Name</th>
+                        <th>Status</th>
                         <th>Segments</th>
                         <th>Actions</th>
                     </tr>
@@ -28,6 +29,13 @@
                             <td>{{ $contact->email }}</td>
                             <td>{{ $contact->first_name }}</td>
                             <td>{{ $contact->last_name }}</td>
+                            <td>
+                                @if($contact->unsubscribed)
+                                    <span class="label label-danger">Unsubscribed</span>
+                                @else
+                                    <span class="label label-success">Subscribed</span>
+                                @endif
+                            </td>
                             <td>
                                 @foreach($contact->segments as $segment)
                                     <span class="label label-default">{{ $segment->name }}</span>

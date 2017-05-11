@@ -12,6 +12,11 @@ class Contact extends BaseModel
         'email',
         'first_name',
         'last_name',
+        'unsubscribed',
+    ];
+
+    protected $booleanFields = [
+        'unsubscribed',
     ];
 
     public function segments()
