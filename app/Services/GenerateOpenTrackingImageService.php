@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Interfaces\GenerateOpenTrackingImageInterface;
-use App\Models\Contact;
+use App\Models\Subscriber;
 use App\Models\Newsletter;
 
 class GenerateOpenTrackingImageService implements GenerateOpenTrackingImageInterface
@@ -12,12 +12,12 @@ class GenerateOpenTrackingImageService implements GenerateOpenTrackingImageInter
      * Generate the tracking image for emails
      *
      * @param string $newsletterId
-     * @param string $contactId
+     * @param string $subscriberId
      * @return mixed
      */
-    public function generate($newsletterId, $contactId)
+    public function generate($newsletterId, $subscriberId)
     {
-        $route = $this->generateRoute($newsletterId, $contactId);
+        $route = $this->generateRoute($newsletterId, $subscriberId);
 
         return '<img src="' . $route . '" alt="" />';
     }
@@ -26,11 +26,11 @@ class GenerateOpenTrackingImageService implements GenerateOpenTrackingImageInter
      * Generate the tracking route
      *
      * @param string $newsletterId
-     * @param string $contactId
+     * @param string $subscriberId
      * @return string
      */
-    protected function generateRoute($newsletterId, $contactId)
+    protected function generateRoute($newsletterId, $subscriberId)
     {
-        return route('tracker.opens', [$newsletterId, $contactId]);
+        return route('tracker.opens', [$newsletterId, $subscriberId]);
     }
 }

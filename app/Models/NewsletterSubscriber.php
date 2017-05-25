@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-class ContactNewsletter extends BaseModel
+class NewsletterSubscriber extends BaseModel
 {
-    protected $table = 'contact_newsletter';
+    protected $table = 'newsletter_subscriber';
 
     protected $fillable = [
-        'contact_id',
+        'subscriber_id',
         'newsletter_id',
         'ip',
         'open_count',

@@ -2,16 +2,16 @@
 
 namespace App\Services;
 
-use App\Interfaces\ContactNewsletterRepositoryInterface;
+use App\Interfaces\NewsletterSubscriberRepositoryInterface;
 use App\Interfaces\NewsletterReportServiceInterface;
 use App\Interfaces\NewsletterUrlsRepositoryInterface;
 
 class NewsletterReportService implements NewsletterReportServiceInterface
 {
     /**
-     * @var ContactNewsletterRepositoryInterface
+     * @var NewsletterSubscriberRepositoryInterface
      */
-    protected $contactNewsletterRepository;
+    protected $newsletterSubscriberRepository;
 
     /**
      * @var NewsletterUrlsRepositoryInterface
@@ -21,21 +21,21 @@ class NewsletterReportService implements NewsletterReportServiceInterface
     /**
      * NewsletterReportService constructor.
      *
-     * @param ContactNewsletterRepositoryInterface $contactNewsletterRepository
+     * @param NewsletterSubscriberRepositoryInterface $newsletterSubscriberRepository
      * @param NewsletterUrlsRepositoryInterface $newsletterUrlsRepository
      */
     public function __construct(
-        ContactNewsletterRepositoryInterface $contactNewsletterRepository,
+        NewsletterSubscriberRepositoryInterface $newsletterSubscriberRepository,
         NewsletterUrlsRepositoryInterface $newsletterUrlsRepository
     )
     {
-        $this->contactNewsletterRepository = $contactNewsletterRepository;
+        $this->newsletterSubscriberRepository = $newsletterSubscriberRepository;
         $this->newsletterUrlsRepository = $newsletterUrlsRepository;
     }
 
     public function opensPerHour($newsletterId)
     {
-        $opensPerHour = $this->contactNewsletterRepository->countUniqueOpensPerHour($newsletterId);
+        $opensPerHour = $this->newsletterSubscriberRepository->countUniqueOpensPerHour($newsletterId);
 
         $chartLabels = [];
         $chartData = [];

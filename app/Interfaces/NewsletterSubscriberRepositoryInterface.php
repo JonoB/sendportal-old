@@ -2,27 +2,27 @@
 
 namespace App\Interfaces;
 
-interface ContactNewsletterRepositoryInterface extends BaseEloquentInterface
+interface NewsletterSubscriberRepositoryInterface extends BaseEloquentInterface
 {
     /**
      * Track opens
      *
      * @param string $newsletterId
-     * @param string $contactId
+     * @param string $subscriberId
      * @param string $ipAddress
      * @return mixed
      */
-    public function incrementOpenCount($newsletterId, $contactId, $ipAddress);
+    public function incrementOpenCount($newsletterId, $subscriberId, $ipAddress);
 
     /**
      * Track clicks
      *
      * @param string $newsletterId
-     * @param string $contactId
+     * @param string $subscriberId
      * @param string $ipAddress
      * @return mixed
      */
-    public function incrementClickCount($newsletterId, $contactId);
+    public function incrementClickCount($newsletterId, $subscriberId);
 
     /**
      * Return the unique open count per hour

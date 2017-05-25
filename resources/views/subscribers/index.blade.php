@@ -1,12 +1,12 @@
 @extends('common.template')
 
 @section('heading')
-    Contacts
+    Subscribers
 @endsection
 
 @section('content')
     <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('contacts.create') }}">Create Contact</a>
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('subscribers.create') }}">Create Subscriber</a>
         <div class="clearfix"></div>
     </div>
 
@@ -19,29 +19,29 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Status</th>
-                        <th>Segments</th>
+                        <th>Tags</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($contacts as $contact)
+                    @foreach($subscribers as $subscriber)
                         <tr>
-                            <td>{{ $contact->email }}</td>
-                            <td>{{ $contact->first_name }}</td>
-                            <td>{{ $contact->last_name }}</td>
+                            <td>{{ $subscriber->email }}</td>
+                            <td>{{ $subscriber->first_name }}</td>
+                            <td>{{ $subscriber->last_name }}</td>
                             <td>
-                                @if($contact->unsubscribed)
+                                @if($subscriber->unsubscribed_at)
                                     <span class="label label-danger">Unsubscribed</span>
                                 @else
                                     <span class="label label-success">Subscribed</span>
                                 @endif
                             </td>
                             <td>
-                                @foreach($contact->segments as $segment)
-                                    <span class="label label-default">{{ $segment->name }}</span>
+                                @foreach($subscriber->tags as $tag)
+                                    <span class="label label-default">{{ $tag->name }}</span>
                                 @endforeach
                             </td>
-                            <td><a href="{{ route('contacts.edit', $contact->id) }}">Edit</a></td>
+                            <td><a href="{{ route('subscribers.edit', $subscriber->id) }}">Edit</a></td>
                         </tr>
                     @endforeach
                 </tbody>

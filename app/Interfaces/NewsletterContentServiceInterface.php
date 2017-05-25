@@ -3,7 +3,7 @@
 namespace App\Interfaces;
 
 
-use App\Models\Contact;
+use App\Models\Subscriber;
 use App\Models\Newsletter;
 
 interface NewsletterContentServiceInterface
@@ -14,10 +14,10 @@ interface NewsletterContentServiceInterface
     public function setNewsletter(Newsletter $newsletter);
 
     /**
-     * Merge open tracking image and contact tags into the content
+     * Merge open tracking image and subscriber tags into the content
      *
-     * @param Contact $contact
+     * @param Subscriber $subscriber
      * @return string
      */
-    public function getMergedContent(Contact $contact);
+    public function getMergedContent(Subscriber $subscriber);
 }

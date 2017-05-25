@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNewsletterSegmentTable extends Migration
+class CreateNewsletterTagTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateNewsletterSegmentTable extends Migration
      */
     public function up()
     {
-        Schema::create('newsletter_segment', function (Blueprint $table) {
+        Schema::create('newsletter_tag', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('segment_id', 36);
+            $table->char('tag_id', 36);
             $table->char('newsletter_id', 36);
             $table->timestamps();
 
-            $table->foreign('segment_id')->references('id')->on('segments');
+            $table->foreign('tag_id')->references('id')->on('tags');
             $table->foreign('newsletter_id')->references('id')->on('newsletters');
         });
     }

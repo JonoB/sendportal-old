@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\ContactNewsletterRepositoryInterface;
+use App\Interfaces\NewsletterSubscriberRepositoryInterface;
 use App\Interfaces\NewsletterRepositoryInterface;
 use App\Interfaces\NewsletterUrlsRepositoryInterface;
 use App\Repositories\NewsletterUrlsEloquentRepository;
@@ -11,9 +11,9 @@ use Illuminate\Http\Request;
 class TrackerController extends Controller
 {
     /**
-     * @var ContactNewsletterRepositoryInterface
+     * @var NewsletterSubscriberRepositoryInterface
      */
-    protected $contactNewsletterRepo;
+    protected $subscriberNewsletterRepo;
 
     /**
      * @var NewsletterUrlsRepositoryInterface
@@ -28,16 +28,16 @@ class TrackerController extends Controller
     /**
      * TrackerController constructor.
      *
-     * @param ContactNewsletterRepositoryInterface $contactNewsletterRepo
+     * @param NewsletterSubscriberRepositoryInterface $subscriberNewsletterRepo
      * @param NewsletterRepositoryInterface $newsletterRepository
      */
     public function __construct(
-        ContactNewsletterRepositoryInterface $contactNewsletterRepo,
+        NewsletterSubscriberRepositoryInterface $subscriberNewsletterRepo,
         NewsletterUrlsRepositoryInterface $newsletterUrlsRepository,
         NewsletterRepositoryInterface $newsletterRepository
     )
     {
-        $this->contactNewsletterRepo = $contactNewsletterRepo;
+        $this->subscriberNewsletterRepo = $subscriberNewsletterRepo;
         $this->newsletterUrlsRepo = $newsletterUrlsRepository;
         $this->newsletterRepo = $newsletterRepository;
     }
@@ -47,18 +47,18 @@ class TrackerController extends Controller
      *
      * @param Request $request
      * @param string $newsletterId
-     * @param string $contactId
+     * @param string $subscriberId
      * @return void
      */
-    public function opens(Request $request, $newsletterId, $contactId)
+    public function opens(Request $request, $newsletterId, $subscriberId)
     {
 
         header('Content-Type: image/gif');
         readfile(public_path('img/tracking.gif'));
 
-        $this->contactNewsletterRepo->incrementOpenCount($newsletterId, $contactId, $request->ip());
+        $this->subscriberNewsletterRepo->incrementOpenCount($newsletterId, $subscriberId, $request->ip());
 
-        $totalOpenCount = $this->contactNewsletterRepo->getUniqueOpenCount($newsletterId);
+        $totalOpenCount = $this->subscriberNewsletterRepo->getUniqueOpenCount($newsletterId);
 
         $this->newsletterRepo->update($newsletterId, [
             'open_count' => $totalOpenCount,
@@ -70,17 +70,17 @@ class TrackerController extends Controller
      *
      * @param Request $request
      * @param string $newsletterId
-     * @param string $contactId
+     * @param string $subscriberId
      * @param string $urlId
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function clicks(Request $request, $newsletterId, $contactId, $urlId)
+    public function clicks(Request $request, $newsletterId, $subscriberId, $urlId)
     {
         // store click count per url
         $this->newsletterUrlsRepo->incrementClickCount($urlId);
 
         // store click count per user
-        $this->contactNewsletterRepo->incrementClickCount($newsletterId, $contactId);
+        $this->subscriberNewsletterRepo->incrementClickCount($newsletterId, $subscriberId);
 
         $totalNewsletterClickCount = $this->newsletterUrlsRepo->getTotalClickCount($newsletterId);
 

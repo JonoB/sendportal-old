@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-use App\Models\Contact;
+use App\Models\Subscriber;
 use App\Models\Newsletter;
 
 interface NewsletterDispatchInterface

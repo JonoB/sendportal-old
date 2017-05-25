@@ -2,17 +2,17 @@
 
 namespace App\Console\Commands;
 
-use App\Interfaces\ContactNewsletterRepositoryInterface;
-use App\Interfaces\ContactRepositoryInterface;
+use App\Interfaces\NewsletterSubscriberRepositoryInterface;
+use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\ContentUrlServiceInterface;
 use App\Interfaces\NewsletterContentServiceInterface;
 use App\Interfaces\NewsletterDispatchInterface;
 use App\Interfaces\NewsletterUrlsRepositoryInterface;
 use App\Interfaces\NewsletterRepositoryInterface;
-use App\Models\Contact;
+use App\Models\Subscriber;
 use App\Models\Newsletter;
 use App\Models\NewsletterStatus;
-use App\Models\Segment;
+use App\Models\Tag;
 use App\Services\NewsletterDispatchService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
@@ -34,15 +34,14 @@ class NewslettersDispatchCommand extends Command
     protected $description = 'Dispatch all newsletters waiting in the queue';
 
     /**
-     * @var ContactRepositoryInterface
+     * @var SubscriberRepositoryInterface
      */
-    protected $contactRepo;
+    protected $subscriberRepo;
 
     /**
      * @var NewsletterRepositoryInterface
      */
     protected $newsletterRepo;
-
 
     /**
      * @var NewsletterDispatchService
@@ -55,9 +54,9 @@ class NewslettersDispatchCommand extends Command
     protected $newsletterContentService;
 
     /**
-     * @var ContactNewsletterRepositoryInterface
+     * @var NewsletterSubscriberRepositoryInterface
      */
-    protected $contactNewsletterRepo;
+    protected $newsletterSubscriberRepository;
 
     /**
      * Store sent items for this newsletter so
@@ -72,8 +71,8 @@ class NewslettersDispatchCommand extends Command
      * NewslettersDispatchCommand constructor.
      */
     public function __construct(
-        ContactNewsletterRepositoryInterface $contactNewsletterRepository,
-        ContactRepositoryInterface $contactRepository,
+        NewsletterSubscriberRepositoryInterface $newsletterSubscriberRepository,
+        SubscriberRepositoryInterface $subscriberRepository,
         NewsletterRepositoryInterface $newsletterRepository,
         NewsletterDispatchInterface $newsletterDispatchService,
         NewsletterContentServiceInterface $newsletterContentService
@@ -81,8 +80,8 @@ class NewslettersDispatchCommand extends Command
     {
         parent::__construct();
 
-        $this->contactNewsletterRepo = $contactNewsletterRepository;
-        $this->contactRepo = $contactRepository;
+        $this->newsletterSubscriberRepository = $newsletterSubscriberRepository;
+        $this->subscriberRepo = $subscriberRepository;
         $this->newsletterRepo = $newsletterRepository;
         $this->newsletterDispatchService = $newsletterDispatchService;
         $this->newsletterContentService = $newsletterContentService;
@@ -131,44 +130,44 @@ class NewslettersDispatchCommand extends Command
 
         $this->newsletterContentService->setNewsletter($newsletter);
 
-        foreach ($newsletter->segments as $segment)
+        foreach ($newsletter->tags as $tag)
         {
-            $this->handleSegment($newsletter, $segment);
+            $this->handleTag($newsletter, $tag);
         }
 
         $this->markNewsletterAsSent($newsletter->id);
     }
 
     /**
-     * Handle a segment from a newsletter
+     * Handle a tag from a newsletter
      *
      * @param Newsletter $newsletter
-     * @param Segment $segment
+     * @param Tag $tag
      */
-    protected function handleSegment(Newsletter $newsletter, Segment $segment)
+    protected function handleTag(Newsletter $newsletter, Tag $tag)
     {
-        $this->info('-Handling Newsletter Segment ID:' . $segment->id . ' (' . $segment->name . ')');
+        $this->info('-Handling Newsletter Tag ID:' . $tag->id . ' (' . $tag->name . ')');
 
-        $contacts = $this->getSegmentContacts($segment);
+        $subscribers = $this->getTagContacts($tag);
 
-        $this->info('-Number of contacts in this segment:' . count($contacts));
+        $this->info('-Number of subscribers in this tag:' . count($subscribers));
 
-        foreach ($contacts as $contact)
+        foreach ($subscribers as $subscriber)
         {
-            if ( ! $this->canSentToContact($newsletter->id, $contact->id))
+            if ( ! $this->canSentToContact($newsletter->id, $subscriber->id))
             {
-                $this->info('--Skipping Contact ID:' . $contact->id . ' (' . $contact->email . ')');
+                $this->info('--Skipping Subscriber ID:' . $subscriber->id . ' (' . $subscriber->email . ')');
 
                 continue;
             }
 
-            $this->info('--Handling Contact ID:' . $contact->id . ' (' . $contact->email . ')');
+            $this->info('--Handling Subscriber ID:' . $subscriber->id . ' (' . $subscriber->email . ')');
 
-            $content = $this->newsletterContentService->getMergedContent($contact);
+            $content = $this->newsletterContentService->getMergedContent($subscriber);
 
-            if ($this->newsletterDispatchService->send($newsletter->from_email, $contact->email, $newsletter->subject, $content))
+            if ($this->newsletterDispatchService->send($newsletter->from_email, $subscriber->email, $newsletter->subject, $content))
             {
-                $this->createDatabaseRecord($newsletter, $contact);
+                $this->createDatabaseRecord($newsletter, $subscriber);
             }
         }
     }
@@ -177,14 +176,14 @@ class NewslettersDispatchCommand extends Command
      * Create tracking record
      *
      * @param Newsletter $newsletter
-     * @param Contact $contact
+     * @param Subscriber $subscriber
      * @return void
      */
-    protected function createDatabaseRecord(Newsletter $newsletter, Contact $contact)
+    protected function createDatabaseRecord(Newsletter $newsletter, Subscriber $subscriber)
     {
-        $this->contactNewsletterRepo->store([
+        $this->newsletterSubscriberRepository->store([
             'newsletter_id' => $newsletter->id,
-            'contact_id' => $contact->id,
+            'subscriber_id' => $subscriber->id,
         ]);
     }
 
@@ -195,21 +194,21 @@ class NewslettersDispatchCommand extends Command
      */
     protected function getQueuedNewsletters()
     {
-        return $this->newsletterRepo->getBy('status_id', NewsletterStatus::STATUS_QUEUED, ['segments']);
+        return $this->newsletterRepo->getBy('status_id', NewsletterStatus::STATUS_QUEUED, ['tags']);
     }
 
     /**
-     * Load contacts for a single segment
+     * Load subscribers for a single tag
      * @todo this needs to be improved so that we chunk items
      *
-     * @param $segment
+     * @param $tag
      * @return Collection
      */
-    protected function getSegmentContacts(Segment $segment)
+    protected function getTagContacts(Tag $tag)
     {
-        $segment->load('contacts');
+        $tag->load('subscribers');
 
-        return $segment->contacts;
+        return $tag->subscribers;
     }
 
     /**
@@ -226,16 +225,16 @@ class NewslettersDispatchCommand extends Command
     }
 
     /**
-     * Check if we can send to this contact
-     * @todo check how this would impact on memory with 200k contacts?
+     * Check if we can send to this subscriber
+     * @todo check how this would impact on memory with 200k subscribers?
      *
      * @param int $newsletterId
-     * @param int $contactId
+     * @param int $subscriberId
      * @return bool
      */
-    protected function canSentToContact($newsletterId, $contactId)
+    protected function canSentToContact($newsletterId, $subscriberId)
     {
-        $key = $newsletterId . ':' . $contactId;
+        $key = $newsletterId . ':' . $subscriberId;
 
         if (in_array($key, $this->getSentItems()))
         {

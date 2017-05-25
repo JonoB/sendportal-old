@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\ContactNewsletterRepositoryInterface;
-use App\Interfaces\ContactRepositoryInterface;
+use App\Interfaces\NewsletterSubscriberRepositoryInterface;
+use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\NewsletterRepositoryInterface;
 use App\Interfaces\NewsletterUrlsRepositoryInterface;
 use App\Repositories\NewsletterUrlsEloquentRepository;
@@ -12,70 +12,70 @@ use Illuminate\Http\Request;
 class SubscriptionsController extends Controller
 {
     /**
-     * @var ContactRepositoryInterface
+     * @var SubscriberRepositoryInterface
      */
-    protected $contactRepository;
+    protected $subscriberRepository;
 
     /**
      * UnsubscribeController constructor.
      *
-     * @param ContactRepositoryInterface $contactRepository
+     * @param SubscriberRepositoryInterface $subscriberRepository
      */
     public function __construct(
-        ContactRepositoryInterface $contactRepository
+        SubscriberRepositoryInterface $subscriberRepository
     )
     {
-        $this->contactRepository = $contactRepository;
+        $this->subscriberRepository = $subscriberRepository;
     }
 
     /**
      * Track email opens
      *
      * @param Request $request
-     * @param string $contactId
+     * @param string $subscriberId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function unsubscribe(Request $request, $contactId)
+    public function unsubscribe(Request $request, $subscriberId)
     {
-        if ( ! $this->contactRepository->find($contactId))
+        if ( ! $this->subscriberRepository->find($subscriberId))
         {
             abort(404);
         }
 
-        return view('subscriptions.unsubscribe', compact('contactId'));
+        return view('subscriptions.unsubscribe', compact('subscriberId'));
     }
 
     public function update(Request $request)
     {
-        $contactId = $request->get('contact_id');
+        $subscriberId = $request->get('subscriber_id');
 
-        if ( ! $this->contactRepository->find($contactId))
+        if ( ! $this->subscriberRepository->find($subscriberId))
         {
             abort(404);
         }
 
         $unsubscribed = $request->get('unsubscribed');
 
-        $this->contactRepository->update($contactId, [
+        $this->subscriberRepository->update($subscriberId, [
             'unsubscribed' => $unsubscribed,
         ]);
 
         if ($unsubscribed)
         {
-            return redirect()->route('subscriptions.subscribe', $contactId);
+            return redirect()->route('subscriptions.subscribe', $subscriberId);
         }
 
-        return redirect()->route('subscriptions.unsubscribe', $contactId);
+        return redirect()->route('subscriptions.unsubscribe', $subscriberId);
     }
 
-    public function subscribe(Request $request, $contactId)
+    public function subscribe(Request $request, $subscriberId)
     {
-        if ( ! $this->contactRepository->find($contactId))
+        if ( ! $this->subscriberRepository->find($subscriberId))
         {
             abort(404);
         }
 
-        return view('subscriptions.subscribe', compact('contactId'));
+        return view('subscriptions.subscribe', compact('subscriberId'));
     }
 
  }

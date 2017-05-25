@@ -3,14 +3,14 @@
 {!! Form::textField('last_name', 'Last Name') !!}
 {!! Form::checkboxField('unsubscribed', 'Unsubscribed') !!}
 
-@foreach($segments as $segment)
+@foreach($tags as $tag)
     <div class="checkbox">
         <label>
-            <input name="segments[]" type="checkbox" value="{{ $segment->id }}" {{ in_array($segment->id, $selectedSegments) ? 'checked' : '' }}>{{ $segment->name }}
+            <input name="tags[]" type="checkbox" value="{{ $tag->id }}" {{ in_array($tag->id, $selectedTags) ? 'checked' : '' }}>{{ $tag->name }}
         </label>
     </div>
 @endforeach
 
-{!! Form::submitButton('Save Contact') !!}
+{!! Form::submitButton('Save') !!}
 
 {!! Form::close() !!}

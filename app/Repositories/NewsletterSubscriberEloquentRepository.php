@@ -2,26 +2,26 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\ContactNewsletterRepositoryInterface;
-use App\Models\ContactNewsletter;
+use App\Interfaces\NewsletterSubscriberRepositoryInterface;
+use App\Models\NewsletterSubscriber;
 
-class ContactNewsletterEloquentRepository extends BaseEloquentRepository implements ContactNewsletterRepositoryInterface
+class NewsletterSubscriberEloquentRepository extends BaseEloquentRepository implements NewsletterSubscriberRepositoryInterface
 {
-    protected $modelName = ContactNewsletter::class;
+    protected $modelName = NewsletterSubscriber::class;
 
     /**
      * Track opens
      *
      * @param string $newsletterId
-     * @param string $contactId
+     * @param string $subscriberId
      * @param string $ipAddress
      * @return mixed
      */
-    public function incrementOpenCount($newsletterId, $contactId, $ipAddress)
+    public function incrementOpenCount($newsletterId, $subscriberId, $ipAddress)
     {
         return $this->getNewInstance()
             ->where('newsletter_id', $newsletterId)
-            ->where('contact_id', $contactId)
+            ->where('subscriber_id', $subscriberId)
             ->update([
                 'open_count' => \DB::raw('open_count + 1'),
                 'ip' => $ipAddress,
@@ -32,14 +32,14 @@ class ContactNewsletterEloquentRepository extends BaseEloquentRepository impleme
      * Track clicks
      *
      * @param string $newsletterId
-     * @param string $contactId
+     * @param string $subscriberId
      * @return mixed
      */
-    public function incrementClickCount($newsletterId, $contactId)
+    public function incrementClickCount($newsletterId, $subscriberId)
     {
         return $this->getNewInstance()
             ->where('newsletter_id', $newsletterId)
-            ->where('contact_id', $contactId)
+            ->where('subscriber_id', $subscriberId)
             ->increment('click_count');
     }
 

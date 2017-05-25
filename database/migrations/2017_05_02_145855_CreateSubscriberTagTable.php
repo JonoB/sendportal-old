@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContactsTable extends Migration
+class CreateSubscriberTagTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateContactsTable extends Migration
      */
     public function up()
     {
-        Schema::create('contacts', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('email')->index();
-            $table->string('first_name');
-            $table->string('last_name')->nullable();
-            $table->tinyInteger('unsubscribed')->default(0);
-            $table->jsonb('meta')->nullable();
+        Schema::create('subscriber_tag', function (Blueprint $table) {
+            $table->increments('id');
+            $table->char('subscriber_id', 36);
+            $table->char('tag_id', 36);
             $table->timestamps();
+
+            $table->foreign('subscriber_id')->references('id')->on('subscribers');
+            $table->foreign('tag_id')->references('id')->on('tags');
         });
     }
 

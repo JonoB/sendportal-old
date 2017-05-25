@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-use App\Models\Contact;
+use App\Models\Subscriber;
 use App\Models\Newsletter;
 
 interface GenerateOpenTrackingImageInterface
@@ -11,8 +11,8 @@ interface GenerateOpenTrackingImageInterface
      * Generate the tracking image for emails
      *
      * @param string $newsletterId
-     * @param string $contactId
+     * @param string $subscriberId
      * @return mixed
      */
-    public function generate($newsletterId, $contactId);
+    public function generate($newsletterId, $subscriberId);
 }

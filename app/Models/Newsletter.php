@@ -48,9 +48,9 @@ class Newsletter extends BaseModel
         return 0;
     }
 
-    public function segments()
+    public function tags()
     {
-        return $this->belongsToMany(Segment::class);
+        return $this->belongsToMany(Tag::class);
     }
 
     public function status()

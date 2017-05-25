@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\Uuid;
+
+class Tag extends BaseModel
+{
+    use Uuid;
+
+    protected $fillable = [
+        'name',
+    ];
+
+    public function getSubscribersCountAttribute()
+    {
+        if ( ! array_key_exists('SubscriberCount', $this->relations))
+        {
+            $this->load('subscriberCount');
+        }
+
+        $related = $this->getRelation('subscriberCount')->first();
+
+        return ($related) ? $related->aggregate : 0;
+    }
+
+    public function subscribers()
+    {
+        return $this->belongsToMany(Subscriber::class);
+    }
+
+    public function subscriberCount()
+    {
+        return $this->belongsToMany(Subscriber::class)
+            ->selectRaw('count(subscribers.id) as aggregate')
+            ->groupBy('pivot_tag_id');
+    }
+}

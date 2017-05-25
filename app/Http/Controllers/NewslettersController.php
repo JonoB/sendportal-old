@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\NewsletterRequest;
-use App\Interfaces\ContactNewsletterRepositoryInterface;
-use App\Interfaces\SegmentRepositoryInterface;
+use App\Interfaces\NewsletterSubscriberRepositoryInterface;
+use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\NewsletterRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Models\NewsletterStatus;
@@ -16,14 +16,14 @@ use Illuminate\Http\Request;
 class NewslettersController extends Controller
 {
     /**
-     * @var ContactNewsletterRepositoryInterface
+     * @var NewsletterSubscriberRepositoryInterface
      */
-    protected $contactNewsletterRepo;
+    protected $newsletterSubscriberRepo;
 
     /**
      * @var NewsletterRepositoryInterface
      */
-    protected $segmentRepo;
+    protected $tagRepo;
 
     /**
      * @var NewsletterRepositoryInterface
@@ -42,14 +42,14 @@ class NewslettersController extends Controller
      * @param TemplateRepositoryInterface $newsletterRepository#
      */
     public function __construct(
-        SegmentRepositoryInterface $segmentRepository,
+        TagRepositoryInterface $tagRepository,
         NewsletterRepositoryInterface $newsletterRepository,
-        ContactNewsletterRepositoryInterface $contactNewsletterRepo,
+        NewsletterSubscriberRepositoryInterface $newsletterSubscriberRepository,
         TemplateRepositoryInterface $templateRepository
     )
     {
-        $this->contactNewsletterRepo = $contactNewsletterRepo;
-        $this->segmentRepo = $segmentRepository;
+        $this->newsletterSubscriberRepo = $newsletterSubscriberRepository;
+        $this->tagRepo = $tagRepository;
         $this->newsletterRepo = $newsletterRepository;
         $this->templateRepo = $templateRepository;
     }
@@ -172,9 +172,9 @@ class NewslettersController extends Controller
         }
 
         $template = $this->templateRepo->find($newsletter->template_id);
-        $segments = $this->segmentRepo->all('name', ['contactsCount']);
+        $tags = $this->tagRepo->all('name', ['subscriberCount']);
 
-        return view('newsletters.confirm', compact('newsletter', 'template', 'segments'));
+        return view('newsletters.confirm', compact('newsletter', 'template', 'tags'));
     }
 
     /**
@@ -193,13 +193,13 @@ class NewslettersController extends Controller
             return redirect()->route('newsletters.status', $id);
         }
 
-        // @todo validation that at least one segment has been selected
+        // @todo validation that at least one tag has been selected
         $newsletter = $this->newsletterRepo->update($id, [
             'scheduled_at' => Carbon::now(),
             'status_id' => NewsletterStatus::STATUS_QUEUED,
         ]);
 
-        $newsletter->segments()->sync($request->get('segments'));
+        $newsletter->tags()->sync($request->get('tags'));
 
         return redirect()->route('newsletters.status', $id);
     }
@@ -301,7 +301,7 @@ class NewslettersController extends Controller
 
         if ($newsletter->status_id == NewsletterStatus::STATUS_SENT)
         {
-            $recipients = $this->contactNewsletterRepo->paginate('created_at', [], 50, ['newsletter_id' => $id]);
+            $recipients = $this->newsletterSubscriberRepo->paginate('created_at', [], 50, ['newsletter_id' => $id]);
 
             return view('newsletters.recipients', compact('newsletter', $recipients));
         }

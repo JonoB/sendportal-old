@@ -26,9 +26,9 @@
                     <i class="fa fa-file-text"></i> <span>Templates</span>
                 </a>
             </li>
-            <li class="{{ Request::is('contacts*') ? 'active' : '' }}">
-                <a href="{{ route('contacts.index') }}">
-                    <i class="fa fa-user"></i> <span>Contacts</span>
+            <li class="{{ Request::is('subscribers*') ? 'active' : '' }}">
+                <a href="{{ route('subscribers.index') }}">
+                    <i class="fa fa-user"></i> <span>Subscribers</span>
                 </a>
             </li>
             <li>

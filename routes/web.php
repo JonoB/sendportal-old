@@ -7,7 +7,7 @@ Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@ind
 
 Route::resource('autoresponders', 'AutorespondersController');
 
-Route::resource('contacts', 'ContactsController');
+Route::resource('subscribers', 'SubscribersController');
 Route::resource('segments', 'SegmentsController');
 
 Route::resource('newsletters', 'NewslettersController');
@@ -27,6 +27,6 @@ Route::resource('templates', 'TemplatesController');
 Route::get('tracker/opens/{newsletterId}/{contactId}', ['as' => 'tracker.opens', 'uses' => 'TrackerController@opens']);
 Route::get('tracker/clicks/{newsletterId}/{contactId}/{linkId}', ['as' => 'tracker.clicks', 'uses' => 'TrackerController@clicks']);
 
-Route::get('unsubscribe/{contactId}', ['as' => 'subscriptions.unsubscribe', 'uses' => 'SubscriptionsController@unsubscribe']);
+Route::get('unsubscribe/{subscriberId}', ['as' => 'subscriptions.unsubscribe', 'uses' => 'SubscriptionsController@unsubscribe']);
 Route::post('subscriptions', ['as' => 'subscriptions.update', 'uses' => 'SubscriptionsController@update']);
-Route::get('subscribe/{contactId}', ['as' => 'subscriptions.subscribe', 'uses' => 'SubscriptionsController@subscribe']);
+Route::get('subscribe/{subscriberId}', ['as' => 'subscriptions.subscribe', 'uses' => 'SubscriptionsController@subscribe']);

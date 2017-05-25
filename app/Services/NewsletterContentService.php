@@ -6,7 +6,7 @@ use App\Interfaces\ContentUrlServiceInterface;
 use App\Interfaces\GenerateOpenTrackingImageInterface;
 use App\Interfaces\NewsletterContentServiceInterface;
 use App\Interfaces\NewsletterUrlsRepositoryInterface;
-use App\Models\Contact;
+use App\Models\Subscriber;
 use App\Models\Newsletter;
 
 class NewsletterContentService implements NewsletterContentServiceInterface
@@ -17,9 +17,9 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     protected $newsletter;
 
     /**
-     * @var Contact
+     * @var Subscriber
      */
-    protected $contact;
+    protected $subscriber;
 
     /**
      * Newsletter content
@@ -44,11 +44,11 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     protected $newsletterUrlsRepository;
 
     /**
-     * Temporary tag that is replaced when the contact is merged in
+     * Temporary tag that is replaced when the subscriber is merged in
      *
      * @var string
      */
-    protected $contactIdReplacementTag = 'replace-this-with-contact-id';
+    protected $subscriberIdReplacementTag = 'replace-this-with-subscriber-id';
 
     /**
      * Unsubscribe tag
@@ -77,7 +77,7 @@ class NewsletterContentService implements NewsletterContentServiceInterface
 
     /**
      * Set the newsletter and create base content
-     * ready for contact merging
+     * ready for subscriber merging
      *
      * @param Newsletter $newsletter
      * @return void
@@ -92,18 +92,18 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     }
 
     /**
-     * Merge open tracking image and contact tags into the content
+     * Merge open tracking image and subscriber tags into the content
      *
-     * @param Contact $contact
+     * @param Subscriber $subscriber
      * @return string
      */
-    public function getMergedContent(Contact $contact)
+    public function getMergedContent(Subscriber $subscriber)
     {
         // embed open tracking image
-        $content = $this->embedOpenTrackingImage($this->getContent(), $this->getNewsletter()->id, $contact->id);
+        $content = $this->embedOpenTrackingImage($this->getContent(), $this->getNewsletter()->id, $subscriber->id);
 
-        // merge dynamic contact tags like email, name, unsubscribe link etc
-        $content = $this->mergeTags($content, $contact);
+        // merge dynamic subscriber tags like email, name, unsubscribe link etc
+        $content = $this->mergeTags($content, $subscriber);
 
         return $content;
     }
@@ -139,14 +139,14 @@ class NewsletterContentService implements NewsletterContentServiceInterface
      *
      * @param string $content
      * @param string $newsletterId
-     * @param string $contactId
+     * @param string $subscriberId
      * @return string
      */
-    protected function embedOpenTrackingImage($content, $newsletterId, $contactId)
+    protected function embedOpenTrackingImage($content, $newsletterId, $subscriberId)
     {
         if ($this->trackOpens())
         {
-            $image = $this->openTrackingImageService->generate($newsletterId, $contactId);
+            $image = $this->openTrackingImageService->generate($newsletterId, $subscriberId);
 
             $content = str_replace('</body>', $image . '</body>', $content);
         }
@@ -154,26 +154,26 @@ class NewsletterContentService implements NewsletterContentServiceInterface
         return $content;
     }
 
-    protected function mergeTags($content, Contact $contact)
+    protected function mergeTags($content, Subscriber $subscriber)
     {
-        $content = $this->mergeContactTags($content, $contact);
+        $content = $this->mergeSubscriberTags($content, $subscriber);
 
-        return $this->mergeUnsubscribeLink($content, $contact);
+        return $this->mergeUnsubscribeLink($content, $subscriber);
     }
 
    /**
-    * Merge tags for the contact
+    * Merge tags for the subscriber
     *
     * @param string $content
-    * @param Contact $contact
+    * @param Subscriber $subscriber
     * @return string
     */
-    protected function mergeContactTags($content, Contact $contact)
+    protected function mergeSubscriberTags($content, Subscriber $subscriber)
     {
         $tags = [
-            'email' => $contact->email,
-            'first_name' => $contact->first_name,
-            'last_name' => $contact->last_name,
+            'email' => $subscriber->email,
+            'first_name' => $subscriber->first_name,
+            'last_name' => $subscriber->last_name,
         ];
 
         // regex doesn't seem to work here - I think it
@@ -194,20 +194,20 @@ class NewsletterContentService implements NewsletterContentServiceInterface
             $content = str_ireplace($search, $value, $content);
         }
 
-        // merge contact into newsletter url tracking
-        return str_ireplace($this->contactIdReplacementTag, $contact->id, $content);
+        // merge subscriber into newsletter url tracking
+        return str_ireplace($this->subscriberIdReplacementTag, $subscriber->id, $content);
     }
 
     /**
      * Merge in the unsubscribe link
      *
      * @param string $content
-     * @param Contact $contact
+     * @param Subscriber $subscriber
      * @return string
      */
-    protected function mergeUnsubscribeLink($content, Contact $contact)
+    protected function mergeUnsubscribeLink($content, Subscriber $subscriber)
     {
-        $route = route('subscriptions.unsubscribe', $contact->id);
+        $route = route('subscriptions.unsubscribe', $subscriber->id);
 
         return str_ireplace($this->unsubscribeReplacementTag, $route, $content);
     }
@@ -227,9 +227,9 @@ class NewsletterContentService implements NewsletterContentServiceInterface
         {
             $newsletterUrl = $this->storeNewsletterUrl($newsletter->id, $url);
 
-            // generate the replacement url, using a temporary tag for the contact. Once the contact
-            // is merged in, then the tag will be replaced with the actual contact_id
-            $replacementUrls[] = route('tracker.clicks', [$newsletter->id, $this->contactIdReplacementTag, $newsletterUrl->id]);
+            // generate the replacement url, using a temporary tag for the subscriber. Once the subscriber
+            // is merged in, then the tag will be replaced with the actual subscriber_id
+            $replacementUrls[] = route('tracker.clicks', [$newsletter->id, $this->subscriberIdReplacementTag, $newsletterUrl->id]);
         }
 
         return $replacementUrls;
@@ -260,15 +260,15 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     }
 
     /**
-     * @return Contact
+     * @return Subscriber
      */
-    protected function getContact()
+    protected function getSubscriber()
     {
-        return $this->contact;
+        return $this->subscriber;
     }
 
     /**
-     * @return Contact
+     * @return Subscriber
      */
     protected function getContent()
     {
@@ -276,7 +276,7 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     }
 
     /**
-     * @return Contact
+     * @return Subscriber
      */
     protected function setContent($content)
     {

@@ -12,9 +12,9 @@
 
         {!! Form::model($newsletter, array('method' => 'put', 'route' => array('newsletters.send', $newsletter->id))) !!}
 
-        @foreach($segments as $segment)
+        @foreach($tags as $tag)
             <div class="checkbox">
-                <label><input name="segments[]" type="checkbox" value="{{ $segment->id }}">{{ $segment->name }} ({{ $segment->contacts_count }} subscribers)</label>
+                <label><input name="tags[]" type="checkbox" value="{{ $tag->id }}">{{ $tag->name }} ({{ $tag->contacts_count }} subscribers)</label>
             </div>
         @endforeach
 
