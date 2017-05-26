@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubscriberRequest;
+use App\Interfaces\SubscriberListRepositoryInterface;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
@@ -16,6 +17,11 @@ class SubscribersController extends Controller
     protected $subscriberRepository;
 
     /**
+     * @var SubscriberListRepositoryInterface
+     */
+    protected $subscriberListRepository;
+
+    /**
      * @var TagRepositoryInterface
      */
     protected $tagRepository;
@@ -27,10 +33,12 @@ class SubscribersController extends Controller
      */
     public function __construct(
         SubscriberRepositoryInterface $subscriberRepository,
+        SubscriberListRepositoryInterface $subscriberListRepository,
         TagRepositoryInterface $tagRepository
     )
     {
         $this->subscriberRepository = $subscriberRepository;
+        $this->subscriberListRepository = $subscriberListRepository;
         $this->tagRepository = $tagRepository;
     }
 
@@ -54,6 +62,7 @@ class SubscribersController extends Controller
     public function create()
     {
         $data = [
+            'subscriberLists' => $this->subscriberListRepository->pluck(),
             'tags' => $this->tagRepository->all(),
             'selectedTags' => [],
         ];
@@ -70,7 +79,7 @@ class SubscribersController extends Controller
     public function store(SubscriberRequest $request)
     {
         $subscriber = $this->subscriberRepository->store($request->all());
-        $this->subscriberRepository->syncTags($subscriber, $request->get('tags'));
+        $this->subscriberRepository->syncTags($subscriber, $request->get('tags', []));
 
         return redirect()->route('subscribers.index');
     }
@@ -98,6 +107,7 @@ class SubscribersController extends Controller
 
         $data = [
             'subscriber' => $subscriber,
+            'subscriberLists' => $this->subscriberListRepository->pluck(),
             'tags' => $this->tagRepository->all(),
             'selectedTags' => selectedOptions('tags', $subscriber),
         ];
@@ -115,7 +125,7 @@ class SubscribersController extends Controller
     public function update(SubscriberRequest $request, $id)
     {
         $subscriber = $this->subscriberRepository->update($id, $request->all());
-        $this->subscriberRepository->syncTags($subscriber, $request->get('tags'));
+        $this->subscriberRepository->syncTags($subscriber, $request->get('tags', []));
 
         return redirect()->route('subscribers.index');
     }

@@ -1,7 +1,7 @@
 @extends('common.template')
 
 @section('heading')
-    Edit Subscriber§§ : {{ $subscriber->name }}
+    Edit Subscriber : {{ $subscriber->name }}
 @stop
 
 @section('content')

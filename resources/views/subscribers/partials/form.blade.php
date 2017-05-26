@@ -2,6 +2,7 @@
 {!! Form::textField('first_name', 'First Name') !!}
 {!! Form::textField('last_name', 'Last Name') !!}
 {!! Form::checkboxField('unsubscribed', 'Unsubscribed') !!}
+{!! Form::selectField('subscriber_list_id', 'List', $subscriberLists) !!}
 
 @foreach($tags as $tag)
     <div class="checkbox">
