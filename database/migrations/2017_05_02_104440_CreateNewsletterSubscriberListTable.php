@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNewsletterTagTable extends Migration
+class CreateNewsletterSubscriberListTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateNewsletterTagTable extends Migration
      */
     public function up()
     {
-        Schema::create('newsletter_tag', function (Blueprint $table) {
+        Schema::create('newsletter_subscriber_list', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('tag_id', 36);
+            $table->char('subscriber_list_id', 36);
             $table->char('newsletter_id', 36);
             $table->timestamps();
 
-            $table->foreign('tag_id')->references('id')->on('tags');
+            $table->foreign('subscriber_list_id')->references('id')->on('subscriber_lists');
             $table->foreign('newsletter_id')->references('id')->on('newsletters');
         });
     }

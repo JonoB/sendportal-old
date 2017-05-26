@@ -12,9 +12,9 @@
 
         {!! Form::model($newsletter, array('method' => 'put', 'route' => array('newsletters.send', $newsletter->id))) !!}
 
-        @foreach($tags as $tag)
+        @foreach($lists as $list)
             <div class="checkbox">
-                <label><input name="tags[]" type="checkbox" value="{{ $tag->id }}">{{ $tag->name }} ({{ $tag->contacts_count }} subscribers)</label>
+                <label><input name="lists[]" type="checkbox" value="{{ $list->id }}">{{ $list->name }} ({{ $list->subscribers()->count() }} subscribers)</label>
             </div>
         @endforeach
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\NewsletterRequest;
 use App\Interfaces\NewsletterSubscriberRepositoryInterface;
+use App\Interfaces\SubscriberListRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\NewsletterRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
@@ -36,22 +37,26 @@ class NewslettersController extends Controller
     protected $templateRepo;
 
     /**
+     * @var SubscriberListRepositoryInterface
+     */
+    protected $listRepository;
+
+    /**
      * NewslettersController constructor.
-     *
-     * @param NewsletterRepositoryInterface $newsletterRepository
-     * @param TemplateRepositoryInterface $newsletterRepository#
      */
     public function __construct(
         TagRepositoryInterface $tagRepository,
         NewsletterRepositoryInterface $newsletterRepository,
         NewsletterSubscriberRepositoryInterface $newsletterSubscriberRepository,
-        TemplateRepositoryInterface $templateRepository
+        TemplateRepositoryInterface $templateRepository,
+        SubscriberListRepositoryInterface $listRepository
     )
     {
-        $this->newsletterSubscriberRepo = $newsletterSubscriberRepository;
         $this->tagRepo = $tagRepository;
         $this->newsletterRepo = $newsletterRepository;
+        $this->newsletterSubscriberRepo = $newsletterSubscriberRepository;
         $this->templateRepo = $templateRepository;
+        $this->listRepository = $listRepository;
     }
 
     /**
@@ -172,9 +177,9 @@ class NewslettersController extends Controller
         }
 
         $template = $this->templateRepo->find($newsletter->template_id);
-        $tags = $this->tagRepo->all('name', ['subscriberCount']);
+        $lists = $this->listRepository->all('name', ['subscriberCount']);
 
-        return view('newsletters.confirm', compact('newsletter', 'template', 'tags'));
+        return view('newsletters.confirm', compact('newsletter', 'template', 'lists'));
     }
 
     /**
@@ -193,13 +198,13 @@ class NewslettersController extends Controller
             return redirect()->route('newsletters.status', $id);
         }
 
-        // @todo validation that at least one tag has been selected
+        // @todo validation that at least one list has been selected
         $newsletter = $this->newsletterRepo->update($id, [
             'scheduled_at' => Carbon::now(),
             'status_id' => NewsletterStatus::STATUS_QUEUED,
         ]);
 
-        $newsletter->tags()->sync($request->get('tags'));
+        $newsletter->lists()->sync($request->get('lists'));
 
         return redirect()->route('newsletters.status', $id);
     }

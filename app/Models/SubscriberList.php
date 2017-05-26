@@ -24,13 +24,13 @@ class SubscriberList extends BaseModel
 
     public function subscribers()
     {
-        return $this->belongsToMany(Subscriber::class);
+        return $this->hasMany(Subscriber::class);
     }
 
     public function subscriberCount()
     {
         return $this->hasMany(Subscriber::class)
             ->selectRaw('count(subscribers.id) as aggregate')
-            ->groupBy('pivot_subscriber_id');
+            ->groupBy('subscribers.id');
     }
 }
