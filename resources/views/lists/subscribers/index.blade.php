@@ -1,12 +1,12 @@
 @extends('common.template')
 
 @section('heading')
-    Subscribers
+    Subscribers In {{ $list->name }}
 @endsection
 
 @section('content')
     <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('subscribers.create') }}">Create Subscriber</a>
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('lists.subscribers.create', $list->id) }}">Create Subscriber</a>
         <div class="clearfix"></div>
     </div>
 
@@ -41,7 +41,7 @@
                                     <span class="label label-default">{{ $tag->name }}</span>
                                 @endforeach
                             </td>
-                            <td><a href="{{ route('subscribers.edit', $subscriber->id) }}">Edit</a></td>
+                            <td><a href="{{ route('lists.subscribers.edit', [$list->id, $subscriber->id]) }}">Edit</a></td>
                         </tr>
                     @endforeach
                 </tbody>

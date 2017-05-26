@@ -7,9 +7,8 @@ Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@ind
 
 Route::resource('autoresponders', 'AutorespondersController');
 
-Route::resource('subscribers', 'SubscribersController');
 Route::resource('lists', 'ListsController');
-
+Route::resource('lists.subscribers', 'ListSubscribersController');
 
 Route::resource('segments', 'SegmentsController');
 

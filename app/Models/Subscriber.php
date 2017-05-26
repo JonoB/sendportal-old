@@ -23,4 +23,14 @@ class Subscriber extends BaseModel
     {
         return $this->belongsToMany(Tag::class);
     }
+
+    /**
+     * The concatenated full name of the subscriber
+     *
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 }

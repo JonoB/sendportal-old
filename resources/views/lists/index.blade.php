@@ -22,7 +22,11 @@
                 <tbody>
                     @foreach($subscriberLists as $list)
                         <tr>
-                            <td>{{ $list->name }}</td>
+                            <td>
+                                <a href="{{ route('lists.subscribers.index', $list->id) }}">
+                                    {{ $list->name }}
+                                </a>
+                            </td>
                             <td><a href="{{ route('lists.edit', $list->id) }}">Edit</a></td>
                         </tr>
                     @endforeach
