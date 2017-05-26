@@ -63,7 +63,7 @@ class ListsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -108,6 +108,6 @@ class ListsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        app()->abort(404, 'Not implemented');
     }
 }

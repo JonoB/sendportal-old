@@ -26,7 +26,6 @@ class SubscriberRequest extends FormRequest
         return [
             'email' => 'required|email|max:255',
             'first_name' => 'required|max:255',
-            'subscriber_list_id' => 'required',
         ];
     }
 }
