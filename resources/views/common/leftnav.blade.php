@@ -28,7 +28,7 @@
             </li>
             <li class="{{ Request::is('lists*') ? 'active' : '' }}">
                 <a href="{{ route('lists.index') }}">
-                    <i class="fa fa-user"></i> <span>Lists</span>
+                    <i class="fa fa-user"></i> <span>Subscribers</span>
                 </a>
             </li>
             <li>

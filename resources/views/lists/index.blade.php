@@ -1,7 +1,7 @@
 @extends('common.template')
 
 @section('heading')
-    Lists
+    Subscriber Lists
 @endsection
 
 @section('content')

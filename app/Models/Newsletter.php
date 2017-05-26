@@ -48,21 +48,34 @@ class Newsletter extends BaseModel
         return 0;
     }
 
-    public function tags()
+    /**
+     * Lists this newsletter was sent to
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function lists()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(SubscriberList::class)->withTimestamps();
     }
 
+    /**
+     * Status of the newsletter
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function status()
     {
         return $this->belongsTo(NewsletterStatus::class, 'status_id');
     }
 
+    /**
+     * Template the newsletter uses
+     *
+     * @return mixed
+     */
     public function template()
     {
         return $this->belongsTo(Template::class)
             ->select('id', 'name');
     }
-
-
 }
