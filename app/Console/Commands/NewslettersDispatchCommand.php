@@ -7,12 +7,11 @@ use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\ContentUrlServiceInterface;
 use App\Interfaces\NewsletterContentServiceInterface;
 use App\Interfaces\NewsletterDispatchInterface;
-use App\Interfaces\NewsletterUrlsRepositoryInterface;
 use App\Interfaces\NewsletterRepositoryInterface;
 use App\Models\Subscriber;
 use App\Models\Newsletter;
 use App\Models\NewsletterStatus;
-use App\Models\Tag;
+use App\Models\SubscriberList;
 use App\Services\NewsletterDispatchService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
@@ -130,9 +129,9 @@ class NewslettersDispatchCommand extends Command
 
         $this->newsletterContentService->setNewsletter($newsletter);
 
-        foreach ($newsletter->tags as $tag)
+        foreach ($newsletter->lists as $list)
         {
-            $this->handleTag($newsletter, $tag);
+            $this->handleList($newsletter, $list);
         }
 
         $this->markNewsletterAsSent($newsletter->id);
@@ -142,19 +141,19 @@ class NewslettersDispatchCommand extends Command
      * Handle a tag from a newsletter
      *
      * @param Newsletter $newsletter
-     * @param Tag $tag
+     * @param SubscriberList $list
      */
-    protected function handleTag(Newsletter $newsletter, Tag $tag)
+    protected function handleList(Newsletter $newsletter, SubscriberList $list)
     {
-        $this->info('-Handling Newsletter Tag ID:' . $tag->id . ' (' . $tag->name . ')');
+        $this->info('-Handling Newsletter SubscriberList ID:' . $list->id . ' (' . $list->name . ')');
 
-        $subscribers = $this->getTagContacts($tag);
+        $subscribers = $this->getActiveListSubscribers($list);
 
-        $this->info('-Number of subscribers in this tag:' . count($subscribers));
+        $this->info('-Number of subscribers in this list:' . count($subscribers));
 
         foreach ($subscribers as $subscriber)
         {
-            if ( ! $this->canSentToContact($newsletter->id, $subscriber->id))
+            if ( ! $this->canSendToSubscriber($newsletter->id, $subscriber->id))
             {
                 $this->info('--Skipping Subscriber ID:' . $subscriber->id . ' (' . $subscriber->email . ')');
 
@@ -194,21 +193,21 @@ class NewslettersDispatchCommand extends Command
      */
     protected function getQueuedNewsletters()
     {
-        return $this->newsletterRepo->getBy('status_id', NewsletterStatus::STATUS_QUEUED, ['tags']);
+        return $this->newsletterRepo->getBy('status_id', NewsletterStatus::STATUS_QUEUED, ['lists']);
     }
 
     /**
-     * Load subscribers for a single tag
+     * Load active subscribers for a single list
      * @todo this needs to be improved so that we chunk items
      *
-     * @param $tag
+     * @param $list
      * @return Collection
      */
-    protected function getTagContacts(Tag $tag)
+    protected function getActiveListSubscribers(SubscriberList $list)
     {
-        $tag->load('subscribers');
+        $list->load('active_subscribers');
 
-        return $tag->subscribers;
+        return $list->active_subscribers;
     }
 
     /**
@@ -232,7 +231,7 @@ class NewslettersDispatchCommand extends Command
      * @param int $subscriberId
      * @return bool
      */
-    protected function canSentToContact($newsletterId, $subscriberId)
+    protected function canSendToSubscriber($newsletterId, $subscriberId)
     {
         $key = $newsletterId . ':' . $subscriberId;
 

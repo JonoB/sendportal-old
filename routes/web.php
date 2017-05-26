@@ -33,6 +33,6 @@ Route::get('unsubscribe/{subscriberId}', ['as' => 'subscriptions.unsubscribe', '
 Route::post('subscriptions', ['as' => 'subscriptions.update', 'uses' => 'SubscriptionsController@update']);
 Route::get('subscribe/{subscriberId}', ['as' => 'subscriptions.subscribe', 'uses' => 'SubscriptionsController@subscribe']);
 
-Route::get('configurations', ['as' => 'configurations.index', 'uses' => 'ConfigController@index']);
-Route::get('configurations/{id}/edit', ['as' => 'configurations.edit', 'uses' => 'ConfigController@edit']);
-Route::post('configurations/{id}', ['as' => 'configurations.update', 'uses' => 'ConfigController@update']);
+Route::get('config', ['as' => 'config.index', 'uses' => 'ConfigController@index']);
+Route::get('config/{id}/edit', ['as' => 'config.edit', 'uses' => 'ConfigController@edit']);
+Route::post('config/{id}', ['as' => 'config.update', 'uses' => 'ConfigController@update']);

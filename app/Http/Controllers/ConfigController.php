@@ -34,7 +34,7 @@ class ConfigController extends Controller
     {
         $configurations = $this->configRepo->getConfigTypes();
 
-        return view('configurations.index', compact('configurations'));
+        return view('config.index', compact('configurations'));
     }
 
     /**
@@ -46,7 +46,7 @@ class ConfigController extends Controller
         $configType = $this->configRepo->findType($configTypeId);
         $settings = $this->configRepo->findSettings($configTypeId);
 
-        return view('configurations.edit', compact('settings', 'configType'));
+        return view('config.edit', compact('settings', 'configType'));
     }
 
     /**

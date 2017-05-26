@@ -19,7 +19,7 @@
                     @foreach($configurations as $configType)
                         <tr>
                             <td>{{ $configType->name }}</td>
-                            <td><a href="{{ route('configurations.edit', $configType->id) }}">Edit</a></td>
+                            <td><a href="{{ route('config.edit', $configType->id) }}">Edit</a></td>
                         </tr>
                     @endforeach
                 </tbody>

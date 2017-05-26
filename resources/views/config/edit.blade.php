@@ -6,7 +6,7 @@
 
 @section('content')
 
-    {!! Form::open(['method' => 'post', 'route' => ['configurations.update', $configType->id]]) !!}
+    {!! Form::open(['method' => 'post', 'route' => ['config.update', $configType->id]]) !!}
 
     @foreach($configType->fields as $name => $field)
 

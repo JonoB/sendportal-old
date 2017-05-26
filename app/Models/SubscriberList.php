@@ -10,6 +10,17 @@ class SubscriberList extends BaseModel
         'name',
     ];
 
+    public function subscribers()
+    {
+        return $this->hasMany(Subscriber::class);
+    }
+
+    public function active_subscribers()
+    {
+        return $this->hasMany(Subscriber::class)
+            ->whereNull('unsubscribed_at');
+    }
+
     public function getSubscribersCountAttribute()
     {
         if ( ! array_key_exists('SubscriberCount', $this->relations))
@@ -20,11 +31,6 @@ class SubscriberList extends BaseModel
         $related = $this->getRelation('subscriberCount')->first();
 
         return ($related) ? $related->aggregate : 0;
-    }
-
-    public function subscribers()
-    {
-        return $this->hasMany(Subscriber::class);
     }
 
     public function subscriberCount()
