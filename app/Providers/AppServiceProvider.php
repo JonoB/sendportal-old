@@ -27,7 +27,9 @@ use App\Services\NewsletterContentService;
 use App\Services\NewsletterDispatchService;
 use App\Services\NewsletterReportService;
 use Illuminate\Support\ServiceProvider;
-
+use Illuminate\Support\Facades\Schema;
+use App\Interfaces\ConfigRepositoryInterface;
+use App\Repositories\ConfigEloquentRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+
     }
 
     /**
@@ -60,5 +62,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(NewsletterRepositoryInterface::class, NewsletterEloquentRepository::class);
         $this->app->bind(TagRepositoryInterface::class, TagEloquentRepository::class);
         $this->app->bind(TemplateRepositoryInterface::class, TemplateEloquentRepository::class);
+        $this->app->bind(ConfigRepositoryInterface::class, ConfigEloquentRepository::class);
     }
 }
