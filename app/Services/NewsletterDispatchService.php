@@ -30,7 +30,6 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
     )
     {
         $this->configRepo = $configRepo;
-        $this->sesClient = $this->createSesClient();
     }
 
     /**
@@ -67,7 +66,7 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
      */
     protected function dispatch($fromEmail, $toEmail, $subject, $content)
     {
-        return $this->sesClient->sendEmail([
+        return $this->createSesClient()->sendEmail([
             'Source' => $fromEmail,
 
             'Destination' => [
@@ -94,6 +93,11 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
      */
     protected function createSesClient()
     {
+        if ($this->sesClient)
+        {
+            return $this->sesClient;
+        }
+
         $settings = $this->configRepo->findSettings(ConfigType::AWS_SNS);
 
        return app()->make('aws')->createClient('ses', [
