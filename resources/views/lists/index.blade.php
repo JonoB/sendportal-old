@@ -16,6 +16,7 @@
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Subscribers</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -27,6 +28,7 @@
                                     {{ $list->name }}
                                 </a>
                             </td>
+                            <td>{{ $list->subscribers()->count() }}</td>
                             <td><a href="{{ route('lists.edit', $list->id) }}">Edit</a></td>
                         </tr>
                     @endforeach
