@@ -2,11 +2,19 @@
 
 namespace App\Services;
 
+use App\Interfaces\ConfigRepositoryInterface;
 use App\Interfaces\NewsletterDispatchInterface;
 use Aws\Ses\SesClient;
+use App\Models\ConfigType;
 
 class NewsletterDispatchService implements NewsletterDispatchInterface
 {
+
+    /**
+     * @var ConfigRepositoryInterface
+     */
+    protected $configRepo;
+
     /**
      * @var SesClient
      */
@@ -14,9 +22,14 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
 
     /**
      * NewsletterDispatchService constructor.
+     *
+     * @param ConfigRepositoryInterface $configRepo
      */
-    public function __construct()
+    public function __construct(
+        ConfigRepositoryInterface $configRepo
+    )
     {
+        $this->configRepo = $configRepo;
         $this->sesClient = $this->createSesClient();
     }
 
@@ -81,6 +94,14 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
      */
     protected function createSesClient()
     {
-       return app()->make('aws')->createClient('ses');
+        $settings = $this->configRepo->findSettings(ConfigType::AWS_SNS);
+
+       return app()->make('aws')->createClient('ses', [
+           'region' => array_get($settings, 'region'),
+           'credentials' => [
+               'key' => array_get($settings, 'key'),
+               'secret' => array_get($settings, 'secret'),
+           ]
+       ]);
     }
 }

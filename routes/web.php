@@ -33,3 +33,7 @@ Route::get('tracker/clicks/{newsletterId}/{contactId}/{linkId}', ['as' => 'track
 Route::get('unsubscribe/{subscriberId}', ['as' => 'subscriptions.unsubscribe', 'uses' => 'SubscriptionsController@unsubscribe']);
 Route::post('subscriptions', ['as' => 'subscriptions.update', 'uses' => 'SubscriptionsController@update']);
 Route::get('subscribe/{subscriberId}', ['as' => 'subscriptions.subscribe', 'uses' => 'SubscriptionsController@subscribe']);
+
+Route::get('configurations', ['as' => 'configurations.index', 'uses' => 'ConfigController@index']);
+Route::get('configurations/{id}/edit', ['as' => 'configurations.edit', 'uses' => 'ConfigController@edit']);
+Route::post('configurations/{id}/edit', ['as' => 'configurations.update', 'uses' => 'ConfigController@update']);
