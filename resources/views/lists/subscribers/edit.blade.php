@@ -10,4 +10,6 @@
 
     @include('lists.subscribers.partials.form')
 
+    {!! Form::close() !!}
+
 @stop

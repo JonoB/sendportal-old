@@ -11,6 +11,17 @@
     </div>
 @endforeach
 
-{!! Form::submitButton('Save') !!}
+<div class="well">
+    <h4>Custom Fields</h4>
 
-{!! Form::close() !!}
+    @if ( ! empty($subscriber->meta))
+        @foreach (json_decode($subscriber->meta) as $id => $metaField)
+            @include('lists.subscribers.partials.meta_field', compact('$metaField'))
+        @endforeach
+    @endif
+
+    <button class="btn btn-default btn-sm">Add Custom Field</button>
+</div>
+
+
+{!! Form::submitButton('Save') !!}
