@@ -141,7 +141,8 @@ class ListSubscribersController extends Controller
      */
     public function update(SubscriberRequest $request, $listId, $id)
     {
-        $input = $request->only($this->validFields) + ['meta' => $this->processMetaFields($request->get('meta_fields'))];
+        $input = $request->only($this->validFields)
+            + ['meta' => $this->processMetaFields($request->get('meta_fields'))];
 
         $subscriber = $this->subscriberRepository->update($id, $input);
         $this->subscriberRepository->syncTags($subscriber, $request->get('tags', []));

@@ -174,7 +174,7 @@ class NewsletterContentService implements NewsletterContentServiceInterface
             'email' => $subscriber->email,
             'first_name' => $subscriber->first_name,
             'last_name' => $subscriber->last_name,
-        ];
+        ] + $this->processCustomFields($subscriber);
 
         // regex doesn't seem to work here - I think it
         // may be due to all the tags and inverted commas in html?
@@ -191,11 +191,36 @@ class NewsletterContentService implements NewsletterContentServiceInterface
                 '{{' . $key . '}}',
                 '{{ ' . $key . ' }}',
             ];
+
             $content = str_ireplace($search, $value, $content);
         }
 
         // merge subscriber into newsletter url tracking
         return str_ireplace($this->subscriberIdReplacementTag, $subscriber->id, $content);
+    }
+
+    /**
+     * Process the subscriber's custom fields into usable tags
+     *
+     * @param Subscriber $subscriber
+     *
+     * @return array
+     */
+    protected function processCustomFields(Subscriber $subscriber)
+    {
+        $fields = json_decode($subscriber->meta, true);
+
+        $tags = [];
+
+        if ( ! empty($fields))
+        {
+            foreach ($fields as $field)
+            {
+                $tags[$field['name']] = $field['value'];
+            }
+        }
+
+        return $tags;
     }
 
     /**
