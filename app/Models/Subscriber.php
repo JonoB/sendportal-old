@@ -12,6 +12,7 @@ class Subscriber extends BaseModel
         'first_name',
         'last_name',
         'unsubscribed_at',
+        'meta'
     ];
 
     public function subscriberList()

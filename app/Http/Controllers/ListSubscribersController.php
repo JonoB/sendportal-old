@@ -26,6 +26,14 @@ class ListSubscribersController extends Controller
      */
     protected $tagRepository;
 
+    /**
+     * @var array
+     */
+    protected $validFields = [
+        'email',
+        'first_name',
+        'last_name',
+    ];
 
     /**
      * SubscribersController constructor.
@@ -81,7 +89,11 @@ class ListSubscribersController extends Controller
      */
     public function store(SubscriberRequest $request, $listId)
     {
-        $subscriber = $this->subscriberRepository->store($request->all() + ['subscriber_list_id' => $listId]);
+        $input = $request->only($this->validFields)
+            + ['meta' => $this->processMetaFields($request->get('meta_fields'))]
+            + ['subscriber_list_id' => $listId];
+
+        $subscriber = $this->subscriberRepository->store($input);
         $this->subscriberRepository->syncTags($subscriber, $request->get('tags', []));
 
         return redirect()->route('lists.subscribers.index', $listId);
@@ -129,7 +141,10 @@ class ListSubscribersController extends Controller
      */
     public function update(SubscriberRequest $request, $listId, $id)
     {
-        $subscriber = $this->subscriberRepository->update($id, $request->all());
+        $input = $request->only($this->validFields)
+            + ['meta' => $this->processMetaFields($request->get('meta_fields'))];
+
+        $subscriber = $this->subscriberRepository->update($id, $input);
         $this->subscriberRepository->syncTags($subscriber, $request->get('tags', []));
 
         return redirect()->route('lists.subscribers.index', $listId);
@@ -144,5 +159,28 @@ class ListSubscribersController extends Controller
     public function destroy($id)
     {
         app()->abort(404, 'Not implemented');
+    }
+
+    /**
+     * Process the meta fields to be passed to the repository
+     *
+     * @param array $metaFields
+     *
+     * @return string
+     */
+    protected function processMetaFields(array $metaFields = null)
+    {
+        if ( ! $metaFields)
+        {
+            return null;
+        }
+
+        return json_encode(array_map(function($meta) {
+            return [
+                'name' => snake_case($meta['label']),
+                'label' => $meta['label'],
+                'value' => $meta['value']
+            ];
+        }, $metaFields));
     }
 }
