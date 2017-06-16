@@ -36,6 +36,11 @@
                     <i class="fa fa-dashboard"></i> <span>Drafts</span>
                 </a>
             </li>
+            <li class="{{ Request::is('emails*') ? 'active' : '' }}">
+                <a href="{{ route('emails.index') }}">
+                    <i class="fa fa-mail"></i> <span>Emails</span>
+                </a>
+            </li>
             <li>
                 <a href="">
                     <i class="fa fa-dashboard"></i> <span>Delivery logs</span>

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Interfaces\EmailAddressRepositoryInterface;
 use App\Interfaces\NewsletterSubscriberRepositoryInterface;
 use App\Interfaces\SesServiceInterface;
 use App\Interfaces\SubscriberListRepositoryInterface;
@@ -15,6 +16,7 @@ use App\Interfaces\NewsletterRepositoryInterface;
 use App\Interfaces\NewsletterUrlsRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
+use App\Repositories\EmailAddressRepository;
 use App\Repositories\SubscriberEloquentRepository;
 use App\Repositories\NewsletterSubscriberEloquentRepository;
 use App\Repositories\NewsletterEloquentRepository;
@@ -66,5 +68,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TemplateRepositoryInterface::class, TemplateEloquentRepository::class);
         $this->app->bind(ConfigRepositoryInterface::class, ConfigEloquentRepository::class);
         $this->app->bind(SesServiceInterface::class, SesService::class);
+        $this->app->bind(EmailAddressRepositoryInterface::class, EmailAddressRepository::class);
     }
 }

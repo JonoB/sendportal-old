@@ -36,3 +36,5 @@ Route::get('subscribe/{subscriberId}', ['as' => 'subscriptions.subscribe', 'uses
 Route::get('config', ['as' => 'config.index', 'uses' => 'ConfigController@index']);
 Route::get('config/{id}/edit', ['as' => 'config.edit', 'uses' => 'ConfigController@edit']);
 Route::post('config/{id}', ['as' => 'config.update', 'uses' => 'ConfigController@update']);
+
+Route::resource('emails', 'EmailAddressController');
