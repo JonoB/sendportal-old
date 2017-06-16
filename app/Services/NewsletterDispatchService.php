@@ -2,34 +2,25 @@
 
 namespace App\Services;
 
-use App\Interfaces\ConfigRepositoryInterface;
+use App\Interfaces\SesServiceInterface;
 use App\Interfaces\NewsletterDispatchInterface;
-use Aws\Ses\SesClient;
-use App\Models\ConfigType;
 
 class NewsletterDispatchService implements NewsletterDispatchInterface
 {
 
     /**
-     * @var ConfigRepositoryInterface
+     * @var SesServiceInterface
      */
-    protected $configRepo;
+    protected $sesService;
 
     /**
-     * @var SesClient
-     */
-    protected $sesClient;
-
-    /**
-     * NewsletterDispatchService constructor.
-     *
-     * @param ConfigRepositoryInterface $configRepo
+     * @param SesServiceInterface $sesService
      */
     public function __construct(
-        ConfigRepositoryInterface $configRepo
+        SesServiceInterface $sesService
     )
     {
-        $this->configRepo = $configRepo;
+        $this->sesService = $sesService;
     }
 
     /**
@@ -66,46 +57,6 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
      */
     protected function dispatch($fromEmail, $toEmail, $subject, $content)
     {
-        return $this->createSesClient()->sendEmail([
-            'Source' => $fromEmail,
-
-            'Destination' => [
-                'ToAddresses' => [$toEmail],
-            ],
-
-            'Message' => [
-                'Subject' => [
-                    'Data' => $subject,
-                ],
-                'Body' => array(
-                    'Html' => [
-                        'Data' => $content,
-                    ],
-                ),
-            ],
-        ]);
-    }
-
-    /**
-     * Create a new SesClient
-     *
-     * @return SesClient
-     */
-    protected function createSesClient()
-    {
-        if ($this->sesClient)
-        {
-            return $this->sesClient;
-        }
-
-        $settings = $this->configRepo->findSettings(ConfigType::AWS_SNS);
-
-       return app()->make('aws')->createClient('ses', [
-           'region' => array_get($settings, 'region'),
-           'credentials' => [
-               'key' => array_get($settings, 'key'),
-               'secret' => array_get($settings, 'secret'),
-           ]
-       ]);
+        return $this->sesService->sendMail($fromEmail, [$toEmail], $subject, $content);
     }
 }

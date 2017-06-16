@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Interfaces\NewsletterSubscriberRepositoryInterface;
+use App\Interfaces\SesServiceInterface;
 use App\Interfaces\SubscriberListRepositoryInterface;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\ContentUrlServiceInterface;
@@ -26,6 +27,7 @@ use App\Services\GenerateOpenTrackingImageService;
 use App\Services\NewsletterContentService;
 use App\Services\NewsletterDispatchService;
 use App\Services\NewsletterReportService;
+use App\Services\SesService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use App\Interfaces\ConfigRepositoryInterface;
@@ -63,5 +65,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TagRepositoryInterface::class, TagEloquentRepository::class);
         $this->app->bind(TemplateRepositoryInterface::class, TemplateEloquentRepository::class);
         $this->app->bind(ConfigRepositoryInterface::class, ConfigEloquentRepository::class);
+        $this->app->bind(SesServiceInterface::class, SesService::class);
     }
 }
