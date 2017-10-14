@@ -93,11 +93,10 @@ class NewslettersDispatchCommand extends Command
      */
     public function handle()
     {
-        $newsletters = $this->getQueuedNewsletters();
-
-        if ( ! $newsletters)
+        if ( ! $newsletters = $this->getQueuedNewsletters())
         {
             $this->info('No queued newsletters; nothing more to do here');
+
             return;
         }
 

@@ -100,12 +100,12 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
 
         $settings = $this->configRepo->findSettings(ConfigType::AWS_SNS);
 
-       return app()->make('aws')->createClient('ses', [
-           'region' => array_get($settings, 'region'),
-           'credentials' => [
-               'key' => array_get($settings, 'key'),
-               'secret' => array_get($settings, 'secret'),
-           ]
-       ]);
+        return app()->make('aws')->createClient('ses', [
+            'region' => array_get($settings, 'region'),
+            'credentials' => [
+                'key' => array_get($settings, 'key'),
+                'secret' => array_get($settings, 'secret'),
+            ]
+        ]);
     }
 }
