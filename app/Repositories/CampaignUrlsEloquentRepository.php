@@ -2,12 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\NewsletterUrlsRepositoryInterface;
-use App\Models\NewsletterUrl;
+use App\Interfaces\CampaignUrlsRepositoryInterface;
+use App\Models\CampaignUrl;
 
-class NewsletterUrlsEloquentRepository extends BaseEloquentRepository implements NewsletterUrlsRepositoryInterface
+class CampaignUrlsEloquentRepository extends BaseEloquentRepository implements CampaignUrlsRepositoryInterface
 {
-    protected $modelName = NewsletterUrl::class;
+    protected $modelName = CampaignUrl::class;
 
     public function getBy($field, $value, array $relations = [])
     {
@@ -45,15 +45,15 @@ class NewsletterUrlsEloquentRepository extends BaseEloquentRepository implements
     }
 
     /**
-     * Return the total click count for a newsletter
+     * Return the total click count for a campaign
      *
-     * @param int $newsletterId
+     * @param int $campaignId
      * @return int
      */
-    public function getTotalClickCount($newsletterId)
+    public function getTotalClickCount($campaignId)
     {
         return $this->getNewInstance()
-            ->where('newsletter_id', $newsletterId)
+            ->where('campaign_id', $campaignId)
             ->sum('counter');
     }
 }

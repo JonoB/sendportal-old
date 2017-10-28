@@ -2,25 +2,25 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\NewsletterSubscriberRepositoryInterface;
-use App\Models\NewsletterSubscriber;
+use App\Interfaces\CampaignSubscriberRepositoryInterface;
+use App\Models\CampaignSubscriber;
 
-class NewsletterSubscriberEloquentRepository extends BaseEloquentRepository implements NewsletterSubscriberRepositoryInterface
+class CampaignSubscriberEloquentRepository extends BaseEloquentRepository implements CampaignSubscriberRepositoryInterface
 {
-    protected $modelName = NewsletterSubscriber::class;
+    protected $modelName = CampaignSubscriber::class;
 
     /**
      * Track opens
      *
-     * @param string $newsletterId
+     * @param string $campaignId
      * @param string $subscriberId
      * @param string $ipAddress
      * @return mixed
      */
-    public function incrementOpenCount($newsletterId, $subscriberId, $ipAddress)
+    public function incrementOpenCount($campaignId, $subscriberId, $ipAddress)
     {
         return $this->getNewInstance()
-            ->where('newsletter_id', $newsletterId)
+            ->where('campaign_id', $campaignId)
             ->where('subscriber_id', $subscriberId)
             ->update([
                 'open_count' => \DB::raw('open_count + 1'),
@@ -31,37 +31,37 @@ class NewsletterSubscriberEloquentRepository extends BaseEloquentRepository impl
     /**
      * Track clicks
      *
-     * @param string $newsletterId
+     * @param string $campaignId
      * @param string $subscriberId
      * @return mixed
      */
-    public function incrementClickCount($newsletterId, $subscriberId)
+    public function incrementClickCount($campaignId, $subscriberId)
     {
         return $this->getNewInstance()
-            ->where('newsletter_id', $newsletterId)
+            ->where('campaign_id', $campaignId)
             ->where('subscriber_id', $subscriberId)
             ->increment('click_count');
     }
 
     /**
-     * Return the open count for a newsletter
+     * Return the open count for a campaign
      *
-     * @param int $newsletterId
+     * @param int $campaignId
      * @return int
      */
-    public function getUniqueOpenCount($newsletterId)
+    public function getUniqueOpenCount($campaignId)
     {
         return $this->getNewInstance()
-            ->where('newsletter_id', $newsletterId)
+            ->where('campaign_id', $campaignId)
             ->where('open_count', '>', 0)
             ->count();
     }
 
-    public function countUniqueOpensPerHour($newsletterId)
+    public function countUniqueOpensPerHour($campaignId)
     {
         return $this->getNewInstance()
             ->select(\DB::raw('COUNT(open_count) as open_count, DATE_FORMAT(opened_at, "%d-%b %k:00") as opened_at'))
-            ->where('newsletter_id', $newsletterId)
+            ->where('campaign_id', $campaignId)
             ->groupBy(\DB::raw('HOUR(opened_at)'))
             ->orderBy('opened_at')
             ->get();

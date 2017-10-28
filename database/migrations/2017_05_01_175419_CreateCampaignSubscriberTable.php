@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNewsletterSubscriberTable extends Migration
+class CreateCampaignSubscriberTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateNewsletterSubscriberTable extends Migration
      */
     public function up()
     {
-        Schema::create('newsletter_subscriber', function (Blueprint $table) {
+        Schema::create('campaign_subscriber', function (Blueprint $table) {
             $table->increments('id');
             $table->char('subscriber_id', 36);
-            $table->char('newsletter_id', 36);
+            $table->char('campaign_id', 36);
             $table->string('ip')->nullable();
             $table->smallInteger('open_count')->default(0);
             $table->smallInteger('click_count')->default(0);
@@ -24,7 +24,7 @@ class CreateNewsletterSubscriberTable extends Migration
             $table->timestamps();
 
             $table->foreign('subscriber_id')->references('id')->on('subscribers');
-            $table->foreign('newsletter_id')->references('id')->on('newsletters');
+            $table->foreign('campaign_id')->references('id')->on('campaigns');
         });
     }
 

@@ -1,11 +1,11 @@
 @extends('common.template')
 
 @section('heading')
-    Newsletter Status
+    Campaign Status
 @stop
 
 @section('content')
 
-{{ $newsletter->status->name }}
+{{ $campaign->status->name }}
 
 @stop

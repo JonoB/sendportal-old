@@ -1,16 +1,16 @@
 @extends('common.template')
 
 @section('heading')
-    Newsletter Design
+    Campaign Design
 @stop
 
 @section('content')
 
-    {!! Form::model($newsletter, array('method' => 'put', 'route' => array('newsletters.design.update', $newsletter->id))) !!}
+    {!! Form::model($campaign, array('method' => 'put', 'route' => array('campaigns.design.update', $campaign->id))) !!}
 
     @include('templates.partials.editor')
 
-    <a href="{{ route('newsletters.template', $newsletter->id) }}" class="btn btn-default">Back</a>
+    <a href="{{ route('campaigns.template', $campaign->id) }}" class="btn btn-default">Back</a>
     {!! Form::submitButton('Save and continue') !!}
     {!! Form::close() !!}
 

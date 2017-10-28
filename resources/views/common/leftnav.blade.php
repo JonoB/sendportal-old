@@ -11,9 +11,9 @@
                     <i class="fa fa-bar-chart"></i> <span>Dashboard</span>
                 </a>
             </li>
-            <li class="{{ Request::is('newsletters*') ? 'active' : '' }}">
-                <a href="{{ route('newsletters.index') }}">
-                    <i class="fa fa-send"></i> <span>Newsletters</span>
+            <li class="{{ Request::is('campaigns*') ? 'active' : '' }}">
+                <a href="{{ route('campaigns.index') }}">
+                    <i class="fa fa-send"></i> <span>Campaigns</span>
                 </a>
             </li>
             <li class="{{ Request::is('autoresponders*') ? 'active' : '' }}">

@@ -2,65 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\NewsletterSubscriberRepositoryInterface;
-use App\Interfaces\NewsletterRepositoryInterface;
-use App\Interfaces\NewsletterUrlsRepositoryInterface;
-use App\Repositories\NewsletterUrlsEloquentRepository;
+use App\Interfaces\CampaignSubscriberRepositoryInterface;
+use App\Interfaces\CampaignRepositoryInterface;
+use App\Interfaces\CampaignUrlsRepositoryInterface;
+use App\Repositories\CampaignUrlsEloquentRepository;
 use Illuminate\Http\Request;
 
 class TrackerController extends Controller
 {
     /**
-     * @var NewsletterSubscriberRepositoryInterface
+     * @var CampaignSubscriberRepositoryInterface
      */
-    protected $subscriberNewsletterRepo;
+    protected $subscriberCampaignRepo;
 
     /**
-     * @var NewsletterUrlsRepositoryInterface
+     * @var CampaignUrlsRepositoryInterface
      */
-    protected $newsletterUrlsRepo;
+    protected $campaignUrlsRepo;
 
     /**
-     * @var NewsletterRepositoryInterface
+     * @var CampaignRepositoryInterface
      */
-    protected $newsletterRepo;
+    protected $campaignRepo;
 
     /**
      * TrackerController constructor.
      *
-     * @param NewsletterSubscriberRepositoryInterface $subscriberNewsletterRepo
-     * @param NewsletterRepositoryInterface $newsletterRepository
+     * @param CampaignSubscriberRepositoryInterface $subscriberCampaignRepo
+     * @param CampaignRepositoryInterface $campaignRepository
      */
     public function __construct(
-        NewsletterSubscriberRepositoryInterface $subscriberNewsletterRepo,
-        NewsletterUrlsRepositoryInterface $newsletterUrlsRepository,
-        NewsletterRepositoryInterface $newsletterRepository
+        CampaignSubscriberRepositoryInterface $subscriberCampaignRepo,
+        CampaignUrlsRepositoryInterface $campaignUrlsRepository,
+        CampaignRepositoryInterface $campaignRepository
     )
     {
-        $this->subscriberNewsletterRepo = $subscriberNewsletterRepo;
-        $this->newsletterUrlsRepo = $newsletterUrlsRepository;
-        $this->newsletterRepo = $newsletterRepository;
+        $this->subscriberCampaignRepo = $subscriberCampaignRepo;
+        $this->campaignUrlsRepo = $campaignUrlsRepository;
+        $this->campaignRepo = $campaignRepository;
     }
 
     /**
      * Track email opens
      *
      * @param Request $request
-     * @param string $newsletterId
+     * @param string $campaignId
      * @param string $subscriberId
      * @return void
      */
-    public function opens(Request $request, $newsletterId, $subscriberId)
+    public function opens(Request $request, $campaignId, $subscriberId)
     {
 
         header('Content-Type: image/gif');
         readfile(public_path('img/tracking.gif'));
 
-        $this->subscriberNewsletterRepo->incrementOpenCount($newsletterId, $subscriberId, $request->ip());
+        $this->subscriberCampaignRepo->incrementOpenCount($campaignId, $subscriberId, $request->ip());
 
-        $totalOpenCount = $this->subscriberNewsletterRepo->getUniqueOpenCount($newsletterId);
+        $totalOpenCount = $this->subscriberCampaignRepo->getUniqueOpenCount($campaignId);
 
-        $this->newsletterRepo->update($newsletterId, [
+        $this->campaignRepo->update($campaignId, [
             'open_count' => $totalOpenCount,
         ]);
     }
@@ -69,27 +69,27 @@ class TrackerController extends Controller
      * Track email clicks and redirect to original route
      *
      * @param Request $request
-     * @param string $newsletterId
+     * @param string $campaignId
      * @param string $subscriberId
      * @param string $urlId
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function clicks(Request $request, $newsletterId, $subscriberId, $urlId)
+    public function clicks(Request $request, $campaignId, $subscriberId, $urlId)
     {
         // store click count per url
-        $this->newsletterUrlsRepo->incrementClickCount($urlId);
+        $this->campaignUrlsRepo->incrementClickCount($urlId);
 
         // store click count per user
-        $this->subscriberNewsletterRepo->incrementClickCount($newsletterId, $subscriberId);
+        $this->subscriberCampaignRepo->incrementClickCount($campaignId, $subscriberId);
 
-        $totalNewsletterClickCount = $this->newsletterUrlsRepo->getTotalClickCount($newsletterId);
+        $totalCampaignClickCount = $this->campaignUrlsRepo->getTotalClickCount($campaignId);
 
-        $this->newsletterRepo->update($newsletterId, [
-            'click_count' => $totalNewsletterClickCount,
+        $this->campaignRepo->update($campaignId, [
+            'click_count' => $totalCampaignClickCount,
         ]);
 
-        $newsletterUrl = $this->newsletterUrlsRepo->find($urlId);
+        $campaignUrl = $this->campaignUrlsRepo->find($urlId);
 
-        return redirect($newsletterUrl->original_url);
+        return redirect($campaignUrl->original_url);
     }
  }

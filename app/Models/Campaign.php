@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Traits\Uuid;
 
-class Newsletter extends BaseModel
+class Campaign extends BaseModel
 {
     use Uuid;
 
@@ -49,7 +49,7 @@ class Newsletter extends BaseModel
     }
 
     /**
-     * Lists this newsletter was sent to
+     * Lists this campaign was sent to
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -59,17 +59,17 @@ class Newsletter extends BaseModel
     }
 
     /**
-     * Status of the newsletter
+     * Status of the campaign
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function status()
     {
-        return $this->belongsTo(NewsletterStatus::class, 'status_id');
+        return $this->belongsTo(CampaignStatus::class, 'status_id');
     }
 
     /**
-     * Template the newsletter uses
+     * Template the campaign uses
      *
      * @return mixed
      */

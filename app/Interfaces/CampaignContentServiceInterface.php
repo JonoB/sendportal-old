@@ -4,14 +4,14 @@ namespace App\Interfaces;
 
 
 use App\Models\Subscriber;
-use App\Models\Newsletter;
+use App\Models\Campaign;
 
-interface NewsletterContentServiceInterface
+interface CampaignContentServiceInterface
 {
     /**
-     * @param Newsletter $newsletter
+     * @param Campaign $campaign
      */
-    public function setNewsletter(Newsletter $newsletter);
+    public function setCampaign(Campaign $campaign);
 
     /**
      * Merge open tracking image and subscriber tags into the content

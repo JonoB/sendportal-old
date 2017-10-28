@@ -1,7 +1,7 @@
 @extends('common.template')
 
 @section('heading')
-    Confirm Newsletter
+    Confirm Campaign
 @stop
 
 @section('content')
@@ -10,7 +10,7 @@
     <div class="col-md-6">
         <h4>Recipients</h4>
 
-        {!! Form::model($newsletter, array('method' => 'put', 'route' => array('newsletters.send', $newsletter->id))) !!}
+        {!! Form::model($campaign, array('method' => 'put', 'route' => array('campaigns.send', $campaign->id))) !!}
 
         @foreach($lists as $list)
             <div class="checkbox">
@@ -32,8 +32,8 @@
             </label>
         </div>
 
-        <a href="{{ route('newsletters.design', $newsletter->id) }}" class="btn btn-default">Back</a>
-        {!! Form::submitButton('Send newsletter') !!}
+        <a href="{{ route('campaigns.design', $campaign->id) }}" class="btn btn-default">Back</a>
+        {!! Form::submitButton('Send campaign') !!}
         {!! Form::close() !!}
     </div>
     <div class="col-md-6">
@@ -41,18 +41,18 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">From</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">{{ $newsletter->from_name . ' <' . $newsletter->from_email . '>' }}</p>
+                    <p class="form-control-static">{{ $campaign->from_name . ' <' . $campaign->from_email . '>' }}</p>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">Subject</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">{{ $newsletter->subject }}</p>
+                    <p class="form-control-static">{{ $campaign->subject }}</p>
                 </div>
             </div>
 
             <div style="border: 1px solid #ddd; height: 600px">
-                <iframe id="js-template-iframe" srcdoc="{{ $newsletter->content }}" class="embed-responsive-item" frameborder="0" style="height: 100%; width: 100%"></iframe>
+                <iframe id="js-template-iframe" srcdoc="{{ $campaign->content }}" class="embed-responsive-item" frameborder="0" style="height: 100%; width: 100%"></iframe>
             </div>
 
         </form>

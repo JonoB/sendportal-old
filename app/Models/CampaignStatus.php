@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class NewsletterStatus extends BaseModel
+class CampaignStatus extends BaseModel
 {
     public $incrementing = true;
 

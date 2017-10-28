@@ -4,17 +4,17 @@ namespace App\Services;
 
 use App\Interfaces\ContentUrlServiceInterface;
 use App\Interfaces\GenerateOpenTrackingImageInterface;
-use App\Interfaces\NewsletterContentServiceInterface;
-use App\Interfaces\NewsletterUrlsRepositoryInterface;
+use App\Interfaces\CampaignContentServiceInterface;
+use App\Interfaces\CampaignUrlsRepositoryInterface;
 use App\Models\Subscriber;
-use App\Models\Newsletter;
+use App\Models\Campaign;
 
-class NewsletterContentService implements NewsletterContentServiceInterface
+class CampaignContentService implements CampaignContentServiceInterface
 {
     /**
-     * @var Newsletter
+     * @var Campaign
      */
-    protected $newsletter;
+    protected $campaign;
 
     /**
      * @var Subscriber
@@ -22,7 +22,7 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     protected $subscriber;
 
     /**
-     * Newsletter content
+     * Campaign content
      *
      * @var $content
      */
@@ -39,9 +39,9 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     protected $contentUrlService;
 
     /**
-     * @var NewsletterUrlsRepositoryInterface
+     * @var CampaignUrlsRepositoryInterface
      */
-    protected $newsletterUrlsRepository;
+    protected $campaignUrlsRepository;
 
     /**
      * Temporary tag that is replaced when the subscriber is merged in
@@ -58,35 +58,35 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     protected $unsubscribeReplacementTag = '{{ unsubscribe_url }}';
 
     /**
-     * NewsletterContentService constructor.
+     * CampaignContentService constructor.
      *
      * @param GenerateOpenTrackingImageInterface $openTrackingImageService
      * @param ContentUrlServiceInterface $contentUrlsService
-     * @param NewsletterUrlsRepositoryInterface $newsletterUrlsRepository
+     * @param CampaignUrlsRepositoryInterface $campaignUrlsRepository
      */
     public function __construct(
         GenerateOpenTrackingImageInterface $openTrackingImageService,
         ContentUrlServiceInterface $contentUrlsService,
-        NewsletterUrlsRepositoryInterface $newsletterUrlsRepository
+        CampaignUrlsRepositoryInterface $campaignUrlsRepository
     )
     {
         $this->openTrackingImageService = $openTrackingImageService;
         $this->contentUrlService = $contentUrlsService;
-        $this->newsletterUrlsRepository = $newsletterUrlsRepository;
+        $this->campaignUrlsRepository = $campaignUrlsRepository;
     }
 
     /**
-     * Set the newsletter and create base content
+     * Set the campaign and create base content
      * ready for subscriber merging
      *
-     * @param Newsletter $newsletter
+     * @param Campaign $campaign
      * @return void
      */
-    public function setNewsletter(Newsletter $newsletter)
+    public function setCampaign(Campaign $campaign)
     {
-        $this->newsletter = $newsletter;
+        $this->campaign = $campaign;
 
-        $content = $this->createBaseNewsletterContent($newsletter);
+        $content = $this->createBaseCampaignContent($campaign);
 
         $this->setContent($content);
     }
@@ -100,7 +100,7 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     public function getMergedContent(Subscriber $subscriber)
     {
         // embed open tracking image
-        $content = $this->embedOpenTrackingImage($this->getContent(), $this->getNewsletter()->id, $subscriber->id);
+        $content = $this->embedOpenTrackingImage($this->getContent(), $this->getCampaign()->id, $subscriber->id);
 
         // merge dynamic subscriber tags like email, name, unsubscribe link etc
         $content = $this->mergeTags($content, $subscriber);
@@ -109,23 +109,23 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     }
 
     /**
-     * Replace all urls in a newsletter for tracking
+     * Replace all urls in a campaign for tracking
      *
-     * @param Newsletter $newsletter
+     * @param Campaign $campaign
      * @return string
      */
-    protected function createBaseNewsletterContent(Newsletter $newsletter)
+    protected function createBaseCampaignContent(Campaign $campaign)
     {
-        $content = $newsletter->content;
+        $content = $campaign->content;
 
         if ($this->trackClicks())
         {
-            // get all the original urls from the newsletter
+            // get all the original urls from the campaign
             $originalUrls = $this->contentUrlService->extract($content);
 
             // for each of the original urls, store a record in the database
             // and return an array of replacement urls
-            $replacementUrls = $this->generateReplacementUrls($newsletter, $originalUrls);
+            $replacementUrls = $this->generateReplacementUrls($campaign, $originalUrls);
 
             // substitute the original urls with the replacements
             $content = str_ireplace($originalUrls, $replacementUrls, $content);
@@ -138,15 +138,15 @@ class NewsletterContentService implements NewsletterContentServiceInterface
      * Embed the open tracking image
      *
      * @param string $content
-     * @param string $newsletterId
+     * @param string $campaignId
      * @param string $subscriberId
      * @return string
      */
-    protected function embedOpenTrackingImage($content, $newsletterId, $subscriberId)
+    protected function embedOpenTrackingImage($content, $campaignId, $subscriberId)
     {
         if ($this->trackOpens())
         {
-            $image = $this->openTrackingImageService->generate($newsletterId, $subscriberId);
+            $image = $this->openTrackingImageService->generate($campaignId, $subscriberId);
 
             $content = str_replace('</body>', $image . '</body>', $content);
         }
@@ -194,7 +194,7 @@ class NewsletterContentService implements NewsletterContentServiceInterface
             $content = str_ireplace($search, $value, $content);
         }
 
-        // merge subscriber into newsletter url tracking
+        // merge subscriber into campaign url tracking
         return str_ireplace($this->subscriberIdReplacementTag, $subscriber->id, $content);
     }
 
@@ -215,21 +215,21 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     /**
      * Create an array of replacement urls for tracking clicks
      *
-     * @param Newsletter $newsletter
+     * @param Campaign $campaign
      * @param array $originalUrls
      * @return array
      */
-    protected function generateReplacementUrls($newsletter, $originalUrls)
+    protected function generateReplacementUrls($campaign, $originalUrls)
     {
         $replacementUrls = [];
 
         foreach ($originalUrls as $url)
         {
-            $newsletterUrl = $this->storeNewsletterUrl($newsletter->id, $url);
+            $campaignUrl = $this->storeCampaignUrl($campaign->id, $url);
 
             // generate the replacement url, using a temporary tag for the subscriber. Once the subscriber
             // is merged in, then the tag will be replaced with the actual subscriber_id
-            $replacementUrls[] = route('tracker.clicks', [$newsletter->id, $this->subscriberIdReplacementTag, $newsletterUrl->id]);
+            $replacementUrls[] = route('tracker.clicks', [$campaign->id, $this->subscriberIdReplacementTag, $campaignUrl->id]);
         }
 
         return $replacementUrls;
@@ -237,26 +237,26 @@ class NewsletterContentService implements NewsletterContentServiceInterface
 
 
     /**
-     * Store a newsletter tracking url in the database
+     * Store a campaign tracking url in the database
      *
-     * @param string $newsletterId
+     * @param string $campaignId
      * @param string $link
      * @return mixed
      */
-    protected function storeNewsletterUrl($newsletterId, $link)
+    protected function storeCampaignUrl($campaignId, $link)
     {
-        return $this->newsletterUrlsRepository->store([
-            'newsletter_id' => $newsletterId,
+        return $this->campaignUrlsRepository->store([
+            'campaign_id' => $campaignId,
             'original_url' => $link,
         ]);
     }
 
     /**
-     * @return Newsletter
+     * @return Campaign
      */
-    protected function getNewsletter()
+    protected function getCampaign()
     {
-        return $this->newsletter;
+        return $this->campaign;
     }
 
     /**
@@ -284,23 +284,23 @@ class NewsletterContentService implements NewsletterContentServiceInterface
     }
 
     /**
-     * Return if newsletter is tracking opens
+     * Return if campaign is tracking opens
      *
      * @return bool
      */
     protected function trackOpens()
     {
-        return (bool)$this->getNewsletter()->track_opens;
+        return (bool)$this->getCampaign()->track_opens;
     }
 
     /**
-     * Return if newsletter is tracking clicks
+     * Return if campaign is tracking clicks
      *
      * @return bool
      */
     protected function trackClicks()
     {
-        return (bool)$this->getNewsletter()->track_clicks;
+        return (bool)$this->getCampaign()->track_clicks;
     }
 
 }

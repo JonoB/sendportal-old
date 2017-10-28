@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-class NewsletterSubscriber extends BaseModel
+class CampaignSubscriber extends BaseModel
 {
-    protected $table = 'newsletter_subscriber';
+    protected $table = 'campaign_subscriber';
 
     protected $fillable = [
+        'campaign_id',
         'subscriber_id',
-        'newsletter_id',
         'ip',
         'open_count',
         'click_count',

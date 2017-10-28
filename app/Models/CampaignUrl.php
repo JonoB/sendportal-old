@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Traits\Uuid;
 
-class NewsletterUrl extends BaseModel
+class CampaignUrl extends BaseModel
 {
     use Uuid;
 
     protected $fillable = [
-        'newsletter_id',
+        'campaign_id',
         'original_url',
     ];
 }

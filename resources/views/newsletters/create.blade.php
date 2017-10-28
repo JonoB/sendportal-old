@@ -1,13 +1,13 @@
 @extends('common.template')
 
 @section('heading')
-    Create Newsletter
+    Create Campaign
 @stop
 
 @section('content')
 
-    {!! Form::open(array('route' => array('newsletters.store'))) !!}
+    {!! Form::open(array('route' => array('campaigns.store'))) !!}
 
-    @include('newsletters.partials.form')
+    @include('campaigns.partials.form')
 
 @stop

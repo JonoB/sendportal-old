@@ -3,16 +3,16 @@
 namespace App\Interfaces;
 
 use App\Models\Subscriber;
-use App\Models\Newsletter;
+use App\Models\Campaign;
 
 interface GenerateOpenTrackingImageInterface
 {
     /**
      * Generate the tracking image for emails
      *
-     * @param string $newsletterId
+     * @param string $campaignId
      * @param string $subscriberId
      * @return mixed
      */
-    public function generate($newsletterId, $subscriberId);
+    public function generate($campaignId, $subscriberId);
 }

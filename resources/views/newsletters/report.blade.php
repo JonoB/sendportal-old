@@ -1,7 +1,7 @@
 @extends('common.template')
 
 @section('heading')
-    {{ $newsletter->name }}
+    {{ $campaign->name }}
 @endsection
 
 @section('content')
@@ -11,7 +11,7 @@
             <div class="info-box">
                 <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-number">{{ $newsletter->sent_count }}</span>
+                    <span class="info-box-number">{{ $campaign->sent_count }}</span>
                     <span class="info-box-text">Emails Sent</span>
                 </div>
             </div>
@@ -21,7 +21,7 @@
             <div class="info-box">
                 <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-number">{{ round($newsletter->open_ratio * 100, 1) }}%</span>
+                    <span class="info-box-number">{{ round($campaign->open_ratio * 100, 1) }}%</span>
                     <span class="info-box-text">Unique Open Rate</span>
                 </div>
             </div>
@@ -30,7 +30,7 @@
             <div class="info-box">
                 <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-number">{{ round($newsletter->click_ratio * 100, 1) }}%</span>
+                    <span class="info-box-number">{{ round($campaign->click_ratio * 100, 1) }}%</span>
                     <span class="info-box-text">Click Rate</span>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                 <div class="box-body">
                     <table class="table">
                         <tbody>
-                            @foreach($newsletterUrls as $url)
+                            @foreach($campaignUrls as $url)
                                 <tr>
                                     <td>{{ $url->original_url }}</td>
                                     <td>{{ $url->counter }}</td>

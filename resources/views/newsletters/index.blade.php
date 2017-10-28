@@ -1,12 +1,12 @@
 @extends('common.template')
 
 @section('heading')
-    Newsletters
+    Campaigns
 @endsection
 
 @section('content')
     <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('newsletters.create') }}">Create Newsletter</a>
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('campaigns.create') }}">Create Campaign</a>
         <div class="clearfix"></div>
     </div>
 
@@ -24,30 +24,30 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($newsletters as $newsletter)
+                @foreach($campaigns as $campaign)
                     <tr>
                         <td>
-                            @if ($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_DRAFT)
-                                <a href="{{ route('newsletters.edit', $newsletter->id) }}">{{ $newsletter->name }}</a>
+                            @if ($campaign->status_id == \App\Models\CampaignStatus::STATUS_DRAFT)
+                                <a href="{{ route('campaigns.edit', $campaign->id) }}">{{ $campaign->name }}</a>
                             @else
-                                <a href="{{ route('newsletters.report', $newsletter->id) }}">{{ $newsletter->name }}</a>
+                                <a href="{{ route('campaigns.report', $campaign->id) }}">{{ $campaign->name }}</a>
                             @endif
                         </td>
                         <td>
-                            @if($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_DRAFT)
-                                <span class="label label-default">{{ $newsletter->status->name }}</span>
-                            @elseif($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_QUEUED)
-                                <span class="label label-warning">{{ $newsletter->status->name }}</span>
-                            @elseif($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_SENDING)
-                                <span class="label label-info">{{ $newsletter->status->name }}</span>
-                            @elseif($newsletter->status_id == \App\Models\NewsletterStatus::STATUS_SENT)
-                                <span class="label label-success">{{ $newsletter->status->name }}</span>
+                            @if($campaign->status_id == \App\Models\CampaignStatus::STATUS_DRAFT)
+                                <span class="label label-default">{{ $campaign->status->name }}</span>
+                            @elseif($campaign->status_id == \App\Models\CampaignStatus::STATUS_QUEUED)
+                                <span class="label label-warning">{{ $campaign->status->name }}</span>
+                            @elseif($campaign->status_id == \App\Models\CampaignStatus::STATUS_SENDING)
+                                <span class="label label-info">{{ $campaign->status->name }}</span>
+                            @elseif($campaign->status_id == \App\Models\CampaignStatus::STATUS_SENT)
+                                <span class="label label-success">{{ $campaign->status->name }}</span>
                             @endif
                         </td>
-                        <td>{{ $newsletter->template->name or '' }}</td>
-                        <td>{{ formatValue($newsletter->sent_count) }}</td>
-                        <td>{{ number_format($newsletter->open_ratio * 100, 1) . '%' }}</td>
-                        <td>{{ number_format($newsletter->click_ratio * 100, 1) . '%' }}</td>
+                        <td>{{ $campaign->template->name or '' }}</td>
+                        <td>{{ formatValue($campaign->sent_count) }}</td>
+                        <td>{{ number_format($campaign->open_ratio * 100, 1) . '%' }}</td>
+                        <td>{{ number_format($campaign->click_ratio * 100, 1) . '%' }}</td>
                     </tr>
                 @endforeach
                 </tbody>

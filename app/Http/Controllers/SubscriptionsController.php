@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\NewsletterSubscriberRepositoryInterface;
+use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\SubscriberRepositoryInterface;
-use App\Interfaces\NewsletterRepositoryInterface;
-use App\Interfaces\NewsletterUrlsRepositoryInterface;
-use App\Repositories\NewsletterUrlsEloquentRepository;
+use App\Interfaces\CampaignRepositoryInterface;
+use App\Interfaces\CampaignUrlsRepositoryInterface;
+use App\Repositories\CampaignUrlsEloquentRepository;
 use Illuminate\Http\Request;
 
 class SubscriptionsController extends Controller

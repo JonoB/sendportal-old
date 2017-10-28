@@ -1,14 +1,14 @@
 @extends('common.template')
 
 @section('heading')
-    Newsletter Template
+    Campaign Template
 @stop
 
 @section('content')
 
-    {!! Form::model($newsletter, ['id' => 'form-template-selector', 'method' => 'put', 'route' => ['newsletters.template.update', $newsletter->id]]) !!}
+    {!! Form::model($campaign, ['id' => 'form-template-selector', 'method' => 'put', 'route' => ['campaigns.template.update', $campaign->id]]) !!}
 
-    <input type="hidden" id="field-template_id" name="template_id" value="{{ $newsletter->template_id }}">
+    <input type="hidden" id="field-template_id" name="template_id" value="{{ $campaign->template_id }}">
 
     <div class="row">
         @foreach($templates as $template)
@@ -17,7 +17,7 @@
                     <h4>{{ $template->name }}</h4>
                 </div>
                 <div class="pull-right">
-                    @if ($newsletter->template_id == $template->id)
+                    @if ($campaign->template_id == $template->id)
                         <span class="label label-success">Selected</span>
                     @else
                         <a href="#" class="btn btn-default btn-xs js-select-template" data-template_id="{{ $template->id }}">Select</a>
@@ -33,7 +33,7 @@
 
     {{ $templates->links() }}
 
-    <a href="{{ route('newsletters.edit', $newsletter->id) }}" class="btn btn-default">Back</a>
+    <a href="{{ route('campaigns.edit', $campaign->id) }}" class="btn btn-default">Back</a>
     {!! Form::submitButton('Save and continue') !!}
     {!! Form::close() !!}
 

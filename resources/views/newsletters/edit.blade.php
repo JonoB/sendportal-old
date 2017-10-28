@@ -1,14 +1,14 @@
 @extends('common.template')
 
 @section('heading')
-    Edit Newsletter
+    Edit Campaign
 @stop
 
 @section('content')
 
-    {!! Form::model($newsletter, array('method' => 'put', 'route' => array('newsletters.update', $newsletter->id))) !!}
+    {!! Form::model($campaign, array('method' => 'put', 'route' => array('campaigns.update', $campaign->id))) !!}
 
 
-    @include('newsletters.partials.form')
+    @include('campaigns.partials.form')
 
 @stop

@@ -3,12 +3,12 @@
 namespace App\Interfaces;
 
 use App\Models\Subscriber;
-use App\Models\Newsletter;
+use App\Models\Campaign;
 
-interface NewsletterDispatchInterface
+interface CampaignDispatchInterface
 {
     /**
-     * Send the newsletter
+     * Send the campaign
      *
      * @param string $fromEmail
      * @param string $toEmail

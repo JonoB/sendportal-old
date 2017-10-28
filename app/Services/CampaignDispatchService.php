@@ -3,11 +3,11 @@
 namespace App\Services;
 
 use App\Interfaces\ConfigRepositoryInterface;
-use App\Interfaces\NewsletterDispatchInterface;
+use App\Interfaces\CampaignDispatchInterface;
 use Aws\Ses\SesClient;
 use App\Models\ConfigType;
 
-class NewsletterDispatchService implements NewsletterDispatchInterface
+class CampaignDispatchService implements CampaignDispatchInterface
 {
 
     /**
@@ -21,7 +21,7 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
     protected $sesClient;
 
     /**
-     * NewsletterDispatchService constructor.
+     * CampaignDispatchService constructor.
      *
      * @param ConfigRepositoryInterface $configRepo
      */
@@ -33,7 +33,7 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
     }
 
     /**
-     * Send the newsletter
+     * Send the campaign
      *
      * @param string $fromEmail
      * @param string $toEmail
@@ -56,7 +56,7 @@ class NewsletterDispatchService implements NewsletterDispatchInterface
     }
 
     /**
-     * Dispatch the newsletter via ses
+     * Dispatch the campaign via ses
      *
      * @param string $fromEmail
      * @param string $toEmail

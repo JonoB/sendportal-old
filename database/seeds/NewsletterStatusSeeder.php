@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class NewsletterStatusSeeder extends Seeder
+class CampaignStatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +11,7 @@ class NewsletterStatusSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('newsletter_statuses')->insert([
+        DB::table('campaign_statuses')->insert([
             ['name' => 'Draft'],
             ['name' => 'Queued'],
             ['name' => 'Sending'],

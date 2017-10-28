@@ -2,34 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\NewsletterRequest;
-use App\Interfaces\NewsletterSubscriberRepositoryInterface;
+use App\Http\Requests\CampaignRequest;
+use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\SubscriberListRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
-use App\Interfaces\NewsletterRepositoryInterface;
+use App\Interfaces\CampaignRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
-use App\Models\NewsletterStatus;
-use App\Services\NewsletterReportService;
+use App\Models\CampaignStatus;
+use App\Services\CampaignReportService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-class NewslettersController extends Controller
+class CampaignsController extends Controller
 {
     /**
-     * @var NewsletterSubscriberRepositoryInterface
+     * @var CampaignSubscriberRepositoryInterface
      */
-    protected $newsletterSubscriberRepo;
+    protected $campaignSubscriberRepo;
 
     /**
-     * @var NewsletterRepositoryInterface
+     * @var CampaignRepositoryInterface
      */
     protected $tagRepo;
 
     /**
-     * @var NewsletterRepositoryInterface
+     * @var CampaignRepositoryInterface
      */
-    protected $newsletterRepo;
+    protected $campaignRepo;
 
     /**
      * @var TemplateRepositoryInterface
@@ -42,19 +42,19 @@ class NewslettersController extends Controller
     protected $listRepository;
 
     /**
-     * NewslettersController constructor.
+     * CampaignsController constructor.
      */
     public function __construct(
         TagRepositoryInterface $tagRepository,
-        NewsletterRepositoryInterface $newsletterRepository,
-        NewsletterSubscriberRepositoryInterface $newsletterSubscriberRepository,
+        CampaignRepositoryInterface $campaignRepository,
+        CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
         TemplateRepositoryInterface $templateRepository,
         SubscriberListRepositoryInterface $listRepository
     )
     {
         $this->tagRepo = $tagRepository;
-        $this->newsletterRepo = $newsletterRepository;
-        $this->newsletterSubscriberRepo = $newsletterSubscriberRepository;
+        $this->campaignRepo = $campaignRepository;
+        $this->campaignSubscriberRepo = $campaignSubscriberRepository;
         $this->templateRepo = $templateRepository;
         $this->listRepository = $listRepository;
     }
@@ -66,9 +66,9 @@ class NewslettersController extends Controller
      */
     public function index()
     {
-        $newsletters = $this->newsletterRepo->paginate('created_atDesc', ['status', 'template']);
+        $campaigns = $this->campaignRepo->paginate('created_atDesc', ['status', 'template']);
 
-        return view('newsletters.index', compact('newsletters'));
+        return view('campaigns.index', compact('campaigns'));
     }
 
     /**
@@ -78,20 +78,20 @@ class NewslettersController extends Controller
      */
     public function create()
     {
-        return view('newsletters.create');
+        return view('campaigns.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param NewsletterRequest $request
+     * @param CampaignRequest $request
      * @return RedirectResponse
      */
-    public function store(NewsletterRequest $request)
+    public function store(CampaignRequest $request)
     {
-        $newsletter = $this->newsletterRepo->store($request->all());
+        $campaign = $this->campaignRepo->store($request->all());
 
-        return redirect()->route('newsletters.template', $newsletter->id);
+        return redirect()->route('campaigns.template', $campaign->id);
     }
 
     /**
@@ -102,12 +102,12 @@ class NewslettersController extends Controller
      */
     public function template($id)
     {
-        $newsletter = $this->newsletterRepo->find($id);
+        $campaign = $this->campaignRepo->find($id);
 
         // @todo fix the pagination in the view
         $templates = $this->templateRepo->paginate();
 
-        return view('newsletters.template', compact('newsletter', 'templates'));
+        return view('campaigns.template', compact('campaign', 'templates'));
     }
 
     /**
@@ -122,15 +122,15 @@ class NewslettersController extends Controller
         $templateId = $request->get('template_id');
         $template = $this->templateRepo->find($templateId);
 
-        // @todo at this point we're just over-writing the newsletter
+        // @todo at this point we're just over-writing the campaign
         // content with the template content, but we need to cater for the
-        // case when the user doesn't actually want to overwrite the newsletter content
-        $this->newsletterRepo->update($id, [
+        // case when the user doesn't actually want to overwrite the campaign content
+        $this->campaignRepo->update($id, [
             'content' => $template->content,
             'template_id' => $templateId,
         ]);
 
-        return redirect()->route('newsletters.design', $id);
+        return redirect()->route('campaigns.design', $id);
     }
 
     /**
@@ -141,10 +141,10 @@ class NewslettersController extends Controller
      */
     public function design($id)
     {
-        $newsletter = $this->newsletterRepo->find($id);
-        $template = $this->templateRepo->find($newsletter->template_id);
+        $campaign = $this->campaignRepo->find($id);
+        $template = $this->templateRepo->find($campaign->template_id);
 
-        return view('newsletters.design', compact('newsletter', 'template'));
+        return view('campaigns.design', compact('campaign', 'template'));
     }
 
     /**
@@ -156,9 +156,9 @@ class NewslettersController extends Controller
      */
     public function updateDesign(Request $request, $id)
     {
-        $this->newsletterRepo->update($id, $request->only('content'));
+        $this->campaignRepo->update($id, $request->only('content'));
 
-        return redirect()->route('newsletters.confirm', $id);
+        return redirect()->route('campaigns.confirm', $id);
     }
 
     /**
@@ -169,21 +169,21 @@ class NewslettersController extends Controller
      */
     public function confirm($id)
     {
-        $newsletter = $this->newsletterRepo->find($id);
+        $campaign = $this->campaignRepo->find($id);
 
-        if ($newsletter->status_id > 1)
+        if ($campaign->status_id > 1)
         {
-            return redirect()->route('newsletters.status', $id);
+            return redirect()->route('campaigns.status', $id);
         }
 
-        $template = $this->templateRepo->find($newsletter->template_id);
+        $template = $this->templateRepo->find($campaign->template_id);
         $lists = $this->listRepository->all('name', ['subscriberCount']);
 
-        return view('newsletters.confirm', compact('newsletter', 'template', 'lists'));
+        return view('campaigns.confirm', compact('campaign', 'template', 'lists'));
     }
 
     /**
-     * Dispatch the newsletter.
+     * Dispatch the campaign.
      *
      * @param \Illuminate\Http\Request  $request
      * @param int $id
@@ -191,22 +191,22 @@ class NewslettersController extends Controller
      */
     public function send(Request $request, $id)
     {
-        $newsletter = $this->newsletterRepo->find($id);
+        $campaign = $this->campaignRepo->find($id);
 
-        if ($newsletter->status_id > 1)
+        if ($campaign->status_id > 1)
         {
-            return redirect()->route('newsletters.status', $id);
+            return redirect()->route('campaigns.status', $id);
         }
 
         // @todo validation that at least one list has been selected
-        $newsletter = $this->newsletterRepo->update($id, [
+        $campaign = $this->campaignRepo->update($id, [
             'scheduled_at' => Carbon::now(),
-            'status_id' => NewsletterStatus::STATUS_QUEUED,
+            'status_id' => CampaignStatus::STATUS_QUEUED,
         ]);
 
-        $newsletter->lists()->sync($request->get('lists'));
+        $campaign->lists()->sync($request->get('lists'));
 
-        return redirect()->route('newsletters.status', $id);
+        return redirect()->route('campaigns.status', $id);
     }
 
     /**
@@ -217,9 +217,9 @@ class NewslettersController extends Controller
      */
     public function status($id)
     {
-        $newsletter = $this->newsletterRepo->find($id, ['status']);
+        $campaign = $this->campaignRepo->find($id, ['status']);
 
-        return view('newsletters.status', compact('newsletter'));
+        return view('campaigns.status', compact('campaign'));
     }
 
     /**
@@ -230,12 +230,12 @@ class NewslettersController extends Controller
      */
     public function edit($id)
     {
-        $newsletter = $this->newsletterRepo->find($id);
+        $campaign = $this->campaignRepo->find($id);
 
-        // @todo we need to check newsletter status here and
+        // @todo we need to check campaign status here and
         // redirect if its not in draft
 
-        return view('newsletters.edit', compact('newsletter'));
+        return view('campaigns.edit', compact('campaign'));
     }
 
     /**
@@ -245,9 +245,9 @@ class NewslettersController extends Controller
      * @param int  $id
      * @return RedirectResponse
      */
-    public function update(NewsletterRequest $request, $id)
+    public function update(CampaignRequest $request, $id)
     {
-        // @todo we need to check newsletter status here and
+        // @todo we need to check campaign status here and
         // redirect if its not in draft
 
         $updateData = $request->only([
@@ -260,58 +260,58 @@ class NewslettersController extends Controller
         $update['track_opens'] = $request->get('track_opens', 0);
         $update['track_clicks'] = $request->get('track_clicks', 0);
 
-        $newsletter = $this->newsletterRepo->update($id, $updateData);
+        $campaign = $this->campaignRepo->update($id, $updateData);
 
-        return redirect()->route('newsletters.template', $newsletter->id);
+        return redirect()->route('campaigns.template', $campaign->id);
     }
 
     /**
-     * Show newsletter report view
+     * Show campaign report view
      *
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|RedirectResponse|\Illuminate\View\View
      */
     public function report($id)
     {
-        $newsletter = $this->newsletterRepo->find($id);
+        $campaign = $this->campaignRepo->find($id);
 
-        if ($newsletter->status_id == NewsletterStatus::STATUS_DRAFT)
+        if ($campaign->status_id == CampaignStatus::STATUS_DRAFT)
         {
-            return redirect()->route('newsletters.edit', $id);
+            return redirect()->route('campaigns.edit', $id);
         }
 
-        if ($newsletter->status_id == NewsletterStatus::STATUS_SENT)
+        if ($campaign->status_id == CampaignStatus::STATUS_SENT)
         {
 
-            return view('newsletters.report', compact('newsletter', 'chartData'));
+            return view('campaigns.report', compact('campaign', 'chartData'));
         }
 
-        return redirect()->route('newsletters.status', $id);
+        return redirect()->route('campaigns.status', $id);
     }
 
     /**
-     * Show newsletter recipients view
+     * Show campaign recipients view
      *
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|RedirectResponse|\Illuminate\View\View
      */
     public function recipients($id)
     {
-        $newsletter = $this->newsletterRepo->find($id);
+        $campaign = $this->campaignRepo->find($id);
 
-        if ($newsletter->status_id == NewsletterStatus::STATUS_DRAFT)
+        if ($campaign->status_id == CampaignStatus::STATUS_DRAFT)
         {
-            return redirect()->route('newsletters.edit', $id);
+            return redirect()->route('campaigns.edit', $id);
         }
 
-        if ($newsletter->status_id == NewsletterStatus::STATUS_SENT)
+        if ($campaign->status_id == CampaignStatus::STATUS_SENT)
         {
-            $recipients = $this->newsletterSubscriberRepo->paginate('created_at', [], 50, ['newsletter_id' => $id]);
+            $recipients = $this->campaignSubscriberRepo->paginate('created_at', [], 50, ['campaign_id' => $id]);
 
-            return view('newsletters.recipients', compact('newsletter', $recipients));
+            return view('campaigns.recipients', compact('campaign', $recipients));
         }
 
-        return redirect()->route('newsletters.status', $id);
+        return redirect()->route('campaigns.status', $id);
     }
 
     /**
@@ -322,7 +322,7 @@ class NewslettersController extends Controller
      */
     public function destroy($id)
     {
-        // @todo we need to check newsletter status here and
+        // @todo we need to check campaign status here and
         // redirect if its not in draft
         //
     }
