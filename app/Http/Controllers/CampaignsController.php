@@ -78,7 +78,9 @@ class CampaignsController extends Controller
      */
     public function create()
     {
-        return view('campaigns.create');
+        $templatesAvailable = $this->templateRepo->all()->count();
+
+        return view('campaigns.create', compact('templatesAvailable'));
     }
 
     /**
