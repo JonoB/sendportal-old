@@ -15,7 +15,7 @@ class CreateSubscribersTable extends Migration
     {
         Schema::create('subscribers', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('subscriber_list_id', 36);
+//            $table->char('subscriber_list_id', 36);
             $table->string('email')->index();
             $table->string('first_name');
             $table->string('last_name')->nullable();
@@ -23,7 +23,7 @@ class CreateSubscribersTable extends Migration
             $table->timestamp('unsubscribed_at')->nullable(1)->index();
             $table->timestamps();
 
-            $table->foreign('subscriber_list_id')->references('id')->on('subscriber_lists');
+//            $table->foreign('subscriber_list_id')->references('id')->on('subscriber_lists');
 
         });
     }
