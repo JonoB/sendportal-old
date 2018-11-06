@@ -61,17 +61,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember"
-                                           id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-
                             <div class="form-group row mb-0 text-center">
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Register') }}

@@ -4,10 +4,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // Auth
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 // App
-Route::middleware(['auth'])->group(function ()
+Route::middleware(['auth', 'verified'])->group(function ()
 {
     Route::get('/logout', ['as' => 'dashboard', 'uses' => 'Auth\LoginController@logout']);
     Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
