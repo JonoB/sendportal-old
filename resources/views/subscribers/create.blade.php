@@ -10,4 +10,8 @@
 
     @include('subscribers.partials.form')
 
+    {!! Form::submitButton('Save') !!}
+
+    {!! Form::close() !!}
+
 @stop

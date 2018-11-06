@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SubscriberRequest;
 use App\Interfaces\SubscriberRepositoryInterface;
+use App\Interfaces\TagRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 
 class SubscribersController extends Controller
@@ -32,7 +33,7 @@ class SubscribersController extends Controller
      */
     public function index()
     {
-        $subscribers = $this->subscriberRepository->paginate('first_name');
+        $subscribers = $this->subscriberRepository->paginate('first_name', ['tags']);
 
         return view('subscribers.index', compact('subscribers'));
     }
@@ -79,11 +80,17 @@ class SubscribersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, TagRepositoryInterface $tagRepository)
     {
         $subscriber = $this->subscriberRepository->find($id);
 
-        return view('subscribers.edit', compact('subscriber'));
+        $data = [
+            'subscriber' => $subscriber,
+            'tags' => $tagRepository->all(),
+            'selectedTags' => selectedOptions('tags', $subscriber)
+        ];
+
+        return view('subscribers.edit', $data);
     }
 
     /**
@@ -97,7 +104,7 @@ class SubscribersController extends Controller
     {
         $this->subscriberRepository->update($id, $request->all());
 
-        return redirect()->route('segments.index');
+        return redirect()->route('subscribers.index');
     }
 
     /**
