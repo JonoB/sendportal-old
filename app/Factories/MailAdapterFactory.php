@@ -92,8 +92,10 @@ class MailAdapterFactory
      */
     public function createSesAdapter()
     {
+        $adapter = new SesMailAdapter();
+
         $config = $this->configRepo->findSettings(ConfigType::AWS_SNS);
 
-        return new SesMailAdapter($config);
+        return $adapter->setConfig($config);
     }
 }

@@ -18,26 +18,18 @@ class SesMailAdapter implements MailAdapterInterface
     protected $client;
 
     /**
-     * @param array $config
-     */
-    public function __construct
-    (
-        $config
-    )
-    {
-        $this->config = $config;
-
-        $this->resolveClient();
-    }
-
-    /**
      * Resolve an SesClient
      *
      * @param null
-     * @return null
+     * @return SesClient
      */
     public function resolveClient()
     {
+        if ($this->client)
+        {
+            return $this->client;
+        }
+
         $this->client = app()->make('aws')->createClient('ses', [
             'region' => array_get($this->config, 'region'),
             'credentials' => [
@@ -45,6 +37,19 @@ class SesMailAdapter implements MailAdapterInterface
                 'secret' => array_get($this->config, 'secret'),
             ]
         ]);
+
+        return $this->client;
+    }
+
+    /**
+     * Set adapter config
+     *
+     * @param array $config
+     * @return null
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
     }
 
     /**
@@ -58,7 +63,7 @@ class SesMailAdapter implements MailAdapterInterface
      */
     public function send($fromEmail, $toEmail, $subject, $content)
     {
-        return $this->client->sendEmail([
+        return $this->resolveClient()->sendEmail([
             'Source' => $fromEmail,
 
             'Destination' => [
