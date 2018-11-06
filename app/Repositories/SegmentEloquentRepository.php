@@ -12,9 +12,10 @@ class SegmentEloquentRepository extends BaseEloquentRepository implements Segmen
     /**
      * Update the model instance
      *
-     * @param  int    $id
-     * @param  array  $data
-     * @return bool
+     * @param int $id
+     * @param array $data
+     *
+     * @return Segment
      */
     public function update($id, array $data)
     {
@@ -22,14 +23,17 @@ class SegmentEloquentRepository extends BaseEloquentRepository implements Segmen
 
         $this->executeUpdate($id, $data);
 
-        return $this->syncSubscribers($this->instance, array_get($data, 'subscribers', []));
+        $this->syncSubscribers($this->instance, array_get($data, 'subscribers', []));
+
+        return $this->instance;
     }
 
     /**
      * Syn subscribers
      *
-     * @param  Segment $segment
-     * @param  array   $subscribers
+     * @param Segment $segment
+     * @param array $subscribers
+     *
      * @return bool
      */
     public function syncSubscribers(Segment $segment, array $subscribers = [])

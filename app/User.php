@@ -26,4 +26,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Get the Avatar URL from gravatar.
+     *
+     * @return string
+     */
+    public function getAvatarUrlAttribute()
+    {
+        return sprintf("https://www.gravatar.com/avatar/%s", md5(strtolower($this->email)));
+    }
 }
