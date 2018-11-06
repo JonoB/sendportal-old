@@ -33,4 +33,14 @@ class Subscriber extends BaseModel
     {
         return "{$this->first_name} {$this->last_name}";
     }
+
+    /**
+     * If the Subscriber has been unsubscribed
+     *
+     * @return bool
+     */
+    public function getUnsubscribedAttribute()
+    {
+        return ! is_null($this->unsubscribed_at);
+    }
 }
