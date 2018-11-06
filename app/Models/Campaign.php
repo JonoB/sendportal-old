@@ -53,9 +53,9 @@ class Campaign extends BaseModel
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function lists()
+    public function segments()
     {
-        return $this->belongsToMany(SubscriberList::class)->withTimestamps();
+        return $this->belongsToMany(Segment::class)->withTimestamps();
     }
 
     /**

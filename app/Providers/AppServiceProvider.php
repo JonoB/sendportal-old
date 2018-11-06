@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
-use App\Interfaces\SubscriberListRepositoryInterface;
+use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\ContentUrlServiceInterface;
 use App\Interfaces\GenerateOpenTrackingImageInterface;
@@ -18,7 +18,7 @@ use App\Repositories\SubscriberEloquentRepository;
 use App\Repositories\CampaignSubscriberEloquentRepository;
 use App\Repositories\CampaignEloquentRepository;
 use App\Repositories\CampaignUrlsEloquentRepository;
-use App\Repositories\SubscriberListEloquentRepository;
+use App\Repositories\SegmentEloquentRepository;
 use App\Repositories\TagEloquentRepository;
 use App\Repositories\TemplateEloquentRepository;
 use App\Services\ContentUrlService;
@@ -51,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(SubscriberRepositoryInterface::class, SubscriberEloquentRepository::class);
-        $this->app->bind(SubscriberListRepositoryInterface::class, SubscriberListEloquentRepository::class);
+        $this->app->bind(SegmentRepositoryInterface::class, SegmentEloquentRepository::class);
         $this->app->bind(CampaignSubscriberRepositoryInterface::class, CampaignSubscriberEloquentRepository::class);
         $this->app->bind(CampaignReportServiceInterface::class, CampaignReportService::class);
         $this->app->bind(CampaignContentServiceInterface::class, CampaignContentService::class);
