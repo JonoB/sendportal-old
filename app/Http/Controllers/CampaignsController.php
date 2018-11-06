@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CampaignRequest;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
-use App\Interfaces\SubscriberListRepositoryInterface;
+use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\CampaignRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
@@ -39,7 +39,7 @@ class CampaignsController extends Controller
     /**
      * @var SubscriberListRepositoryInterface
      */
-    protected $listRepository;
+    protected $segmentRepository;
 
     /**
      * CampaignsController constructor.
@@ -49,14 +49,14 @@ class CampaignsController extends Controller
         CampaignRepositoryInterface $campaignRepository,
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
         TemplateRepositoryInterface $templateRepository,
-        SubscriberListRepositoryInterface $listRepository
+        SegmentRepositoryInterface $segment
     )
     {
         $this->tagRepo = $tagRepository;
         $this->campaignRepo = $campaignRepository;
         $this->campaignSubscriberRepo = $campaignSubscriberRepository;
         $this->templateRepo = $templateRepository;
-        $this->listRepository = $listRepository;
+        $this->segment = $segment;
     }
 
     /**
@@ -177,7 +177,7 @@ class CampaignsController extends Controller
         }
 
         $template = $this->templateRepo->find($campaign->template_id);
-        $lists = $this->listRepository->all('name', ['subscriberCount']);
+        $lists = $this->segment->all('name', ['subscriberCount']);
 
         return view('campaigns.confirm', compact('campaign', 'template', 'lists'));
     }
@@ -204,7 +204,7 @@ class CampaignsController extends Controller
             'status_id' => CampaignStatus::STATUS_QUEUED,
         ]);
 
-        $campaign->lists()->sync($request->get('lists'));
+        $campaign->segments()->sync($request->get('lists'));
 
         return redirect()->route('campaigns.status', $id);
     }

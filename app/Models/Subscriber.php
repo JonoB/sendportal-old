@@ -7,16 +7,15 @@ class Subscriber extends BaseModel
     use Uuid;
 
     protected $fillable = [
-        'subscriber_list_id',
         'email',
         'first_name',
         'last_name',
         'unsubscribed_at',
     ];
 
-    public function subscriberList()
+    public function segments()
     {
-        return $this->belongsTo(SubscriberList::class);
+        return $this->belongsToMany(Segment::class)->withTimestamps();;
     }
 
     public function tags()

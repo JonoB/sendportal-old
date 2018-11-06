@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SubscriberListRequest;
-use App\Interfaces\SubscriberListRepositoryInterface;
+use App\Http\Requests\SubscriberRequest;
+use App\Interfaces\SubscriberRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 
-class ListsController extends Controller
+class SubscribersController extends Controller
 {
     /**
-     * @var SubscriberListRepositoryInterface
+     * @var SubscriberInterface
      */
-    protected $subscriberListRepository;
+    protected $subscriberRepository;
 
     /**
      * SubscribersController constructor.
      *
-     * @param SubscriberListRepositoryInterface $subscriberListRepository
+     * @param segmentRepositoryInterface $subscriberSegmentRepository
      */
     public function __construct(
-        SubscriberListRepositoryInterface $subscriberListRepository
+        SubscriberRepositoryInterface $subscriberRepository
     )
     {
-        $this->subscriberListRepository = $subscriberListRepository;
+        $this->subscriberRepository = $subscriberRepository;
     }
 
     /**
@@ -32,9 +32,9 @@ class ListsController extends Controller
      */
     public function index()
     {
-        $subscriberLists = $this->subscriberListRepository->paginate('name');
+        $subscribers = $this->subscriberRepository->paginate('first_name');
 
-        return view('lists.index', compact('subscriberLists'));
+        return view('subscribers.index', compact('subscribers'));
     }
 
     /**
@@ -44,20 +44,20 @@ class ListsController extends Controller
      */
     public function create()
     {
-        return view('lists.create');
+        return view('subscribers.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  SubscriberListRequest $request
+     * @param  SubscriberRequest $request
      * @return RedirectResponse
      */
-    public function store(SubscriberListRequest $request)
+    public function store(SubscriberRequest $request)
     {
-        $this->subscriberListRepository->store($request->all());
+        $this->subscriberRepository->store($request->all());
 
-        return redirect()->route('lists.index');
+        return redirect()->route('subscribers.index');
     }
 
     /**
@@ -68,9 +68,9 @@ class ListsController extends Controller
      */
     public function show($id)
     {
-        app()->abort(404, 'Not implemented');
+        $subscriber = $this->subscriberRepository->find($id);
 
-        return view('lists.show');
+        return view('subscribers.show', compact('subscriber'));
     }
 
     /**
@@ -81,9 +81,9 @@ class ListsController extends Controller
      */
     public function edit($id)
     {
-        $subscriberList = $this->subscriberListRepository->find($id);
+        $subscriber = $this->subscriberRepository->find($id);
 
-        return view('lists.edit', compact('subscriberList'));
+        return view('subscribers.edit', compact('subscriber'));
     }
 
     /**
@@ -93,11 +93,11 @@ class ListsController extends Controller
      * @param int $id
      * @return RedirectResponse
      */
-    public function update(SubscriberListRequest $request, $id)
+    public function update(SegmentRequest $request, $id)
     {
-        $this->subscriberListRepository->update($id, $request->all());
+        $this->subscriberSegment->update($id, $request->all());
 
-        return redirect()->route('lists.index');
+        return redirect()->route('segments.index');
     }
 
     /**
