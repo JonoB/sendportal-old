@@ -61,6 +61,11 @@ body {
     padding-top: 15px;
 }
 
+.skin-blue .wrapper
+{
+    background-color: #ecf0f5;
+}
+
 .sidebar-menu > li.header {
     background-color: #ecf0f5 !important;
     color: #929ca0 !important;
