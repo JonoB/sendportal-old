@@ -211,18 +211,22 @@
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="" class="user-image" alt="User Image">
-                        <span class="hidden-xs">Alexander Pierce</span>
+
+                        <!--<img src="" class="user-image" alt="User Image">-->
+                        <span class="hidden-xs"> {{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img src="" class="img-circle" alt="User Image">
+                            <!--<img src="" class="img-circle" alt="User Image">-->
 
                             <p>
-                                Alexander Pierce - Web Developer
-                                <small>Member since Nov. 2012</small>
+                                {{ Auth::user()->name }}
+                                <small>
+                                    Registered on {{ Auth::user()->created_at->format('d-m-Y') }}
+                                </small>
                             </p>
+
                         </li>
                         <!-- Menu Body -->
                         <li class="user-body">
@@ -245,7 +249,7 @@
                                 <a href="#" class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                <a href="/logout" class="btn btn-default btn-flat">Log Out</a>
                             </div>
                         </li>
                     </ul>
