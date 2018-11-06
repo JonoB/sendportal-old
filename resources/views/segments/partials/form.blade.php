@@ -1,1 +1,1 @@
-{!! Form::textField('name', 'List Name') !!}
+{!! Form::textField('name', 'Segment Name') !!}

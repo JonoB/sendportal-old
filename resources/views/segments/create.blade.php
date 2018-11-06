@@ -1,7 +1,7 @@
 @extends('common.template')
 
 @section('heading')
-    New List
+    New Segment
 @stop
 
 @section('content')

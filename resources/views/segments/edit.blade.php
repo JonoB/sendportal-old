@@ -1,7 +1,7 @@
 @extends('common.template')
 
 @section('heading')
-    Edit List : {{ $segment->name }}
+    Edit Segment : {{ $segment->name }}
 @stop
 
 @section('content')
