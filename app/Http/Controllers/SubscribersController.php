@@ -95,7 +95,7 @@ class SubscribersController extends Controller
      */
     public function update(SegmentRequest $request, $id)
     {
-        $this->subscriberSegment->update($id, $request->all());
+        $this->subscriberRepository->update($id, $request->all());
 
         return redirect()->route('segments.index');
     }
