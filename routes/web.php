@@ -14,12 +14,12 @@ Route::middleware(['auth'])->group(function ()
     Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
-//    Route::resource('autoresponders', 'AutorespondersController');
+    Route::resource('autoresponders', 'AutorespondersController');
 
     Route::resource('lists', 'ListsController');
     Route::resource('lists.subscribers', 'ListSubscribersController');
 
-//    Route::resource('segments', 'SegmentsController');
+    Route::resource('segments', 'SegmentsController');
 
     Route::resource('campaigns', 'CampaignsController');
     Route::get('campaigns/{id}/template', ['as' => 'campaigns.template', 'uses' => 'CampaignsController@template']);
