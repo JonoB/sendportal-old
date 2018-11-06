@@ -39,22 +39,23 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h1>
-                @yield('heading')
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Dashboard</li>
-            </ol>
-        </section>
+        <div class="content-wrapper-inner">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    @yield('heading')
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li class="active">Dashboard</li>
+                </ol>
+            </section>
 
-        <section class="content">
-            @include('common.messages')
-            @yield('content')
-        </section>
-
+            <section class="content">
+                @include('common.messages')
+                @yield('content')
+            </section>
+        </div>
     </div>
     <!-- /.content-wrapper -->
 </div>

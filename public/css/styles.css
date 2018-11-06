@@ -46,8 +46,12 @@ body {
     width: 200%;
 }
 
+/* Theme overrides */
+
 .main-sidebar {
     background-color: #ecf0f5 !important;
+    padding-top: 12px;
+    padding-left: 12px;
 }
 
 .main-sidebar li.active a {
@@ -56,13 +60,7 @@ body {
     color: #3c8dbc !important;
 }
 
-.sidebar-menu
-{
-    padding-top: 15px;
-}
-
-.skin-blue .wrapper
-{
+.skin-blue .wrapper {
     background-color: #ecf0f5;
 }
 
@@ -75,6 +73,7 @@ body {
 .sidebar-menu li a {
     color: #7b8488 !important;
     border: 0 !important;
+    padding: 8px;
 }
 
 .sidebar-menu > li > a:hover {
@@ -112,17 +111,20 @@ body {
         margin-top: 2rem;
     }
 
-    .content-wrapper {
-        padding: 6rem;
-    }
-
-    .main-sidebar {
-        padding-left: 6rem;
-        padding-top: 6rem;
-    }
-
     .sidebar-menu {
         padding-top: 6rem;
     }
 
+}
+
+.container-wrapper {
+    background-color: #ff0000;
+}
+.content-wrapper-inner {
+    background-color: #f9f9f9;
+    padding: 12px;
+    margin: 24px;
+    border: 1px solid #eae9e9;
+    box-shadow: 0 5px 5px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);
+    border-radius: 3px;
 }

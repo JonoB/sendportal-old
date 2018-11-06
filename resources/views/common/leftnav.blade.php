@@ -5,7 +5,6 @@
 
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
-            <li class="header">MAIN NAVIGATION</li>
             <li class="{{ Route::currentRouteName() == 'dashboard' ? 'active' : '' }}">
                 <a href="{{ route('dashboard') }}">
                     <i class="fa fa-bar-chart"></i> <span>Dashboard</span>
