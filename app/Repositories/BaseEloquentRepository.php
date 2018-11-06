@@ -1,6 +1,8 @@
 <?php namespace App\Repositories;
 
-abstract class BaseEloquentRepository extends BaseRepository
+use App\Interfaces\BaseEloquentInterface;
+
+abstract class BaseEloquentRepository extends BaseRepository implements BaseEloquentInterface
 {
 
     /**

@@ -49,18 +49,4 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
             ->orderBy($this->getOrderBy(), $this->getOrderDirection())
             ->paginate($paginate);
     }
-
-    /**
-     * Update the Subscriber
-     *
-     * @param int $id The model id
-     * @param array $data The input data
-     * @return object model instance
-     */
-    public function update($id, array $data)
-    {
-        $data['unsubscribed_at'] = array_get($data, 'unsubscribed', false) ? now() : null;
-
-        return $this->executeUpdate($id, $data);
-    }
 }
