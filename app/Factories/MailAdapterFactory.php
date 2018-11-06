@@ -78,7 +78,7 @@ class MailAdapterFactory
         $adapterMethod = 'create' . ucfirst($name) . 'Adapter';
 
         if (method_exists($this, $adapterMethod)) {
-            return $this->{$adapterMethod};
+            return $this->{$adapterMethod}();
         } else {
             throw new \InvalidArgumentException("Mail adapter [{$name}] is not supported.");
         }
