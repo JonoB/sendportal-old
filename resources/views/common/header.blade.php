@@ -218,9 +218,11 @@
                         <!-- User image -->
                         <li class="user-header">
                             <img src="{{ Auth::user()->avatar_url }}" class="img-circle" alt="{{ Auth::user()->name }}">
-
                             <p>
                                 {{ Auth::user()->name }}
+                                <small>
+                                    Registered on {{ Auth::user()->created_at->format('d-m-Y') }}
+                                </small>
                             </p>
                         </li>
                         <!-- Menu Body -->

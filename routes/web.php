@@ -9,6 +9,7 @@ Auth::routes();
 // App
 Route::middleware(['auth'])->group(function ()
 {
+    Route::get('/logout', ['as' => 'dashboard', 'uses' => 'Auth\LoginController@logout']);
     Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
