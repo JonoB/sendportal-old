@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Dashboard | SendPortal</title>
+    <title>@yield('title')</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -18,9 +18,6 @@
     <link rel="stylesheet" href="{{ asset('css/skin-blue.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
-    <!-- Date Picker -->
-    <link rel="stylesheet" href="{{ asset('css/datepicker3.css') }}">
-
 @yield('css')
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -33,42 +30,23 @@
 <body class="hold-transition skin-blue">
 <div class="wrapper">
 
-    @include('common.header')
+    @yield('content')
 
-    @include('common.leftnav')
-
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <div class="content-wrapper-inner">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-                    @yield('heading')
-                </h1>
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">Dashboard</li>
-                </ol>
-            </section>
-            <section class="content">
-                @include('common.messages')
-                @yield('content')
-            </section>
-        </div>
-        <!-- /.content-wrapper -->
-    </div>
 </div>
 <!-- ./wrapper -->
 
-<footer class="main-footer">
-    @yield('footer')
-</footer>
+
+@auth
+    <footer class="main-footer">
+        @yield('footer')
+    </footer>
+@endauth
 
 <!-- jQuery 2.2.3 -->
 <script src="{{ asset('js/jquery-2.2.3.min.js') }}"></script>
 
 <!-- jQuery UI 1.11.4 -->
-<!-- <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>-->
+<!-- <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>--»
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   //$.widget.bridge('uibutton', $.ui.button);
@@ -76,12 +54,6 @@
 
 <!-- Bootstrap 3.3.6 -->
 <script src=" {{ asset('js/bootstrap.min.js') }} "></script>
-
-<!-- datepicker -->
-<script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
-
-<!-- AdminLTE App -->
-<script src="{{ asset('js/admin-lte.js') }}"></script>
 
 @yield('js')
 

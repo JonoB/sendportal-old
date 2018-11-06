@@ -1,4 +1,6 @@
-@extends('common.template')
+@extends('auth.template')
+
+@section('title', 'Register')
 
 @section('content')
     <div class="container min-h-screen">
@@ -38,8 +40,8 @@
 
                                     @if ($errors->has('email'))
                                         <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
+                                            <strong>{{ $errors->first('email') }}</strong>
+                                        </span>
                                     @endif
                                 </div>
                             </div>
@@ -55,8 +57,8 @@
 
                                     @if ($errors->has('password'))
                                         <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('password') }}</strong>
-                                            </span>
+                                            <strong>{{ $errors->first('password') }}</strong>
+                                        </span>
                                     @endif
                                 </div>
                             </div>
@@ -65,6 +67,7 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Register') }}
                                 </button>
+                                <a href="{{ route('login') }}" class="btn btn-default">Back</a>
                             </div>
                         </form>
                     </div>

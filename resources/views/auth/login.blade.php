@@ -1,4 +1,6 @@
-@extends('common.template')
+@extends('auth.template')
+
+@section('title', 'Login')
 
 @section('content')
     <div class="container min-h-screen">
