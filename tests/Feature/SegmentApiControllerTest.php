@@ -68,9 +68,9 @@ class SegmentApiControllerTest extends TestCase
     /** @test */
     function the_index_endpoint_returns_a_paginated_list_of_segments()
     {
-        $subscriberCount = 10;
+        $segmentCount = 10;
 
-        factory(Segment::class, $subscriberCount)->create();
+        factory(Segment::class, $segmentCount)->create();
 
         $response = $this->actingAs($this->user, 'api')
             ->getJson(route('api.segments.index'));
@@ -80,7 +80,7 @@ class SegmentApiControllerTest extends TestCase
             'data' => [],
             'links' => [],
             'meta' => [
-                'total' => $subscriberCount
+                'total' => $segmentCount
             ]
         ]);
     }
@@ -96,9 +96,7 @@ class SegmentApiControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson([
             'data' => [
-                'first_name' => $segment->first_name,
-                'last_name' => $segment->last_name,
-                'email' => $segment->email
+                'name' => $segment->name
             ]
         ]);
     }

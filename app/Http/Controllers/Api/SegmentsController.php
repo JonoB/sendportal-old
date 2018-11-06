@@ -7,6 +7,7 @@ use App\Http\Requests\Api\SegmentStoreRequest;
 use App\Http\Requests\Api\SegmentUpdateRequest;
 use App\Http\Resources\Segment;
 use App\Http\Resources\Segment as SegmentResource;
+use App\Interfaces\SegmentRepositoryInterface;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
