@@ -6,7 +6,7 @@
 
 @section('content')
 
-    @if( ! $templatesAvailable)
+	@if( ! $templatesAvailable)
         <div class="col-md-6">
             <div class="no-templates">
                 <h4>You haven't created any templates!</h4>
@@ -15,9 +15,8 @@
             </div>
         </div>
     @else
-        {!! Form::open(array('route' => array('campaigns.store'))) !!}
+    	{!! Form::open(['route' => ['campaigns.store'], 'class' => 'form-horizontal']) !!}
 
-        @include('campaigns.partials.form')
-    @endif
-
+    	@include('campaigns.partials.form')
+	@endif
 @stop

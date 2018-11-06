@@ -6,7 +6,7 @@
 
 @section('content')
 
-    {!! Form::model($template, array('method' => 'put', 'route' => array('templates.update', $template->id))) !!}
+    {!! Form::model($template, ['method' => 'put', 'route' => ['templates.update', $template->id], 'class' => 'form-horizontal']) !!}
 
     @include('templates.partials.form')
 

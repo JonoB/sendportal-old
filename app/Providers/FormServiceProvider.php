@@ -103,7 +103,13 @@ class FormServiceProvider extends ServiceProvider
                 $res[] = e($key).'="'.e($val).'"';
             }
 
-            return '<button type="submit" '.implode(' ', $res).'>' . $label . '</button>';
+            $out = '<div class="form-group">';
+            $out .= '<div class="col-sm-offset-2 col-sm-10">';
+            $out .= '<button type="submit" '.implode(' ', $res).'>' . $label . '</button>';
+            $out .= '</div>';
+            $out .= '</div>';
+
+            return $out;
         });
 
         Form::macro('fieldWrapper', function ($name, $label, $element)
@@ -111,7 +117,9 @@ class FormServiceProvider extends ServiceProvider
             $out = '<div class="form-group form-group-' . $name;
             $out .= Form::fieldError($name) . '">';
             $out .= Form::fieldLabel($name, $label);
+            $out .= '<div class="col-sm-10">';
             $out .= $element;
+            $out .= '</div>';
             $out .= '</div>';
 
             return $out;
@@ -121,7 +129,7 @@ class FormServiceProvider extends ServiceProvider
         {
             $error = '';
 
-            if ($errors = Session::get('errors'))
+            if ($errors = session('errors'))
             {
                 $error = $errors->first($field) ? ' has-error' : '';
             }
@@ -133,7 +141,7 @@ class FormServiceProvider extends ServiceProvider
         {
             $error = '';
 
-            if ($errors = Session::get('errors'))
+            if ($errors = session('errors'))
             {
                 $error = $errors->first($field);
             }
@@ -147,7 +155,7 @@ class FormServiceProvider extends ServiceProvider
 
             $name = str_replace('[]', '', $name);
 
-            $out = '<label for="id-field-' . $name . '" class="control-label">';
+            $out = '<label for="id-field-' . $name . '" class="control-label col-sm-2">';
             $out .= $label . '</label>';
 
             return $out;
