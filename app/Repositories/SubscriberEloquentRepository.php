@@ -25,32 +25,6 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
     }
 
     /**
-     * Paginate list of subscribers for the given subscriber list
-     *
-     * @param string $listId
-     * @param string $orderBy
-     * @param array $relations
-     * @param int $paginate
-     * @param array $parameters
-     *
-     * @return mixed
-     */
-    public function paginateListSubscribers($listId, $orderBy = 'name', array $relations = [], $paginate = 50, array $parameters = [])
-    {
-        $instance = $this->getQueryBuilder();
-
-        $this->parseOrder($orderBy);
-
-        // $parameters can be extended in child classes for filtering
-        $parameters = [];
-
-        return $instance->with($relations)
-            ->where('subscriber_list_id', '=', $listId)
-            ->orderBy($this->getOrderBy(), $this->getOrderDirection())
-            ->paginate($paginate);
-    }
-
-    /**
      * Update the Subscriber
      *
      * @param int $id The model id
@@ -59,8 +33,12 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
      */
     public function update($id, array $data)
     {
-        $data['unsubscribed_at'] = array_get($data, 'unsubscribed', false) ? now() : null;
+        $this->instance = $this->find($id);
 
-        return $this->executeUpdate($id, $data);
+        $this->executeUpdate($id, $data);
+
+        $this->syncTags($this->instance, array_get($data, 'tags', []));
+
+        return $this->instance;
     }
 }
