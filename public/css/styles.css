@@ -1,3 +1,7 @@
+body {
+    background-color: #ecf0f5 !important;
+}
+
 .actions-container {
     margin-bottom: 10px;
 }
@@ -22,7 +26,7 @@
 .template-preview {
     background-color: #fff;
     background-size: 16px 16px;
-    background-position: 0 0,8px 8px;
+    background-position: 0 0, 8px 8px;
     height: 300px;
     position: relative;
     overflow: hidden;
@@ -40,4 +44,80 @@
     -o-transform-origin: top left;
     transform-origin: top left;
     width: 200%;
+}
+
+.main-sidebar {
+    background-color: #ecf0f5 !important;
+}
+
+.main-sidebar li.active a {
+    border: 0;
+    background-color: #ecf0f5 !important;
+    color: #3c8dbc !important;
+}
+
+.sidebar-menu
+{
+    padding-top: 15px;
+}
+
+.sidebar-menu > li.header {
+    background-color: #ecf0f5 !important;
+    color: #929ca0 !important;
+    font-weight: bold;
+}
+
+.sidebar-menu li a {
+    color: #7b8488 !important;
+    border: 0 !important;
+}
+
+.sidebar-menu > li > a:hover {
+    background-color: #ecf0f5 !important;
+    color: #3c8dbc !important;
+}
+
+.sidebar-menu i {
+    color: #bec8cc;
+    margin-right: 1rem;
+}
+
+.skin-blue .main-header .logo {
+    background-color: #3c8dbc;
+    text-align: left;
+    padding-left: 3rem
+}
+
+.sidebar-toggle {
+    color: white !important;
+    background-color: #3c8dbc !important;
+}
+
+.main-footer {
+    margin-left: 0 !important;
+}
+
+@media (min-width: 767px) {
+    .skin-blue .main-header .logo {
+        background-color: #3c8dbc;
+        text-align: center;
+    }
+
+    .box {
+        margin-top: 2rem;
+    }
+
+    .content-wrapper {
+        padding: 6rem;
+    }
+
+    .main-sidebar {
+        padding-left: 6rem;
+        padding-top: 6rem;
+    }
+
+    .sidebar-menu {
+        padding-top: 6rem;
+    }
+
 }
