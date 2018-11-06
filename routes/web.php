@@ -3,8 +3,6 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-require_once app_path('Http/helpers.php');
-
 // Auth
 Auth::routes();
 
