@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Segment;
 use App\Models\Subscriber;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -195,6 +196,37 @@ class SubscriberApiControllerTest extends TestCase
             'first_name' => $subscriber->first_name,
             'last_name' => $subscriber->last_name
         ]);
+    }
+
+    /** @test */
+    function the_store_endpoint_can_associate_segments_with_the_subscriber()
+    {
+        $segment = factory(Segment::class)->create();
+
+        $data = [
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'email' => $this->faker->safeEmail,
+            'segments' => [
+                $segment->id
+            ]
+        ];
+
+        $response = $this->actingAs($this->user, 'api')
+            ->postJson(route('api.subscribers.store', $data));
+
+        $response->assertStatus(201);
+        $response->assertJson([
+            'data' => [
+                'email' => $data['email'],
+                'segments' => [
+                    ['id' => $segment->id]
+                ]
+            ],
+        ]);
+
+        $this->assertDatabaseHas('subscribers', ['email' => $data['email']]);
+        $this->assertDatabaseHas('segment_subscriber', ['segment_id' => $segment->id, 'subscriber_id' => $response->json()['data']['id']]);
     }
 
     /** @test */

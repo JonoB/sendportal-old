@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Segment as SegmentResource;
 
 class Subscriber extends JsonResource
 {
@@ -19,6 +20,7 @@ class Subscriber extends JsonResource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
+            'segments' => SegmentResource::collection($this->whenLoaded('segments')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

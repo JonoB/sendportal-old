@@ -27,7 +27,8 @@ class SubscriberStoreRequest extends FormRequest
             'id' => ['nullable'],
             'first_name' => ['required'],
             'last_name' => ['nullable'],
-            'email' => ['required', 'email']
+            'email' => ['required', 'email'],
+            'segments' => ['array', 'nullable']
         ];
     }
 }

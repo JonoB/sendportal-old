@@ -61,6 +61,8 @@ class SubscribersController extends Controller
     {
         $subscriber = $this->apiStoreService->createOrUpdate($request->validated());
 
+        $subscriber->load('segments');
+
         return new SubscriberResource($subscriber);
     }
 
@@ -73,7 +75,7 @@ class SubscribersController extends Controller
      */
     public function show($id)
     {
-        return new SubscriberResource($this->subscribers->find((int)$id));
+        return new SubscriberResource($this->subscribers->find((int)$id, ['segments']));
     }
 
     /**
