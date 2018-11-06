@@ -87,6 +87,7 @@ class CampaignsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param CampaignRequest $request
+     *
      * @return RedirectResponse
      */
     public function store(CampaignRequest $request)
@@ -100,6 +101,7 @@ class CampaignsController extends Controller
      * Display a list of templates for selection.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function template($id)
@@ -115,13 +117,22 @@ class CampaignsController extends Controller
     /**
      * Update the template.
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function updateTemplate(Request $request, $id)
     {
         $templateId = $request->get('template_id');
+
+        if ( ! $templateId)
+        {
+            return redirect()->back()->withErrors([
+                'msg' => 'Your must select a template to use for this campaign',
+            ]);
+        }
+
         $template = $this->templateRepo->find($templateId);
 
         // @todo at this point we're just over-writing the campaign
@@ -139,6 +150,7 @@ class CampaignsController extends Controller
      * Display the template for design.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function design($id)
@@ -152,8 +164,9 @@ class CampaignsController extends Controller
     /**
      * Update the design.
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function updateDesign(Request $request, $id)
@@ -167,6 +180,7 @@ class CampaignsController extends Controller
      * Display the confirmation view.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function confirm($id)
@@ -187,8 +201,9 @@ class CampaignsController extends Controller
     /**
      * Dispatch the campaign.
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function send(Request $request, $id)
@@ -215,6 +230,7 @@ class CampaignsController extends Controller
      * Display the status view.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function status($id)
@@ -228,6 +244,7 @@ class CampaignsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -243,8 +260,9 @@ class CampaignsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request  $request
-     * @param int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
      * @return RedirectResponse
      */
     public function update(CampaignRequest $request, $id)
@@ -271,6 +289,7 @@ class CampaignsController extends Controller
      * Show campaign report view
      *
      * @param $id
+     *
      * @return \Illuminate\Contracts\View\Factory|RedirectResponse|\Illuminate\View\View
      */
     public function report($id)
@@ -284,7 +303,6 @@ class CampaignsController extends Controller
 
         if ($campaign->status_id == CampaignStatus::STATUS_SENT)
         {
-
             return view('campaigns.report', compact('campaign', 'chartData'));
         }
 
@@ -295,6 +313,7 @@ class CampaignsController extends Controller
      * Show campaign recipients view
      *
      * @param $id
+     *
      * @return \Illuminate\Contracts\View\Factory|RedirectResponse|\Illuminate\View\View
      */
     public function recipients($id)
@@ -320,6 +339,7 @@ class CampaignsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -328,6 +348,4 @@ class CampaignsController extends Controller
         // redirect if its not in draft
         //
     }
-
-
 }
