@@ -30,7 +30,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue">
 <div class="wrapper">
 
     @include('common.header')
@@ -57,12 +57,12 @@
 
     </div>
     <!-- /.content-wrapper -->
-    <footer class="main-footer">
-        @yield('footer')
-    </footer>
-
 </div>
 <!-- ./wrapper -->
+
+<footer class="main-footer">
+    @yield('footer')
+</footer>
 
 <!-- jQuery 2.2.3 -->
 <script src="{{ asset('js/jquery-2.2.3.min.js') }}"></script>
