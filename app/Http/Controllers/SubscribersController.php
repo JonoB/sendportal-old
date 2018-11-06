@@ -89,11 +89,11 @@ class SubscribersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param SubscriberListRequest $request
+     * @param SubscriberRequest $request
      * @param int $id
      * @return RedirectResponse
      */
-    public function update(SegmentRequest $request, $id)
+    public function update(SubscriberRequest $request, $id)
     {
         $this->subscriberRepository->update($id, $request->all());
 
