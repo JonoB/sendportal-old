@@ -40,7 +40,8 @@
     @include('common.leftnav')
 
     <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
+    <div class="content-wrapper">
+        <div class="content-wrapper-inner">
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
@@ -51,13 +52,10 @@
                     <li class="active">Dashboard</li>
                 </ol>
             </section>
-            <!-- /.content-header -->
-
             <section class="content">
                 @include('common.messages')
                 @yield('content')
             </section>
-
         </div>
         <!-- /.content-wrapper -->
 
@@ -66,6 +64,7 @@
         @yield('content')
 
     @endauth
+    </div>
 </div>
 <!-- ./wrapper -->
 

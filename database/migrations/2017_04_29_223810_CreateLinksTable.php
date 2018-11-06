@@ -31,6 +31,6 @@ class CreateLinksTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('campaign_urls');
     }
 }

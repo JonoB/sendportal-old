@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ListRequest extends FormRequest
+class SubscriberStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,11 @@ class ListRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:255',
+            'id' => ['nullable'],
+            'first_name' => ['required'],
+            'last_name' => ['nullable'],
+            'email' => ['required', 'email'],
+            'segments' => ['array', 'nullable']
         ];
     }
 }

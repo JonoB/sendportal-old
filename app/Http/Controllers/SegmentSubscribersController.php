@@ -9,7 +9,7 @@ use App\Interfaces\TagRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 
-class ListSubscribersController extends Controller
+class SegmentSubscribersController extends Controller
 {
     /**
      * @var SubscriberRepositoryInterface

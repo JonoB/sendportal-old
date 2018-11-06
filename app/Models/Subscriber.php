@@ -1,24 +1,32 @@
 <?php namespace App\Models;
 
 use App\Traits\Uuid;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Subscriber extends BaseModel
 {
     use Uuid;
 
-    protected $fillable = [
-        'subscriber_list_id',
-        'email',
-        'first_name',
-        'last_name',
-        'unsubscribed_at',
-    ];
+    /**
+     * @var array
+     */
+    protected $guarded = [];
 
-    public function subscriberList()
+    /**
+     * Segments this subscriber is assigned to
+     *
+     * @return BelongsToMany
+     */
+    public function segments()
     {
-        return $this->belongsTo(SubscriberList::class);
+        return $this->belongsToMany(Segment::class)->withTimestamps();
     }
 
+    /**
+     * Tags associated with this subscriber
+     *
+     * @return BelongsToMany
+     */
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
@@ -32,15 +40,5 @@ class Subscriber extends BaseModel
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
-    }
-
-    /**
-     * If the Subscriber has been unsubscribed
-     *
-     * @return bool
-     */
-    public function getUnsubscribedAttribute()
-    {
-        return ! is_null($this->unsubscribed_at);
     }
 }

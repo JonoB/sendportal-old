@@ -15,8 +15,7 @@ Route::middleware(['auth'])->group(function ()
 
     Route::resource('autoresponders', 'AutorespondersController');
 
-    Route::resource('lists', 'ListsController');
-    Route::resource('lists.subscribers', 'ListSubscribersController');
+    Route::resource('subscribers', 'SubscribersController');
 
     Route::resource('segments', 'SegmentsController');
 

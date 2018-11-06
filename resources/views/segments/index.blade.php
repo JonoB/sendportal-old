@@ -1,12 +1,12 @@
 @extends('common.template')
 
 @section('heading')
-    Subscriber Lists
+    Segments
 @endsection
 
 @section('content')
     <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('lists.create') }}">Create List</a>
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('segments.create') }}">Create Segment</a>
         <div class="clearfix"></div>
     </div>
 
@@ -21,15 +21,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($subscriberLists as $list)
+                    @foreach($segments as $segment)
                         <tr>
                             <td>
-                                <a href="{{ route('lists.subscribers.index', $list->id) }}">
-                                    {{ $list->name }}
+                                <a href="{{ route('segments.edit', $segment->id) }}">
+                                    {{ $segment->name }}
                                 </a>
                             </td>
-                            <td>{{ $list->subscribers()->count() }}</td>
-                            <td><a href="{{ route('lists.edit', $list->id) }}">Edit</a></td>
+                            <td>{{ $segment->subscribers()->count() }}</td>
+                            <td><a href="{{ route('segments.edit', $segment->id) }}">Edit</a></td>
                         </tr>
                     @endforeach
                 </tbody>

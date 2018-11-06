@@ -2,7 +2,7 @@
 
 use App\Traits\Uuid;
 
-class SubscriberList extends BaseModel
+class Segment extends BaseModel
 {
     use Uuid;
 
@@ -12,20 +12,22 @@ class SubscriberList extends BaseModel
 
     public function subscribers()
     {
-        return $this->hasMany(Subscriber::class);
+        return $this->belongsToMany(Subscriber::class)
+            ->withTimestamps()
+            ->withPivot('unsubscribed_at');
     }
 
     public function active_subscribers()
     {
-        return $this->hasMany(Subscriber::class)
+        return $this->subscribers()
             ->whereNull('unsubscribed_at');
     }
 
     public function getSubscribersCountAttribute()
     {
-        if ( ! array_key_exists('SubscriberCount', $this->relations))
+        if ( ! array_key_exists('subscribers', $this->relations))
         {
-            $this->load('subscriberCount');
+            $this->load('subscribers');
         }
 
         $related = $this->getRelation('subscriberCount')->first();
@@ -35,7 +37,7 @@ class SubscriberList extends BaseModel
 
     public function subscriberCount()
     {
-        return $this->hasMany(Subscriber::class)
+        return $this->belongsToMany(Subscriber::class)
             ->selectRaw('count(subscribers.id) as aggregate')
             ->groupBy('subscribers.id');
     }

@@ -6,8 +6,8 @@
 
 @section('content')
 
-    {!! Form::open(['route' => ['lists.store']]) !!}
+    {!! Form::open(['route' => ['segments.store']]) !!}
 
-    @include('lists.partials.form')
+    @include('segments.partials.form')
 
 @stop
