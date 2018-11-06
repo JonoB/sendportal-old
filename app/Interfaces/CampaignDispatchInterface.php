@@ -2,19 +2,17 @@
 
 namespace App\Interfaces;
 
-use App\Models\Subscriber;
-use App\Models\Campaign;
-
 interface CampaignDispatchInterface
 {
     /**
      * Send the campaign
      *
+     * @param string $mailService
      * @param string $fromEmail
      * @param string $toEmail
      * @param string $subject
      * @param string $content
      * @return mixed
      */
-    public function send($fromEmail, $toEmail, $subject, $content);
+    public function send($mailService, $fromEmail, $toEmail, $subject, $content);
 }
