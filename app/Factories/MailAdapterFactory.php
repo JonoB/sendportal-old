@@ -2,6 +2,7 @@
 
 namespace App\Factories;
 
+use App\Adapters\SendgridMailAdapter;
 use App\Adapters\SesMailAdapter;
 use App\Interfaces\ConfigRepositoryInterface;
 use App\Interfaces\MailAdapterInterface;
@@ -97,5 +98,22 @@ class MailAdapterFactory
         $config = $this->configRepo->findSettings(ConfigType::AWS_SNS);
 
         return $adapter->setConfig($config);
+    }
+
+    /**
+     * Return a SendgridMailAdapter
+     *
+     * @param null
+     * @return MailAdapterInterface
+     */
+    public function createSendgridAdapter()
+    {
+        $adapter = new SendgridMailAdapter();
+
+        $config = $this->configRepo->findSettings(ConfigType::SENDGRID);
+
+        $adapter->setConfig($config);
+
+        return $adapter;
     }
 }
