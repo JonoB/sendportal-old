@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCampaignsTable extends Migration
+class CreateEmailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateCampaignsTable extends Migration
      */
     public function up()
     {
-        Schema::create('campaigns', function (Blueprint $table) {
+        Schema::create('emails', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
+            $table->uuid('mailable_id');
+            $table->string('mailable_type');
             $table->char('template_id', 36)->nullable();
             $table->unsignedInteger('status_id')->default(1);
             $table->string('subject')->nullable();
@@ -27,11 +28,7 @@ class CreateCampaignsTable extends Migration
             $table->mediumInteger('sent_count')->nullable()->default(0);
             $table->mediumInteger('open_count')->nullable()->default(0);
             $table->mediumInteger('click_count')->nullable()->default(0);
-            $table->timestamp('scheduled_at')->nullable();
             $table->timestamps();
-
-            $table->foreign('template_id')->references('id')->on('templates');
-            $table->foreign('status_id')->references('id')->on('campaign_statuses');
         });
     }
 
@@ -42,6 +39,6 @@ class CreateCampaignsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('campaigns');
+        Schema::dropIfExists('emails');
     }
 }

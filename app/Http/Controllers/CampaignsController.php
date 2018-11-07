@@ -59,6 +59,11 @@ class CampaignsController extends Controller
         $this->segment = $segment;
     }
 
+    protected $campaignFields = [
+        'name',
+        'scheduled_at',
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -92,7 +97,10 @@ class CampaignsController extends Controller
      */
     public function store(CampaignRequest $request)
     {
-        $campaign = $this->campaignRepo->store($request->all());
+        $campaign = $this->campaignRepo->store($request->only($this->campaignFields));
+        $campaign->email()->save($request->except($this->campaignFields));
+
+        dd($campaign);
 
         return redirect()->route('campaigns.template', $campaign->id);
     }
