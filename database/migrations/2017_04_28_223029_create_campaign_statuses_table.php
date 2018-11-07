@@ -18,6 +18,14 @@ class CreateCampaignStatusesTable extends Migration
             $table->string('name');
             $table->timestamps();
         });
+
+        DB::table('campaign_statuses')
+            ->insert([
+               ['name' => 'Draft'],
+               ['name' => 'Queued'],
+               ['name' => 'Sending'],
+               ['name' => 'Sent'],
+            ]);
     }
 
     /**
