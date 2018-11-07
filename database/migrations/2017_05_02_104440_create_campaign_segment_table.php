@@ -15,8 +15,8 @@ class CreateCampaignSegmentTable extends Migration
     {
         Schema::create('campaign_segment', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('segment_id', 36);
-            $table->char('campaign_id', 36);
+            $table->unsignedInteger('segment_id');
+            $table->unsignedInteger('campaign_id');
             $table->timestamps();
 
             $table->foreign('segment_id')->references('id')->on('segments');
