@@ -22,6 +22,7 @@ class CreateCampaignsTable extends Migration
             $table->text('content')->nullable();
             $table->string('from_name')->nullable();
             $table->string('from_email')->nullable();
+            $table->unsignedInteger('config_id');
             $table->boolean('track_opens')->default(1);
             $table->boolean('track_clicks')->default(1);
             $table->mediumInteger('sent_count')->nullable()->default(0);
@@ -32,6 +33,7 @@ class CreateCampaignsTable extends Migration
 
             $table->foreign('template_id')->references('id')->on('templates');
             $table->foreign('status_id')->references('id')->on('campaign_statuses');
+            $table->foreign('config_id')->references('id')->on('configs');
         });
     }
 
