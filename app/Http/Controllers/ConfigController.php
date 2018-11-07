@@ -38,6 +38,31 @@ class ConfigController extends Controller
     }
 
     /**
+     * Display the form for creating
+     * a configuration set
+     *
+     * @param null
+     * @return null
+     */
+    public function create()
+    {
+        $configTypes = $this->configRepo->getConfigTypes()->pluck('name', 'id');
+
+        return view('config.create', compact('configTypes'));
+    }
+
+    /**
+     * Store a new configuration set
+     *
+     * @param Request $request
+     * @return null
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
      * @param $configTypeId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -62,5 +87,19 @@ class ConfigController extends Controller
         $this->configRepo->updateSettings($configTypeId, $newSettings);
 
         return redirect()->back();
+    }
+
+    /**
+     * Return the fields for
+     * a given ConfigType
+     *
+     * @param integer $configTypeId
+     * @return null
+     */
+    public function configTypeAjax($configTypeId)
+    {
+        $configType = $this->configRepo->findType($configTypeId);
+
+        return response()->json($configType->fields);
     }
 }

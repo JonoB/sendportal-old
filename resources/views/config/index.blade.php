@@ -5,6 +5,10 @@
 @endsection
 
 @section('content')
+    <div class="actions-container">
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('config.create') }}">Create Configuration</a>
+        <div class="clearfix"></div>
+    </div>
 
     <div class="box box-primary">
         <div class="box-body no-padding">
