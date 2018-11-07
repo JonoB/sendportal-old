@@ -19,7 +19,7 @@ class SesMailAdapter extends BaseMailAdapter implements MailAdapterInterface
      * @param null
      * @return SesClient
      */
-    public function resolveClient()
+    protected function resolveClient()
     {
         if ($this->client)
         {
@@ -77,7 +77,7 @@ class SesMailAdapter extends BaseMailAdapter implements MailAdapterInterface
      * @param Result $result
      * @return string
      */
-    public function resolveMessageId(Result $result)
+    protected function resolveMessageId(Result $result)
     {
         return array_get($result->toArray(), 'MessageId');
     }

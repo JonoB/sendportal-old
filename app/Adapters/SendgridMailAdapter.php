@@ -19,7 +19,7 @@ class SendgridMailAdapter extends BaseMailAdapter implements MailAdapterInterfac
      * @param null
      * @return SendGrid
      */
-    public function resolveClient()
+    protected function resolveClient()
     {
         if ($this->client)
         {
@@ -70,7 +70,7 @@ class SendgridMailAdapter extends BaseMailAdapter implements MailAdapterInterfac
      * @param SendGrid\Response $response
      * @return string
      */
-    public function resolveMessageId(Sendgrid\Response $response)
+    protected function resolveMessageId(Sendgrid\Response $response)
     {
         $response = array_get($response->headers(), 8);
 
