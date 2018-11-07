@@ -10,3 +10,11 @@ $factory->define(Subscriber::class, function (Faker $faker) {
         'email' => $faker->safeEmail
     ];
 });
+
+$factory->state(Subscriber::class, 'segmented', function (Faker $faker) {
+    return [];
+});
+
+$factory->afterCreatingState(Subscriber::class, 'segmented', function ($subscriber, $faker) {
+    $subscriber->segments()->save(factory(\App\Models\Segment::class)->make());
+});

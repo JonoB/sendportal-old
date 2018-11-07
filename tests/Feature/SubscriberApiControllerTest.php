@@ -87,9 +87,26 @@ class SubscriberApiControllerTest extends TestCase
     }
 
     /** @test */
+    function the_index_endpoint_does_not_include_segments()
+    {
+        factory(Subscriber::class)->state('segmented')->create();
+
+        $response = $this->actingAs($this->user, 'api')
+            ->getJson(route('api.subscribers.index'));
+
+        $response->assertJsonMissing([
+            'data' => [
+                [
+                    'segments' => []
+                ]
+            ]
+        ]);
+    }
+
+    /** @test */
     function the_show_endpoint_returns_a_single_subscriber()
     {
-        $subscriber = factory(Subscriber::class)->create();
+        $subscriber = factory(Subscriber::class)->state('segmented')->create();
 
         $response = $this->actingAs($this->user, 'api')
             ->getJson(route('api.subscribers.show', $subscriber->id));
@@ -99,7 +116,8 @@ class SubscriberApiControllerTest extends TestCase
             'data' => [
                 'first_name' => $subscriber->first_name,
                 'last_name' => $subscriber->last_name,
-                'email' => $subscriber->email
+                'email' => $subscriber->email,
+                'segments' => []
             ]
         ]);
     }
@@ -199,7 +217,7 @@ class SubscriberApiControllerTest extends TestCase
     }
 
     /** @test */
-    function the_store_endpoint_can_associate_segments_with_the_subscriber()
+    function the_store_endpoint_can_associate_segments_with_a_new_subscriber()
     {
         $segment = factory(Segment::class)->create();
 
@@ -227,6 +245,69 @@ class SubscriberApiControllerTest extends TestCase
 
         $this->assertDatabaseHas('subscribers', ['email' => $data['email']]);
         $this->assertDatabaseHas('segment_subscriber', ['segment_id' => $segment->id, 'subscriber_id' => $response->json()['data']['id']]);
+    }
+
+    /** @test */
+    function the_store_endpoint_does_not_associate_segments_when_updating_via_id()
+    {
+        $subscriber = factory(Subscriber::class)->create();
+        $segment = factory(Segment::class)->create();
+
+        $data = [
+            'id' => $subscriber->id,
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'email' => $this->faker->safeEmail,
+            'segments' => [
+                $segment->id
+            ]
+        ];
+
+        $response = $this->actingAs($this->user, 'api')
+            ->postJson(route('api.subscribers.store', $data));
+
+        $response->assertStatus(200);
+        $response->assertJsonMissing([
+            'data' => [
+                'segments' => []
+            ]
+        ]);
+
+        $this->assertDatabaseMissing('segment_subscriber', [
+            'segment_id' => $segment->id,
+            'subscriber_id' => $subscriber->id
+        ]);
+    }
+
+    /** @test */
+    function the_store_endpoint_does_not_associate_segments_when_updating_via_email()
+    {
+        $subscriber = factory(Subscriber::class)->create();
+        $segment = factory(Segment::class)->create();
+
+        $data = [
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'email' => $subscriber->email,
+            'segments' => [
+                $segment->id
+            ]
+        ];
+
+        $response = $this->actingAs($this->user, 'api')
+            ->postJson(route('api.subscribers.store', $data));
+
+        $response->assertStatus(200);
+        $response->assertJsonMissing([
+            'data' => [
+                'segments' => []
+            ]
+        ]);
+
+        $this->assertDatabaseMissing('segment_subscriber', [
+            'segment_id' => $segment->id,
+            'subscriber_id' => $subscriber->id
+        ]);
     }
 
     /** @test */

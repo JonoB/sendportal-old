@@ -31,14 +31,14 @@ class ApiStoreService
     {
         if (array_get($data, 'id') !== null)
         {
-            return $this->subscribers->update($data['id'], array_except($data, 'id'));
+            return $this->subscribers->update($data['id'], array_except($data, ['id', 'segments']));
         }
 
         $subscriber = $this->subscribers->findBy('email', array_get($data, 'email'));
 
         if ($subscriber)
         {
-            return $this->subscribers->update($subscriber->id, $data);
+            return $this->subscribers->update($subscriber->id, array_except($data, 'segments'));
         }
 
         $subscriber = $this->subscribers->store(array_except($data, ['segments']));
