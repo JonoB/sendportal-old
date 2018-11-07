@@ -15,6 +15,9 @@ Route::middleware(['auth'])->group(function ()
 
 //    Route::resource('autoresponders', 'AutorespondersController');
 
+    Route::get('subscribers/export', ['as' => 'subscribers.export', 'uses' => 'SubscribersController@export']);
+    Route::get('subscribers/import', ['as' => 'subscribers.import', 'uses' => 'ImportSubscribersController@show']);
+    Route::post('subscribers/import', ['as' => 'subscribers.import.store', 'uses' => 'ImportSubscribersController@store']);
     Route::resource('subscribers', 'SubscribersController');
 
     Route::resource('segments', 'SegmentsController');

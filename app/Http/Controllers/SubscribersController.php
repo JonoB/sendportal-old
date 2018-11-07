@@ -6,6 +6,7 @@ use App\Http\Requests\SubscriberRequest;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class SubscribersController extends Controller
 {
@@ -36,6 +37,18 @@ class SubscribersController extends Controller
         $subscribers = $this->subscriberRepository->paginate('first_name', ['tags']);
 
         return view('subscribers.index', compact('subscribers'));
+    }
+
+    /**
+     * Export Subscribers
+     *
+     * @return Response
+     */
+    public function export()
+    {
+        $subscribers = $this->subscriberRepository->export(['email', 'first_name', 'last_name', 'created_at']);
+
+        return (new FastExcel($subscribers))->download(sprintf('subscribers-%s.csv', date('Y_m_d-H_m_s')));
     }
 
     /**

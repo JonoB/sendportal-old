@@ -6,7 +6,15 @@
 
 @section('content')
     <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('subscribers.create') }}">Create Subscriber</a>
+        <a class="btn btn-default btn-flat pull-right" href="{{ route('subscribers.import') }}">
+            <i class="fa fa-upload"></i> Import Subscribers
+        </a>
+        <a class="btn btn-default btn-flat pull-right" href="{{ route('subscribers.export') }}">
+            <i class="fa fa-download"></i> Export Subscribers
+        </a>
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('subscribers.create') }}">
+            <i class="fa fa-plus"></i> Create Subscriber
+        </a>
         <div class="clearfix"></div>
     </div>
 
@@ -23,7 +31,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($subscribers as $subscriber)
+                    @forelse($subscribers as $subscriber)
                         <tr>
                             <td>
                                 <a href="{{ route('subscribers.show', $subscriber->id) }}">
@@ -39,7 +47,13 @@
                             </td>
                             <td><a href="{{ route('subscribers.edit', $subscriber->id) }}">Edit</a></td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="100%">
+                                <h5 class="text-center text-muted">There are no Subscribers</h5>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
 
