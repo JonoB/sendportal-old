@@ -3,6 +3,7 @@
 namespace App\Factories;
 
 use App\Adapters\MailgunMailAdapter;
+use App\Adapters\PostmarkMailAdapter;
 use App\Adapters\SendgridMailAdapter;
 use App\Adapters\SesMailAdapter;
 use App\Interfaces\ConfigRepositoryInterface;
@@ -129,6 +130,23 @@ class MailAdapterFactory
         $adapter = new MailgunMailAdapter();
 
         $config = $this->configRepo->findSettings(ConfigType::MAILGUN);
+
+        $adapter->setConfig($config);
+
+        return $adapter;
+    }
+
+    /**
+     * Return a PostmarkMailAdapter
+     *
+     * @param null
+     * @return MailAdapterInterface
+     */
+    public function createPostmarkAdapter()
+    {
+        $adapter = new PostmarkMailAdapter();
+
+        $config = $this->configRepo->findSettings(ConfigType::POSTMARK);
 
         $adapter->setConfig($config);
 
