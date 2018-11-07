@@ -9,18 +9,7 @@ class Campaign extends BaseModel
     use Uuid;
 
     protected $fillable = [
-        'template_id',
-        'status_id',
         'name',
-        'subject',
-        'content',
-        'from_name',
-        'from_email',
-        'track_opens',
-        'track_clicks',
-        'sent_count',
-        'open_count',
-        'click_count',
         'scheduled_at',
     ];
 
