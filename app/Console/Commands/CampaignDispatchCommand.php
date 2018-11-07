@@ -248,7 +248,7 @@ class CampaignDispatchCommand extends Command
      *
      * @return bool
      */
-    protected function checkCampaignStatus(int $campaignId): bool
+    protected function checkCampaignStatus($campaignId): bool
     {
         return $this->campaignRepo->find($campaignId)->status_id === CampaignStatus::STATUS_QUEUED;
     }
@@ -262,7 +262,7 @@ class CampaignDispatchCommand extends Command
      *
      * @return bool
      */
-    protected function canSendToSubscriber(int $campaignId, int $subscriberId): bool
+    protected function canSendToSubscriber($campaignId, $subscriberId): bool
     {
         $key = "{$campaignId}:{$subscriberId}";
 

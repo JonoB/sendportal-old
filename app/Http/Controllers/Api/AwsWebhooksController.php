@@ -46,18 +46,14 @@ class AwsWebhooksController extends Controller
      */
     protected function processEmailEvent(array $event)
     {
-        \Log::info($event);
-
         $messageId = array_get($event, 'mail.messageId');
 
-        if ( ! $eventType = array_get($event, 'notificationType'))
+        if ( ! $eventType = array_get($event, 'eventType'))
         {
             return response('OK (not processed).');
         }
 
         $method = 'handle' . studly_case(str_slug($eventType, ''));
-
-        \Log::info($method);
 
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-examples.html#event-publishing-retrieving-sns-open
         // Bounce, Complaint, Delivery, Send Email, Reject Event, Open Event, Click Event
@@ -75,7 +71,7 @@ class AwsWebhooksController extends Controller
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-examples.html#event-publishing-retrieving-sns-click
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-contents.html#event-publishing-retrieving-sns-contents-click-object
-        \Log::info('click', $messageId);
+        \Log::info('click', [$messageId]);
     }
 
     public function handleOpen($messageId, array $event)
@@ -83,14 +79,14 @@ class AwsWebhooksController extends Controller
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-contents.html#event-publishing-retrieving-sns-contents-open-object
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-examples.html#event-publishing-retrieving-sns-open
 
-        \Log::info('open', $messageId);
+        \Log::info('open', [$messageId]);
     }
 
     public function handleReject($messageId, array $event)
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-contents.html#event-publishing-retrieving-sns-contents-reject-object
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-examples.html#event-publishing-retrieving-sns-reject
-        \Log::info('reject', $messageId);
+        \Log::info('reject', [$messageId]);
     }
 
     /**
@@ -100,7 +96,7 @@ class AwsWebhooksController extends Controller
     protected function handleDelivery($messageId, array $event)
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/notification-contents.html#delivery-
-        \Log::info('delivery', $messageId);
+        \Log::info('delivery', [$messageId]);
     }
 
     /**
@@ -119,7 +115,7 @@ class AwsWebhooksController extends Controller
         // not-spam — Indicates that the entity providing the report does not consider the message to be spam. This may be used to correct a message that was incorrectly tagged or categorized as spam.
         // other — Indicates any other feedback that does not fit into other registered types.
         // virus — Reports that a virus is found in the originating message.
-        \Log::info('complaint', $messageId);
+        \Log::info('complaint', [$messageId]);
     }
 
     /**
@@ -137,6 +133,6 @@ class AwsWebhooksController extends Controller
             // unsubscribe
         }
 
-        \Log::info('bounce', $messageId);
+        \Log::info('bounce', [$messageId]);
     }
 }
