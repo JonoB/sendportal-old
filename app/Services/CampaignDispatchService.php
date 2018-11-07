@@ -59,9 +59,10 @@ class CampaignDispatchService implements CampaignDispatchInterface
      * @param string $toEmail
      * @param string $subject
      * @param string $content
+     *
      * @return string
      */
-    protected function dispatch($mailService, $fromEmail, $toEmail, $subject, $content)
+    protected function dispatch($mailService, $fromEmail, $toEmail, $subject, $content): string
     {
         return $this->mailAdapter->adapter($mailService)->send($fromEmail, $toEmail, $subject, $content);
     }
