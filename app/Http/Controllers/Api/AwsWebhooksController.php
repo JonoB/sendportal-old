@@ -67,6 +67,10 @@ class AwsWebhooksController extends Controller
         abort(404);
     }
 
+    /**
+     * @param $messageId
+     * @param array $event
+     */
     public function handleClick($messageId, array $event)
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-examples.html#event-publishing-retrieving-sns-click
@@ -74,6 +78,10 @@ class AwsWebhooksController extends Controller
         \Log::info('click', [$messageId]);
     }
 
+    /**
+     * @param $messageId
+     * @param array $event
+     */
     public function handleOpen($messageId, array $event)
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-contents.html#event-publishing-retrieving-sns-contents-open-object
@@ -82,6 +90,10 @@ class AwsWebhooksController extends Controller
         \Log::info('open', [$messageId]);
     }
 
+    /**
+     * @param $messageId
+     * @param array $event
+     */
     public function handleReject($messageId, array $event)
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-contents.html#event-publishing-retrieving-sns-contents-reject-object
