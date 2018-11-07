@@ -20,15 +20,11 @@ use Illuminate\Support\Collection;
 class CampaignDispatchCommand extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'sp:campaigns:dispatch';
 
     /**
-     * The console command description.
-     *
      * @var string
      */
     protected $description = 'Dispatch all campaigns waiting in the queue';
@@ -59,16 +55,13 @@ class CampaignDispatchCommand extends Command
     protected $campaignSubscriberRepository;
 
     /**
-     * Store sent items for this campaign so
-     * that we don't send to the same person
-     * more than once
+     * Store sent items for this campaign so that we don't send to the same person more than once
      *
      * @var array
      */
     protected $sentItems = [];
 
     /**
-     * CampaignsDispatchCommand constructor.
      * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
      * @param SubscriberRepositoryInterface $subscriberRepository
      * @param CampaignRepositoryInterface $campaignRepository
@@ -101,12 +94,12 @@ class CampaignDispatchCommand extends Command
     {
         if ( ! $campaigns = $this->getQueuedCampaigns())
         {
-            $this->info('No queued campaigns; nothing more to do here');
+            $this->line('No queued campaigns; nothing more to do here');
 
             return;
         }
 
-        $this->info('Number of campaigns in queued status: ' . count($campaigns));
+        $this->info('Number of campaigns in queued status: ' . \count($campaigns));
 
         foreach ($campaigns as $campaign)
         {
@@ -123,7 +116,7 @@ class CampaignDispatchCommand extends Command
      */
     protected function handleCampaign(Campaign $campaign): void
     {
-        $this->info('Handling Campaign ID:' . $campaign->id . ' (' . $campaign->name . ')');
+        $this->info("Handling Campaign ID: {$campaign->id} ({$campaign->name})");
 
         if ( ! $this->checkCampaignStatus($campaign->id))
         {
@@ -154,29 +147,53 @@ class CampaignDispatchCommand extends Command
      */
     protected function handleSegment(Campaign $campaign, Segment $segment): void
     {
-        $this->info('-Handling Campaign Segment ID:' . $segment->id . ' (' . $segment->name . ')');
+        $this->line("- Handling Campaign Segment ID: {$segment->id} ({$segment->name})");
 
         $subscribers = $this->getActiveSegmentSubscribers($segment);
 
-        $this->info('-Number of subscribers in this segment:' . \count($subscribers));
+        $this->line('- Number of subscribers in this segment: ' . \count($subscribers));
 
         foreach ($subscribers as $subscriber)
         {
             if ( ! $this->canSendToSubscriber($campaign->id, $subscriber->id))
             {
-                $this->info('--Skipping Subscriber ID:' . $subscriber->id . ' (' . $subscriber->email . ')');
+                $this->info("-- Skipping Subscriber ID: {$subscriber->id} ({$subscriber->email})");
 
                 continue;
             }
 
-            $this->info('--Handling Subscriber ID:' . $subscriber->id . ' (' . $subscriber->email . ')');
+            $this->info("-- Handling Subscriber ID: {$subscriber->id} ({$subscriber->email})");
 
-            $content = $this->campaignContentService->getMergedContent($subscriber);
+            $this->dispatch($campaign, $subscriber, $this->campaignContentService->getMergedContent($subscriber));
+        }
+    }
 
-            if ($messageId = $this->campaignDispatchService->send('ses', $campaign->from_email, $subscriber->email, $campaign->subject, $content))
-            {
-                $this->createDatabaseRecord($campaign, $subscriber, $messageId);
-            }
+    /**
+     * Dispatch the campaign email
+     *
+     * @param Campaign $campaign
+     * @param Subscriber $subscriber
+     * @param string $content
+     *
+     * @return void
+     */
+    protected function dispatch(Campaign $campaign, Subscriber $subscriber, string $content): void
+    {
+        $messageId = $this->campaignDispatchService->send(
+            'ses',
+            $campaign->from_email,
+            $subscriber->email,
+            $campaign->subject,
+            $content
+        );
+
+        if ($messageId)
+        {
+            $this->createDatabaseRecord($campaign, $subscriber, $messageId);
+        }
+        else
+        {
+            $this->comment('-- No message ID was returned for us to track.');
         }
     }
 
@@ -247,7 +264,7 @@ class CampaignDispatchCommand extends Command
      */
     protected function canSendToSubscriber(int $campaignId, int $subscriberId): bool
     {
-        $key = $campaignId . ':' . $subscriberId;
+        $key = "{$campaignId}:{$subscriberId}";
 
         if (\in_array($key, $this->getSentItems(), true))
         {

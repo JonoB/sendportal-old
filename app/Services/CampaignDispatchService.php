@@ -4,24 +4,19 @@ namespace App\Services;
 
 use App\Factories\MailAdapterFactory;
 use App\Interfaces\CampaignDispatchInterface;
+use Illuminate\Support\Facades\Log;
 
 class CampaignDispatchService implements CampaignDispatchInterface
 {
-
     /**
      * @var MailAdapterFactory
      */
     protected $mailAdapter;
 
     /**
-     * CampaignDispatchService constructor.
-     *
      * @param MailAdapterFactory $mailAdapter
      */
-    public function __construct
-    (
-        MailAdapterFactory $mailAdapter
-    )
+    public function __construct(MailAdapterFactory $mailAdapter)
     {
         $this->mailAdapter = $mailAdapter;
     }
@@ -34,9 +29,10 @@ class CampaignDispatchService implements CampaignDispatchInterface
      * @param string $toEmail
      * @param string $subject
      * @param string $content
-     * @return mixed
+     *
+     * @return string
      */
-    public function send($mailService, $fromEmail, $toEmail, $subject, $content)
+    public function send($mailService, $fromEmail, $toEmail, $subject, $content): string
     {
         try
         {
@@ -44,15 +40,14 @@ class CampaignDispatchService implements CampaignDispatchInterface
         }
         catch (\Exception $e)
         {
-            \Log::error(json_encode($e->getMessage()));
+            Log::error(json_encode($e->getMessage()));
 
             return false;
         }
     }
 
     /**
-     * Dispatch the campaign via
-     * the given mail service
+     * Dispatch the campaign via the given mail service
      *
      * @param string $mailService
      * @param string $fromEmail
@@ -64,6 +59,7 @@ class CampaignDispatchService implements CampaignDispatchInterface
      */
     protected function dispatch($mailService, $fromEmail, $toEmail, $subject, $content): string
     {
-        return $this->mailAdapter->adapter($mailService)->send($fromEmail, $toEmail, $subject, $content);
+        return $this->mailAdapter->adapter($mailService)
+            ->send($fromEmail, $toEmail, $subject, $content);
     }
 }

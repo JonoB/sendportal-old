@@ -3,9 +3,6 @@
 namespace App\Services;
 
 use App\Interfaces\CampaignContentServiceInterface;
-use App\Interfaces\CampaignUrlsRepositoryInterface;
-use App\Interfaces\ContentUrlServiceInterface;
-use App\Interfaces\GenerateOpenTrackingImageInterface;
 use App\Models\Campaign;
 use App\Models\Subscriber;
 
