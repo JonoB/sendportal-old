@@ -46,7 +46,7 @@ class SubscribersController extends Controller
      */
     public function export()
     {
-        $subscribers = $this->subscriberRepository->export(['email', 'first_name', 'last_name', 'created_at']);
+        $subscribers = $this->subscriberRepository->export(['id', 'email', 'first_name', 'last_name', 'created_at']);
 
         return (new FastExcel($subscribers))->download(sprintf('subscribers-%s.csv', date('Y_m_d-H_m_s')));
     }
