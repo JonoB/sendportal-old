@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Segment;
+use App\Models\Subscriber;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -126,6 +127,38 @@ class SegmentApiControllerTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('segments', $data);
+    }
+
+    /** @test */
+    function the_store_endpoint_can_associate_subscribers_with_a_new_segment()
+    {
+        $subscriber = factory(Subscriber::class)->create();
+
+        $data = [
+            'name' => ucwords($this->faker->word),
+            'subscribers' => [
+                $subscriber->id
+            ]
+        ];
+
+        $response = $this->actingAs($this->user, 'api')
+            ->postJson(route('api.segments.store', $data));
+
+        $response->assertStatus(201);
+        $response->assertJson([
+            'data' => [
+                'subscribers' => [
+                    [
+                        'id' => $subscriber->id
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertDatabaseHas('segment_subscriber', [
+            'segment_id' => $response->json()['data']['id'],
+            'subscriber_id' => $subscriber->id
+        ]);
     }
 
     /** @test */

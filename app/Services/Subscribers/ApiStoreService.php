@@ -58,7 +58,7 @@ class ApiStoreService
      */
     protected function handleSegments(array $data, Subscriber $subscriber): Subscriber
     {
-        if (isset($data['segments']))
+        if ( ! empty($data['segments']))
         {
             $subscriber->segments()->attach($data['segments']);
         }
