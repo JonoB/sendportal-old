@@ -14,13 +14,4 @@ interface SubscriberRepositoryInterface extends BaseEloquentInterface
      * @return Collection
      */
     public function export(array $fields, $orderBy = 'id');
-
-    /**
-     * Sync tags to a contact
-     *
-     * @param Subscriber $subscriber
-     * @param array $tags
-     * @return mixed
-     */
-    public function syncTags(Subscriber $subscriber, array $tags = []);
 }
