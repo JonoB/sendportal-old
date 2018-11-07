@@ -45,7 +45,7 @@ class MailgunMailAdapter extends BaseMailAdapter implements MailAdapterInterface
             'from'    => $fromEmail,
             'to'      => $toEmail,
             'subject' => $subject,
-            'text'    => $content,
+            'html'    => $content,
         ]);
     }
 }
