@@ -17,6 +17,7 @@ class CreateCampaignSubscriberTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('subscriber_id');
             $table->unsignedInteger('campaign_id');
+            $table->string('message_id');
             $table->string('ip')->nullable();
             $table->smallInteger('open_count')->default(0);
             $table->smallInteger('click_count')->default(0);
