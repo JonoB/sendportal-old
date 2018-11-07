@@ -98,9 +98,7 @@ class CampaignsController extends Controller
     public function store(CampaignRequest $request)
     {
         $campaign = $this->campaignRepo->store($request->only($this->campaignFields));
-        $campaign->email()->save($request->except($this->campaignFields));
-
-        dd($campaign);
+        $campaign->email()->create($request->except($this->campaignFields));
 
         return redirect()->route('campaigns.template', $campaign->id);
     }

@@ -7,12 +7,12 @@ use App\Models\Campaign;
 use App\Models\Template;
 use App\Repositories\CampaignEloquentRepository;
 use App\Repositories\SegmentEloquentRepository;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CampaignTest extends TestCase
 {
-
     use RefreshDatabase;
 
     /**
@@ -22,9 +22,7 @@ class CampaignTest extends TestCase
 
     private $campaignRepository;
 
-    private $segmentRepository;
-
-    protected function __setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -33,44 +31,18 @@ class CampaignTest extends TestCase
     }
 
     /** @test */
-    function a_campaign_can_have_an_email()
-    {
-        $campaign = factory(Campaign::class)->create([
-            'template_id' => factory(Template::class)->create()->id,
-            'subject' => 'A Subject',
-            'content' => 'Some content',
-            'from_name' => 'Josh',
-            'from_email' => 'josh@mettle.io',
-            'track_opens' => true,
-            'track_clicks' => true,
-            'open_count' => 0,
-            'click_count' => 0,
-            'status_id' => 1,
-        ]);
-
-        $this->assertNotNull($campaign->template_id);
-        $this->assertNotNull($campaign->subject);
-        $this->assertNotNull($campaign->content);
-        $this->assertNotNull($campaign->from_name);
-        $this->assertNotNull($campaign->from_email);
-        $this->assertNotNull($campaign->track_opens);
-        $this->assertNotNull($campaign->track_clicks);
-        $this->assertNotNull($campaign->open_count);
-        $this->assertNotNull($campaign->click_count);
-        $this->assertNotNull($campaign->status);
-    }
-
-    /** @test */
     function an_email_is_created_when_a_campaign_is_stored()
     {
+        $this->actingAs($this->user);
+
         $emailData = [
             'template_id' => factory(Template::class)->create()->id,
             'subject' => 'A Subject',
             'content' => 'Some content',
             'from_name' => 'Josh',
             'from_email' => 'josh@mettle.io',
-            'track_opens' => true,
-            'track_clicks' => true,
+            'track_opens' => 1,
+            'track_clicks' => 1,
             'open_count' => 0,
             'click_count' => 0,
             'status_id' => 1,
@@ -80,8 +52,11 @@ class CampaignTest extends TestCase
 
         $this->post(route('campaigns.store'), $campaign->toArray());
 
-        $createdCampaign = $this->campaignRepository->all();
+        $createdCampaign = $this->campaignRepository->all()->first();
 
-        $this->assertContains($emailData, $campaign->email);
+        foreach($emailData as $key => $value)
+        {
+            $this->assertEquals($createdCampaign->email->first()->$key, $emailData[$key]);
+        }
     }
 }

@@ -51,11 +51,11 @@ class Campaign extends BaseModel
     /**
      * The email associated to this campaign
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function email()
     {
-        return $this->morphOne(Email::class, 'mailable');
+        return $this->morphMany(Email::class, 'mailable');
     }
 
     /**
