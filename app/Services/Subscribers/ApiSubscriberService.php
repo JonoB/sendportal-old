@@ -5,7 +5,7 @@ namespace App\Services\Subscribers;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Models\Subscriber;
 
-class ApiStoreService
+class ApiSubscriberService
 {
     /**
      * @var SubscriberRepositoryInterface
@@ -27,18 +27,18 @@ class ApiStoreService
      *
      * @return Subscriber
      */
-    public function createOrUpdate(array $data): Subscriber
+    public function store(array $data): Subscriber
     {
         if (array_get($data, 'id') !== null)
         {
-            return $this->subscribers->update($data['id'], array_except($data, 'id'));
+            return $this->subscribers->update($data['id'], array_except($data, ['id', 'segments']));
         }
 
         $subscriber = $this->subscribers->findBy('email', array_get($data, 'email'));
 
         if ($subscriber)
         {
-            return $this->subscribers->update($subscriber->id, $data);
+            return $this->subscribers->update($subscriber->id, array_except($data, 'segments'));
         }
 
         $subscriber = $this->subscribers->store(array_except($data, ['segments']));
@@ -58,7 +58,7 @@ class ApiStoreService
      */
     protected function handleSegments(array $data, Subscriber $subscriber): Subscriber
     {
-        if (isset($data['segments']))
+        if ( ! empty($data['segments']))
         {
             $subscriber->segments()->attach($data['segments']);
         }
