@@ -16,6 +16,7 @@ class CreateCampaignsTable extends Migration
         Schema::create('campaigns', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->timestamp('scheduled_at')->nullable();
             $table->timestamps();
         });
     }
