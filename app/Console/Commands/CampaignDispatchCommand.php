@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
+use App\Interfaces\EmailRepositoryInterface;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\ContentUrlServiceInterface;
 use App\Interfaces\CampaignContentServiceInterface;
@@ -55,6 +56,11 @@ class CampaignDispatchCommand extends Command
     protected $campaignSubscriberRepository;
 
     /**
+     * @var EmailRepositoryInterface
+     */
+    private $emailRepository;
+
+    /**
      * Store sent items for this campaign so that we don't send to the same person more than once
      *
      * @var array
@@ -62,18 +68,23 @@ class CampaignDispatchCommand extends Command
     protected $sentItems = [];
 
     /**
+     * CampaignsDispatchCommand constructor.
+     *
      * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
      * @param SubscriberRepositoryInterface $subscriberRepository
      * @param CampaignRepositoryInterface $campaignRepository
      * @param CampaignDispatchInterface $campaignDispatchService
      * @param CampaignContentServiceInterface $campaignContentService
+     * @param EmailRepositoryInterface $emailRepository
      */
+
     public function __construct(
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
         SubscriberRepositoryInterface $subscriberRepository,
         CampaignRepositoryInterface $campaignRepository,
         CampaignDispatchInterface $campaignDispatchService,
-        CampaignContentServiceInterface $campaignContentService
+        CampaignContentServiceInterface $campaignContentService,
+        EmailRepositoryInterface $emailRepository
     )
     {
         parent::__construct();
@@ -83,6 +94,7 @@ class CampaignDispatchCommand extends Command
         $this->campaignRepo = $campaignRepository;
         $this->campaignDispatchService = $campaignDispatchService;
         $this->campaignContentService = $campaignContentService;
+        $this->emailRepository = $emailRepository;
     }
 
     /**
@@ -125,7 +137,7 @@ class CampaignDispatchCommand extends Command
             return;
         }
 
-        $this->markCampaignAsSending($campaign->id);
+        $this->markCampaignAsSending($campaign->email->id);
 
         $this->campaignContentService->setCampaign($campaign);
 
@@ -134,7 +146,7 @@ class CampaignDispatchCommand extends Command
             $this->handleSegment($campaign, $segment);
         }
 
-        $this->markCampaignAsSent($campaign->id);
+        $this->markCampaignAsSent($campaign->email->id);
     }
 
     /**
@@ -155,7 +167,7 @@ class CampaignDispatchCommand extends Command
 
         foreach ($subscribers as $subscriber)
         {
-            if ( ! $this->canSendToSubscriber($campaign->id, $subscriber->id))
+            if ( ! $this->canSendToSubscriber($campaign->email->id, $subscriber->id))
             {
                 $this->info("-- Skipping Subscriber ID: {$subscriber->id} ({$subscriber->email})");
 
@@ -181,9 +193,9 @@ class CampaignDispatchCommand extends Command
     {
         $messageId = $this->campaignDispatchService->send(
             'ses',
-            $campaign->from_email,
+            $campaign->email->from_email,
             $subscriber->email,
-            $campaign->subject,
+            $campaign->email->subject,
             $content
         );
 
@@ -222,7 +234,7 @@ class CampaignDispatchCommand extends Command
      */
     protected function getQueuedCampaigns(): EloquentCollection
     {
-        return $this->campaignRepo->getBy('status_id', CampaignStatus::STATUS_QUEUED, ['segments']);
+        return $this->emailRepository->queuedCampaigns();
     }
 
     /**
@@ -250,7 +262,7 @@ class CampaignDispatchCommand extends Command
      */
     protected function checkCampaignStatus($campaignId): bool
     {
-        return $this->campaignRepo->find($campaignId)->status_id === CampaignStatus::STATUS_QUEUED;
+        return $this->campaignRepo->find($campaignId)->email->status_id === CampaignStatus::STATUS_QUEUED;
     }
 
     /**
@@ -301,13 +313,11 @@ class CampaignDispatchCommand extends Command
     /**
      * Update campaign status to sending
      *
-     * @param $campaignId
-     *
-     * @return void
+     * @param $emailId
      */
-    protected function markCampaignAsSending($campaignId): void
+    protected function markCampaignAsSending($emailId): void
     {
-        $this->campaignRepo->update($campaignId, [
+        $this->emailRepository->update($emailId, [
             'status_id' => CampaignStatus::STATUS_SENDING
         ]);
     }
@@ -315,13 +325,11 @@ class CampaignDispatchCommand extends Command
     /**
      * Update campaign status to sent
      *
-     * @param $campaignId
-     *
-     * @return void
+     * @param $emailId
      */
-    protected function markCampaignAsSent($campaignId): void
+    protected function markCampaignAsSent($emailId): void
     {
-        $this->campaignRepo->update($campaignId, [
+        $this->emailRepository->update($emailId, [
             'status_id' => CampaignStatus::STATUS_SENT,
             'sent_count' => \count($this->getSentItems())
         ]);

@@ -53,7 +53,6 @@ class CampaignContentService implements CampaignContentServiceInterface
     protected function mergeTags(string $content, Subscriber $subscriber): string
     {
         $content = $this->mergeSubscriberTags($content, $subscriber);
-
         return $this->mergeUnsubscribeLink($content, $subscriber);
     }
 
