@@ -136,8 +136,6 @@ class CampaignTest extends TestCase
             'content' => 'Some content',
             'from_name' => 'Josh',
             'from_email' => 'josh@mettle.io',
-            'track_opens' => 1,
-            'track_clicks' => 1,
             'open_count' => 0,
             'click_count' => 0,
             'status_id' => 1,

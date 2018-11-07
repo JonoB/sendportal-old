@@ -24,11 +24,6 @@ class CampaignsController extends Controller
     /**
      * @var CampaignRepositoryInterface
      */
-    protected $tagRepo;
-
-    /**
-     * @var CampaignRepositoryInterface
-     */
     protected $campaignRepo;
 
     /**
@@ -37,28 +32,28 @@ class CampaignsController extends Controller
     protected $templateRepo;
 
     /**
-     * @var SubscriberListRepositoryInterface
-     */
-    protected $segmentRepository;
-
-    /**
      * CampaignsController constructor.
+     *
+     * @param CampaignRepositoryInterface $campaignRepository
+     * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
+     * @param TemplateRepositoryInterface $templateRepository
      */
     public function __construct(
-        TagRepositoryInterface $tagRepository,
         CampaignRepositoryInterface $campaignRepository,
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
-        TemplateRepositoryInterface $templateRepository,
-        SegmentRepositoryInterface $segment
+        TemplateRepositoryInterface $templateRepository
     )
     {
-        $this->tagRepo = $tagRepository;
         $this->campaignRepo = $campaignRepository;
         $this->campaignSubscriberRepo = $campaignSubscriberRepository;
         $this->templateRepo = $templateRepository;
-        $this->segment = $segment;
     }
 
+    /**
+     * Fields that belong to a campaign instead of an email.
+     *
+     * @var array
+     */
     protected $campaignFields = [
         'name',
         'scheduled_at',
@@ -224,8 +219,11 @@ class CampaignsController extends Controller
 
         // @todo validation that at least one list has been selected
 
-        $campaign->email()->update([
+        $campaign->update([
             'scheduled_at' => Carbon::now(),
+        ]);
+
+        $campaign->email()->update([
             'status_id' => CampaignStatus::STATUS_QUEUED,
         ]);
 
@@ -284,17 +282,13 @@ class CampaignsController extends Controller
             return redirect(route('campaign.index'));
         }
 
-        $campaignUpdateFields = [
-            'name',
-        ];
-
         $emailUpdateFields = [
             'subject',
             'from_email',
             'from_name',
         ];
 
-        $this->campaignRepo->update($id, $request->only($campaignUpdateFields));
+        $this->campaignRepo->update($id, $request->only($this->campaignFields));
         $campaign->email()->update($request->only($emailUpdateFields));
 
         return redirect()->route('campaigns.template', $campaign->id);
