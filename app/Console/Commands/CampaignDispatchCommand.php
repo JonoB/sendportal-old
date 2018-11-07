@@ -8,10 +8,10 @@ use App\Interfaces\ContentUrlServiceInterface;
 use App\Interfaces\CampaignContentServiceInterface;
 use App\Interfaces\CampaignDispatchInterface;
 use App\Interfaces\CampaignRepositoryInterface;
+use App\Models\Segment;
 use App\Models\Subscriber;
 use App\Models\Campaign;
 use App\Models\CampaignStatus;
-use App\Models\SubscriberList;
 use App\Services\CampaignDispatchService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
@@ -68,6 +68,11 @@ class CampaignDispatchCommand extends Command
 
     /**
      * CampaignsDispatchCommand constructor.
+     * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
+     * @param SubscriberRepositoryInterface $subscriberRepository
+     * @param CampaignRepositoryInterface $campaignRepository
+     * @param CampaignDispatchInterface $campaignDispatchService
+     * @param CampaignContentServiceInterface $campaignContentService
      */
     public function __construct(
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
@@ -128,9 +133,9 @@ class CampaignDispatchCommand extends Command
 
         $this->campaignContentService->setCampaign($campaign);
 
-        foreach ($campaign->lists as $list)
+        foreach ($campaign->segments as $segment)
         {
-            $this->handleList($campaign, $list);
+            $this->handleSegment($campaign, $segment);
         }
 
         $this->markCampaignAsSent($campaign->id);
@@ -140,15 +145,15 @@ class CampaignDispatchCommand extends Command
      * Handle a tag from a campaign
      *
      * @param Campaign $campaign
-     * @param SubscriberList $list
+     * @param Segment $segment
      */
-    protected function handleList(Campaign $campaign, SubscriberList $list)
+    protected function handleSegment(Campaign $campaign, Segment $segment)
     {
-        $this->info('-Handling Campaign SubscriberList ID:' . $list->id . ' (' . $list->name . ')');
+        $this->info('-Handling Campaign Segment ID:' . $segment->id . ' (' . $segment->name . ')');
 
-        $subscribers = $this->getActiveListSubscribers($list);
+        $subscribers = $this->getActiveSegmentSubscribers($segment);
 
-        $this->info('-Number of subscribers in this list:' . count($subscribers));
+        $this->info('-Number of subscribers in this segment:' . count($subscribers));
 
         foreach ($subscribers as $subscriber)
         {
@@ -194,21 +199,21 @@ class CampaignDispatchCommand extends Command
      */
     protected function getQueuedCampaigns()
     {
-        return $this->campaignRepo->getBy('status_id', CampaignStatus::STATUS_QUEUED, ['lists']);
+        return $this->campaignRepo->getBy('status_id', CampaignStatus::STATUS_QUEUED, ['segments']);
     }
 
     /**
      * Load active subscribers for a single list
      * @todo this needs to be improved so that we chunk items
      *
-     * @param $list
+     * @param Segment $segment
      * @return Collection
      */
-    protected function getActiveListSubscribers(SubscriberList $list)
+    protected function getActiveSegmentSubscribers(Segment $segment)
     {
-        $list->load('active_subscribers');
+        $segment->load('active_subscribers');
 
-        return $list->active_subscribers;
+        return $segment->active_subscribers;
     }
 
     /**
