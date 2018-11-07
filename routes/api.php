@@ -29,4 +29,11 @@ Route::middleware('auth:api')->name('api.')->group(function()
         ->name('subscribers.segments.update');
     Route::delete('subscribers/{subscriber}/segments', 'SubscriberSegmentsController@destroy')
         ->name('subscribers.segments.destroy');
+
+    Route::apiResource('segments.subscribers', 'SegmentSubscribersController')
+        ->except(['show', 'update', 'destroy']);
+    Route::put('segments/{segment}/subscribers', 'SegmentSubscribersController@update')
+        ->name('segments.subscribers.update');
+    Route::delete('segments/{segment}/subscribers', 'SegmentSubscribersController@destroy')
+        ->name('segments.subscribers.destroy');
 });

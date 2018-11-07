@@ -8,7 +8,7 @@ use App\Http\Requests\Api\SegmentUpdateRequest;
 use App\Http\Resources\Segment;
 use App\Http\Resources\Segment as SegmentResource;
 use App\Interfaces\SegmentRepositoryInterface;
-use App\Services\Segments\ApiStoreService;
+use App\Services\Segments\ApiSegmentService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
@@ -20,23 +20,23 @@ class SegmentsController extends Controller
     protected $segments;
 
     /**
-     * @var ApiStoreService
+     * @var ApiSegmentService
      */
-    protected $apiStoreService;
+    protected $apiService;
 
     /**
      * SegmentsController constructor.
      *
      * @param SegmentRepositoryInterface $segments
-     * @param ApiStoreService $apiStoreService
+     * @param ApiSegmentService $apiService
      */
     public function __construct(
         SegmentRepositoryInterface $segments,
-        ApiStoreService $apiStoreService
+        ApiSegmentService $apiService
     )
     {
         $this->segments = $segments;
-        $this->apiStoreService = $apiStoreService;
+        $this->apiService = $apiService;
     }
 
     /**
@@ -60,7 +60,7 @@ class SegmentsController extends Controller
     {
         $input = $request->validated();
 
-        $segment = $this->apiStoreService->store($input);
+        $segment = $this->apiService->store($input);
 
         $segment->load('subscribers');
 

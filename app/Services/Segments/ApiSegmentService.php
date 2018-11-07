@@ -5,7 +5,7 @@ namespace App\Services\Segments;
 use App\Interfaces\SegmentRepositoryInterface;
 use App\Models\Segment;
 
-class ApiStoreService
+class ApiSegmentService
 {
     /**
      * @var SegmentRepositoryInterface
