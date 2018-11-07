@@ -37,3 +37,5 @@ Route::middleware('auth:api')->name('api.')->group(function()
     Route::delete('segments/{segment}/subscribers', 'SegmentSubscribersController@destroy')
         ->name('segments.subscribers.destroy');
 });
+
+Route::post('webhooks/aws', 'AwsWebhooksController@handle');
