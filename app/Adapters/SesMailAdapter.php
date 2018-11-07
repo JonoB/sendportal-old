@@ -65,6 +65,7 @@ class SesMailAdapter extends BaseMailAdapter implements MailAdapterInterface
                     ],
                 ),
             ],
+            'ConfigurationSetName' => 'Sendportal',
         ]);
 
         return $this->resolveMessageId($result);
