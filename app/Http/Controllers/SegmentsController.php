@@ -33,7 +33,7 @@ class SegmentsController extends Controller
      */
     public function index()
     {
-        $segments = $this->segmentRepository->paginate('name', ['subscribersCount', 'activeSubscribersCount']);
+        $segments = $this->segmentRepository->paginate('name');
 
         return view('segments.index', compact('segments'));
     }

@@ -19,7 +19,9 @@ class Subscriber extends BaseModel
      */
     public function segments()
     {
-        return $this->belongsToMany(Segment::class)->withTimestamps();
+        return $this->belongsToMany(Segment::class)
+            ->withTimestamps()
+            ->withPivot('unsubscribed_at');
     }
 
     /**

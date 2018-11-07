@@ -29,8 +29,8 @@
                                     {{ $segment->name }}
                                 </a>
                             </td>
-                            <td>{{ $segment->subscribers_count() }}</td>
-                            <td>{{ $segment->active_subscribers_count() }}</td>
+                            <td>{{ $segment->subscribers_count }}</td>
+                            <td>{{ $segment->active_subscribers_count }}</td>
                             <td><a href="{{ route('segments.edit', $segment->id) }}">Edit</a></td>
                         </tr>
                     @endforeach

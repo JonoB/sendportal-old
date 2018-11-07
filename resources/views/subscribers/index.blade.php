@@ -31,7 +31,7 @@
                                 </a>
                             </td>
                             <td><a href="mailto:{{ $subscriber->email }}">{{ $subscriber->email }}</a></td>
-                            <td>{{ $subscriber->segments()->count() }}</td>
+                            <td>{{ $subscriber->segments->count() }}</td>
                             <td>
                                 @foreach($subscriber->tags as $tag)
                                     <span class="label label-default">{{ $tag->name }}</span>

@@ -12,7 +12,13 @@
 
             <ul>
                 @foreach ($subscriber->segments as $segment)
-                    <li><a href="{{ route('segments.edit', $segment->id) }}">{{ $segment->name }}</a></li>
+                    <li>
+                        @if($segment->pivot->unsubscribed_at)
+                            <del><a href="{{ route('segments.edit', $segment->id) }}">{{ $segment->name }}</a></del>
+                        @else
+                            <a href="{{ route('segments.edit', $segment->id) }}">{{ $segment->name }}</a>
+                        @endif
+                    </li>
                 @endforeach
             </ul>
         </div>
