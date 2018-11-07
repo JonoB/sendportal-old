@@ -168,7 +168,7 @@ class CampaignDispatchCommand extends Command
 
             $content = $this->campaignContentService->getMergedContent($subscriber);
 
-            if ($messageId = $this->campaignDispatchService->send('ses', $campaign->from_email, $subscriber->email, $campaign->subject, $content))
+            if ($messageId = $this->campaignDispatchService->send('sendgrid', $campaign->from_email, $subscriber->email, $campaign->subject, $content))
             {
                 $this->createDatabaseRecord($campaign, $subscriber, $messageId);
             }
