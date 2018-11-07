@@ -7,7 +7,7 @@ use App\Http\Requests\Api\SubscriberStoreRequest;
 use App\Http\Requests\Api\SubscriberUpdateRequest;
 use App\Http\Resources\Subscriber as SubscriberResource;
 use App\Interfaces\SubscriberRepositoryInterface;
-use App\Services\Subscribers\ApiStoreService;
+use App\Services\Subscribers\ApiSubscriberService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
@@ -19,13 +19,21 @@ class SubscribersController extends Controller
     protected $subscribers;
 
     /**
+     * @var ApiSubscriberService
+     */
+    protected $apiService;
+
+    /**
      * @param SubscriberRepositoryInterface $subscribers
+     * @param ApiSubscriberService $apiService
      */
     public function __construct(
-        SubscriberRepositoryInterface $subscribers
+        SubscriberRepositoryInterface $subscribers,
+        ApiSubscriberService $apiService
     )
     {
         $this->subscribers = $subscribers;
+        $this->apiService = $apiService;
     }
 
     /**
@@ -44,13 +52,12 @@ class SubscribersController extends Controller
      * Store a newly created resource in storage.
      *
      * @param SubscriberStoreRequest $request
-     * @param ApiStoreService $service
      *
      * @return SubscriberResource
      */
-    public function store(SubscriberStoreRequest $request, ApiStoreService $service)
+    public function store(SubscriberStoreRequest $request )
     {
-        $subscriber = $service($request->validated());
+        $subscriber = $this->apiService->store($request->validated());
 
         $subscriber->load('segments');
 

@@ -5,7 +5,7 @@ namespace App\Services\Subscribers;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Models\Subscriber;
 
-class ApiStoreService
+class ApiSubscriberService
 {
     /**
      * @var SubscriberRepositoryInterface
@@ -27,7 +27,7 @@ class ApiStoreService
      *
      * @return Subscriber
      */
-    public function __invoke(array $data): Subscriber
+    public function store(array $data): Subscriber
     {
         if (array_get($data, 'id') !== null)
         {

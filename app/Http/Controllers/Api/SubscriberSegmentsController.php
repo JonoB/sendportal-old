@@ -8,7 +8,7 @@ use App\Http\Requests\Api\SubscriberSegmentUpdateRequest;
 use App\Http\Resources\Segment;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Services\Subscribers\Segments\ApiDestroyService;
-use App\Services\Subscribers\Segments\ApiStoreService;
+use App\Services\Subscribers\Segments\ApiSubscriberSegmentService;
 use App\Services\Subscribers\Segments\ApiUpdateService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -23,13 +23,21 @@ class SubscriberSegmentsController extends Controller
     protected $subscribers;
 
     /**
+     * @var ApiSubscriberSegmentService
+     */
+    protected $apiService;
+
+    /**
      * @param SubscriberRepositoryInterface $subscribers
+     * @param ApiSubscriberSegmentService $apiService
      */
     public function __construct(
-        SubscriberRepositoryInterface $subscribers
+        SubscriberRepositoryInterface $subscribers,
+        ApiSubscriberSegmentService $apiService
     )
     {
         $this->subscribers = $subscribers;
+        $this->apiService = $apiService;
     }
 
     /**
@@ -50,16 +58,15 @@ class SubscriberSegmentsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param SubscriberSegmentStoreRequest $request
-     * @param ApiStoreService $service
      * @param string $subscriberId
      *
      * @return AnonymousResourceCollection
      */
-    public function store(SubscriberSegmentStoreRequest $request, ApiStoreService $service, $subscriberId)
+    public function store(SubscriberSegmentStoreRequest $request, $subscriberId)
     {
         $input = $request->validated();
 
-        $segments = $service($subscriberId, $input['segments']);
+        $segments = $this->apiService->store($subscriberId, $input['segments']);
 
         return SegmentResource::collection($segments);
     }
@@ -68,16 +75,15 @@ class SubscriberSegmentsController extends Controller
      * Update the specified resource in storage.
      *
      * @param SubscriberSegmentUpdateRequest $request
-     * @param ApiUpdateService $service
      * @param string $subscriberId
      *
      * @return AnonymousResourceCollection
      */
-    public function update(SubscriberSegmentUpdateRequest $request, ApiUpdateService $service, $subscriberId)
+    public function update(SubscriberSegmentUpdateRequest $request, $subscriberId)
     {
         $input = $request->validated();
 
-        $segments = $service($subscriberId, $input['segments']);
+        $segments = $this->apiService->update($subscriberId, $input['segments']);
 
         return SegmentResource::collection($segments);
     }
@@ -86,16 +92,15 @@ class SubscriberSegmentsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param SubscriberSegmentDestroyRequest $request
-     * @param ApiDestroyService $service
      * @param string $subscriberId
      *
      * @return AnonymousResourceCollection
      */
-    public function destroy(SubscriberSegmentDestroyRequest $request, ApiDestroyService $service, $subscriberId)
+    public function destroy(SubscriberSegmentDestroyRequest $request, $subscriberId)
     {
         $input = $request->validated();
 
-        $segments = $service($subscriberId, $input['segments']);
+        $segments = $this->apiService->destroy($subscriberId, $input['segments']);
 
         return SegmentResource::collection($segments);
     }
