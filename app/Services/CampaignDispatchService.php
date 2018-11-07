@@ -59,7 +59,7 @@ class CampaignDispatchService implements CampaignDispatchInterface
      * @param string $toEmail
      * @param string $subject
      * @param string $content
-     * @return \Aws\Result
+     * @return string
      */
     protected function dispatch($mailService, $fromEmail, $toEmail, $subject, $content)
     {

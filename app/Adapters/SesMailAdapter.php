@@ -47,7 +47,7 @@ class SesMailAdapter extends BaseMailAdapter implements MailAdapterInterface
      */
     public function send($fromEmail, $toEmail, $subject, $content)
     {
-        return $this->resolveClient()->sendEmail([
+        $result = $this->resolveClient()->sendEmail([
             'Source' => $fromEmail,
 
             'Destination' => [
@@ -65,5 +65,7 @@ class SesMailAdapter extends BaseMailAdapter implements MailAdapterInterface
                 ),
             ],
         ]);
+
+        return array_get($result->toArray(), 'MessageId');
     }
 }

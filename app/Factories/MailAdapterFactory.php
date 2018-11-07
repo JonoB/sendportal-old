@@ -99,7 +99,9 @@ class MailAdapterFactory
 
         $config = $this->configRepo->findSettings(ConfigType::AWS_SNS);
 
-        return $adapter->setConfig($config);
+        $adapter->setConfig($config);
+
+        return $adapter;
     }
 
     /**

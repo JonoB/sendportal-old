@@ -163,9 +163,9 @@ class CampaignDispatchCommand extends Command
 
             $content = $this->campaignContentService->getMergedContent($subscriber);
 
-            if ($this->campaignDispatchService->send('ses', $campaign->from_email, $subscriber->email, $campaign->subject, $content))
+            if ($messageId = $this->campaignDispatchService->send('ses', $campaign->from_email, $subscriber->email, $campaign->subject, $content))
             {
-                $this->createDatabaseRecord($campaign, $subscriber);
+                $this->createDatabaseRecord($campaign, $subscriber, $messageId);
             }
         }
     }
@@ -175,13 +175,15 @@ class CampaignDispatchCommand extends Command
      *
      * @param Campaign $campaign
      * @param Subscriber $subscriber
+     * @param string $messageId
      * @return void
      */
-    protected function createDatabaseRecord(Campaign $campaign, Subscriber $subscriber)
+    protected function createDatabaseRecord(Campaign $campaign, Subscriber $subscriber, $messageId)
     {
         $this->campaignSubscriberRepository->store([
             'campaign_id' => $campaign->id,
             'subscriber_id' => $subscriber->id,
+            'message_id' => $messageId,
         ]);
     }
 
