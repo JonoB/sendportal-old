@@ -10,4 +10,7 @@
 
     @include('segments.partials.form')
 
+    {!! Form::submitButton('Save') !!}
+
+    {!! Form::close() !!}
 @stop
