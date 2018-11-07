@@ -35,16 +35,6 @@ class Subscriber extends BaseModel
     }
 
     /**
-     * Tags associated with this subscriber
-     *
-     * @return BelongsToMany
-     */
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class);
-    }
-
-    /**
      * The concatenated full name of the subscriber
      *
      * @return string

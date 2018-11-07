@@ -218,6 +218,10 @@ body {
     }
 }
 
+.box {
+    border-top: 2px solid #d2d6de;
+}
+
 .container-wrapper {
     background-color: #ff0000;
 }
