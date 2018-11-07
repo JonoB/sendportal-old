@@ -1,16 +1,28 @@
 <?php namespace App\Models;
 
-use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Subscriber extends BaseModel
 {
-    use Uuid;
-
     /**
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model)
+        {
+            $model->hash = \Ramsey\Uuid\Uuid::uuid4()->toString();
+        });
+    }
 
     /**
      * Segments this subscriber is assigned to
