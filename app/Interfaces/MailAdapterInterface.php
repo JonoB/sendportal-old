@@ -2,17 +2,16 @@
 
 namespace App\Interfaces;
 
-interface CampaignDispatchInterface
+interface MailAdapterInterface
 {
     /**
-     * Send the campaign
+     * Send the e-mail
      *
-     * @param string $mailService
      * @param string $fromEmail
      * @param string $toEmail
      * @param string $subject
      * @param string $content
      * @return mixed
      */
-    public function send($mailService, $fromEmail, $toEmail, $subject, $content);
+    public function send($fromEmail, $toEmail, $subject, $content);
 }

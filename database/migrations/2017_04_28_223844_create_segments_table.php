@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCampaignsTable extends Migration
+class CreateSegmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateCampaignsTable extends Migration
      */
     public function up()
     {
-        Schema::create('campaigns', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+        Schema::create('segments', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('name');
             $table->timestamps();
         });
@@ -27,6 +27,6 @@ class CreateCampaignsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('campaigns');
+        Schema::dropIfExists('segments');
     }
 }

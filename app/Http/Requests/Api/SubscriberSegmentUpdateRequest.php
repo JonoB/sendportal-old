@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SegmentStoreRequest extends FormRequest
+class SubscriberSegmentUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,8 @@ class SegmentStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required'],
-            'subscribers' => ['array', 'nullable']
+            'segments' => ['array', 'required'],
+            'segments.*' => ['integer']
         ];
     }
 }

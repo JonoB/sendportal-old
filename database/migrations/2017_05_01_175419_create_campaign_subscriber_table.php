@@ -15,8 +15,9 @@ class CreateCampaignSubscriberTable extends Migration
     {
         Schema::create('campaign_subscriber', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('subscriber_id', 36);
-            $table->char('campaign_id', 36);
+            $table->unsignedInteger('subscriber_id');
+            $table->unsignedInteger('campaign_id');
+            $table->string('message_id');
             $table->string('ip')->nullable();
             $table->smallInteger('open_count')->default(0);
             $table->smallInteger('click_count')->default(0);

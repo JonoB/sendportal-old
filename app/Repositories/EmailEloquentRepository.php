@@ -15,7 +15,7 @@ class EmailEloquentRepository extends BaseEloquentRepository implements EmailRep
         return $this->getQueryBuilder()
             ->where('status_id', CampaignStatus::STATUS_QUEUED)
             ->where('mailable_type', 'App\Models\Campaign')
-            ->with('lists')
+            ->with('segments')
             ->get();
     }
 }
