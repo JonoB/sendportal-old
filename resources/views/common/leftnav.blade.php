@@ -5,57 +5,41 @@
 
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
-            <li class="{{ Route::currentRouteName() == 'dashboard' ? 'active' : '' }}">
+            <li class="{{ request()->is('dashboard') ? 'active' : '' }}">
                 <a href="{{ route('dashboard') }}">
                     <i class="fa fa-bar-chart"></i> <span>Dashboard</span>
                 </a>
             </li>
-            <li class="{{ Request::is('campaigns*') ? 'active' : '' }}">
+            <li class="{{ request()->is('campaigns*') ? 'active' : '' }}">
                 <a href="{{ route('campaigns.index') }}">
                     <i class="fa fa-send"></i> <span>Campaigns</span>
                 </a>
             </li>
-            <li class="{{ Request::is('autoresponders*') ? 'active' : '' }}">
-                <a href="{{ route('autoresponders.index') }}">
-                    <i class="fa fa-refresh"></i> <span>Autoresponders</span>
+            <li class="{{ request()->is('automation*') ? 'active' : '' }}">
+                <a href="{{ route('automation.index') }}">
+                    <i class="fa fa-refresh"></i> <span>Automation</span>
                 </a>
             </li>
-            <li class="{{ Request::is('templates*') ? 'active' : '' }}">
+            <li class="{{ request()->is('templates*') ? 'active' : '' }}">
                 <a href="{{ route('templates.index') }}">
                     <i class="fa fa-file-text"></i> <span>Templates</span>
                 </a>
             </li>
-            <li class="{{ Request::is('subscribers*') ? 'active' : '' }}">
+            <li class="{{ request()->is('subscribers*') ? 'active' : '' }}">
                 <a href="{{ route('subscribers.index') }}">
                     <i class="fa fa-users"></i> <span>Subscribers</span>
                 </a>
             </li>
-            <li class="{{ Request::is('segments*') ? 'active' : '' }}">
+            <li class="{{ request()->is('segments*') ? 'active' : '' }}">
                 <a href="{{ route('segments.index') }}">
                     <i class="fa fa-list"></i> <span>Segments</span>
                 </a>
             </li>
-            <li class="{{ Request::is('config*') ? 'active' : '' }}">
+            <li class="{{ request()->is('config*') ? 'active' : '' }}">
                 <a href="{{ route('config.index') }}">
                     <i class="fa fa-cog"></i> <span>Configurations</span>
                 </a>
             </li>
-            <li>
-                <a href="">
-                    <i class="fa fa-dashboard"></i> <span>Drafts</span>
-                </a>
-            </li>
-            <li>
-                <a href="">
-                    <i class="fa fa-dashboard"></i> <span>Delivery logs</span>
-                </a>
-            </li>
-            <li>
-                <a href="">
-                    <i class="fa fa-dashboard"></i> <span>Activity</span>
-                </a>
-            </li>
-
         </ul>
     </section>
     <!-- /.sidebar -->
