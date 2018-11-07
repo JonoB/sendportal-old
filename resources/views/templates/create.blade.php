@@ -6,7 +6,7 @@
 
 @section('content')
 
-    {!! Form::open(array('route' => array('templates.store'))) !!}
+    {!! Form::open(['route' => ['templates.store'], 'class' => 'form-horizontal']) !!}
 
     @include('templates.partials.form')
 

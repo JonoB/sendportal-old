@@ -36,6 +36,6 @@ class CreateCampaignSubscriberTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('campaign_subscriber');
     }
 }

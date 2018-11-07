@@ -5,7 +5,6 @@
 
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
-            <li class="header">MAIN NAVIGATION</li>
             <li class="{{ Route::currentRouteName() == 'dashboard' ? 'active' : '' }}">
                 <a href="{{ route('dashboard') }}">
                     <i class="fa fa-bar-chart"></i> <span>Dashboard</span>
@@ -26,9 +25,14 @@
                     <i class="fa fa-file-text"></i> <span>Templates</span>
                 </a>
             </li>
-            <li class="{{ Request::is('lists*') ? 'active' : '' }}">
-                <a href="{{ route('lists.index') }}">
-                    <i class="fa fa-user"></i> <span>Subscribers</span>
+            <li class="{{ Request::is('subscribers*') ? 'active' : '' }}">
+                <a href="{{ route('subscribers.index') }}">
+                    <i class="fa fa-users"></i> <span>Subscribers</span>
+                </a>
+            </li>
+            <li class="{{ Request::is('segments*') ? 'active' : '' }}">
+                <a href="{{ route('segments.index') }}">
+                    <i class="fa fa-list"></i> <span>Segments</span>
                 </a>
             </li>
             <li>

@@ -39,6 +39,7 @@ class CreateConfigurationTables extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('configs');
+        Schema::dropIfExists('config_types');
     }
 }
