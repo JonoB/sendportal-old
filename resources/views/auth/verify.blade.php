@@ -1,5 +1,7 @@
 @extends('auth.template')
 
+@section('title', __('Verify Your Email Address'))
+
 @section('content')
     <div class="container min-h-screen">
         <div class="row h-full d-flex justify-center items-center min-h-screen">
