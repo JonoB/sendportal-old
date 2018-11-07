@@ -3,12 +3,11 @@
 namespace App\Adapters;
 
 use App\Interfaces\MailAdapterInterface;
-use GuzzleHttp\Client;
+use SendGrid;
+use SendGrid\Mail\Mail;
 
 class SendgridMailAdapter implements MailAdapterInterface
 {
-    const BASE_URL = 'https://api.sendgrid.com/v3/mail/send';
-
     /**
      * @var array
      */
@@ -20,10 +19,10 @@ class SendgridMailAdapter implements MailAdapterInterface
     protected $client;
 
     /**
-     * Resolve a Guzzle Client
+     * Resolve a Sendgrid Client
      *
      * @param null
-     * @return Client
+     * @return SendGrid
      */
     public function resolveClient()
     {
@@ -32,7 +31,7 @@ class SendgridMailAdapter implements MailAdapterInterface
             return $this->client;
         }
 
-        $this->client = new Client();
+        $this->client = new SendGrid(array_get($this->config, 'key'));
 
         return $this->client;
     }
@@ -55,28 +54,26 @@ class SendgridMailAdapter implements MailAdapterInterface
      * @param string $toEmail
      * @param string $subject
      * @param string $content
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return bool
+     * @throws \SendGrid\Mail\TypeException
      */
     public function send($fromEmail, $toEmail, $subject, $content)
     {
-        $payload = [
-            'headers' => [
-                'Authorization' => 'Bearer ' . array_get($this->config, 'key'),
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'personalizations' => [
-                    ['to' => $toEmail],
-                ],
-                'from' => $fromEmail,
-                'subject' => $subject,
-                'content' =>[
-                    'type'  => 'text/html',
-                    'value' => $content,
-                ],
-            ],
-        ];
+        $email = new Mail();
+        $email->setFrom($fromEmail);
+        $email->setSubject($subject);
+        $email->addTo($toEmail);
+        $email->addContent("text/html",  $content);
 
-        return $this->resolveClient()->post(static::BASE_URL, $payload);
+        try
+        {
+            $response = $this->resolveClient()->send($email);
+        }
+        catch (\Exception $e)
+        {
+            \Log::error('Failed to send via SendGrid', ['error' => $e->getMessage()]);
+        }
+
+        return $response->statusCode() == 202;
     }
 }
