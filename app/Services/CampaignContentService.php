@@ -116,7 +116,7 @@ class CampaignContentService implements CampaignContentServiceInterface
      */
     protected function createBaseCampaignContent(Campaign $campaign)
     {
-        $content = $campaign->content;
+        $content = $campaign->email->content;
 
         if ($this->trackClicks())
         {

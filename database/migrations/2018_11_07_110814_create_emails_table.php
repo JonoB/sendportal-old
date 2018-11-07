@@ -28,7 +28,10 @@ class CreateEmailsTable extends Migration
             $table->mediumInteger('sent_count')->nullable()->default(0);
             $table->mediumInteger('open_count')->nullable()->default(0);
             $table->mediumInteger('click_count')->nullable()->default(0);
+            $table->timestamp('scheduled_at')->nullable();
             $table->timestamps();
+
+            $table->foreign('status_id')->references('id')->on('campaign_statuses');
         });
     }
 

@@ -1,11 +1,9 @@
 <div class="row">
     <div class="col-sm-6">
-        {!! Form::textField('name', 'Campaign Name') !!}
-        {!! Form::textField('subject', 'Email Subject') !!}
-        {!! Form::textField('from_name', 'From Name') !!}
-        {!! Form::textField('from_email', 'From Email') !!}
-        {!! Form::checkboxField('track_opens', 'Track Opens') !!}
-        {!! Form::checkboxField('track_clicks', 'Track Clicks') !!}
+        {!! Form::textField('name', 'Campaign Name', isset($campaign->name) ? $campaign->name : null) !!}
+        {!! Form::textField('subject', 'Email Subject', isset($campaign->email->subject) ? $campaign->email->subject : null) !!}
+        {!! Form::textField('from_name', 'From Name', isset($campaign->email->from_name) ? $campaign->email->from_name : null) !!}
+        {!! Form::textField('from_email', 'From Email', isset($campaign->email->from_email) ? $campaign->email->from_email : null) !!}
 
         {!! Form::submitButton('Save and continue') !!}
         {!! Form::close() !!}

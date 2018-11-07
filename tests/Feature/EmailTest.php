@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\CampaignStatus;
+use App\Models\Email;
+use App\Models\Template;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class EmailTest extends TestCase
 {
@@ -23,5 +23,25 @@ class EmailTest extends TestCase
         parent::setUp();
 
         $this->user = factory(User::class)->create();
+    }
+
+    /** @test */
+    function an_email_has_a_related_status()
+    {
+        $email = factory(Email::class)->create([
+            'status_id' => CampaignStatus::STATUS_DRAFT,
+        ]);
+
+        $this->assertNotNull($email->status->name);
+    }
+
+    /** @test */
+    function an_email_has_a_related_template()
+    {
+        $email = factory(Email::class)->create([
+            'template_id' => factory(Template::class)->create()->id,
+        ]);
+
+        $this->assertNotNull($email->template->name);
     }
 }

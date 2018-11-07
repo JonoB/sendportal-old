@@ -10,41 +10,21 @@ class Campaign extends BaseModel
 
     protected $fillable = [
         'name',
-        'scheduled_at',
     ];
 
     // we can't use boolean fields on this model because
     // we have multiple points to update from the controller
     protected $booleanFields = [];
 
-    public function getOpenRatioAttribute()
-    {
-        if ($this->attributes['sent_count'])
-        {
-            return $this->attributes['open_count'] / $this->attributes['sent_count'];
-        }
-
-        return 0;
-    }
-
-    public function getClickRatioAttribute()
-    {
-        if ($this->attributes['click_count'])
-        {
-            return $this->attributes['click_count'] / $this->attributes['sent_count'];
-        }
-
-        return 0;
-    }
 
     /**
      * The email associated to this campaign
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
     public function email()
     {
-        return $this->morphMany(Email::class, 'mailable');
+        return $this->morphOne(Email::class, 'mailable');
     }
 
     /**
@@ -65,16 +45,5 @@ class Campaign extends BaseModel
     public function status()
     {
         return $this->belongsTo(CampaignStatus::class, 'status_id');
-    }
-
-    /**
-     * Template the campaign uses
-     *
-     * @return mixed
-     */
-    public function template()
-    {
-        return $this->belongsTo(Template::class)
-            ->select('id', 'name');
     }
 }
