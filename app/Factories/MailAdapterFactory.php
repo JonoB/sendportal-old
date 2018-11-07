@@ -2,6 +2,7 @@
 
 namespace App\Factories;
 
+use App\Adapters\MailgunMailAdapter;
 use App\Adapters\SendgridMailAdapter;
 use App\Adapters\SesMailAdapter;
 use App\Interfaces\ConfigRepositoryInterface;
@@ -111,6 +112,23 @@ class MailAdapterFactory
         $adapter = new SendgridMailAdapter();
 
         $config = $this->configRepo->findSettings(ConfigType::SENDGRID);
+
+        $adapter->setConfig($config);
+
+        return $adapter;
+    }
+
+    /**
+     * Return a MailgunMailAdapter
+     *
+     * @param null
+     * @return MailAdapterInterface
+     */
+    public function createMailgunAdapter()
+    {
+        $adapter = new MailgunMailAdapter();
+
+        $config = $this->configRepo->findSettings(ConfigType::MAILGUN);
 
         $adapter->setConfig($config);
 
