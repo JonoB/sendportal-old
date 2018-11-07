@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAutoResponderEmailsTable extends Migration
+class CreateAutomationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,13 @@ class CreateAutoResponderEmailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('auto_responder_emails', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('automations', function (Blueprint $table) {
+            $table->unsignedInteger('id')->primary();
+            $table->string('name');
+            $table->unsignedInteger('segment_id');
             $table->timestamps();
+
+            $table->foreign('segment_id')->references('id')->on('segments');
         });
     }
 
@@ -26,6 +30,6 @@ class CreateAutoResponderEmailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('auto_responder_emails');
+        Schema::dropIfExists('automation');
     }
 }

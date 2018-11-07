@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Models\Autoresponder;
+use App\Models\Automation;
 use App\Models\Segment;
-use App\Repositories\AutoresponderEloquentRepository;
+use App\Repositories\AutomationEloquentRepository;
 use App\Repositories\SegmentEloquentRepository;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AutoresponderTest extends TestCase
+class AutomationTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -25,9 +25,9 @@ class AutoresponderTest extends TestCase
     private $segmentRepository;
 
     /**
-     * @var AutoresponderEloquentRepository
+     * @var AutomationEloquentRepository
      */
-    private $autoresponderRepository;
+    private $automationRepository;
 
     protected function setUp()
     {
@@ -35,14 +35,14 @@ class AutoresponderTest extends TestCase
 
         $this->user = factory(User::class)->create();
         $this->segmentRepository = $this->app->make(SegmentEloquentRepository::class);
-        $this->autoresponderRepository = $this->app->make(AutoresponderEloquentRepository::class);
+        $this->automationRepository = $this->app->make(AutomationEloquentRepository::class);
     }
 
     /** @test */
     function an_authenticated_user_can_view_the_index()
     {
         $this->actingAs($this->user);
-        $response = $this->get(route('autoresponders.index'));
+        $response = $this->get(route('automations.index'));
 
         $response->assertStatus(200);
     }
@@ -50,31 +50,33 @@ class AutoresponderTest extends TestCase
     /** @test */
     function an_unauthenticated_user_cannot_view_the_index()
     {
-        $response = $this->get(route('autoresponders.index'));
+        $response = $this->get(route('automations.index'));
 
         $response->assertStatus(302);
         $response->assertRedirect('/login');
     }
 
     /** @test */
-    function the_index_page_lists_existing_autoresponders()
+    function the_index_page_lists_existing_automations()
     {
+        $this->withoutExceptionHandling();
         $this->actingAs($this->user);
 
-        $autoresponder = factory(Autoresponder::class)->create();
+        $automation = factory(Automation::class)->create();
 
-        $response = $this->get(route('autoresponders.index'));
+        $response = $this->get(route('automations.index'));
 
         $response->assertStatus(200);
-        $response->assertSee($autoresponder->name);
-        $response->assertSee($autoresponder->segment->name);
+        $response->assertSee($automation->name);
+        $response->assertSee($automation->segment->name);
     }
 
     /** @test */
     function an_authenticated_user_can_view_the_create_page()
     {
+        $this->withoutExceptionHandling();
         $this->actingAs($this->user);
-        $response = $this->get(route('autoresponders.create'));
+        $response = $this->get(route('automations.create'));
 
         $response->assertStatus(200);
     }
@@ -82,7 +84,7 @@ class AutoresponderTest extends TestCase
     /** @test */
     function an_unauthenticated_user_cannot_view_the_create_page()
     {
-        $response = $this->get(route('autoresponders.create'));
+        $response = $this->get(route('automations.create'));
 
         $response->assertStatus(302);
         $response->assertRedirect('/login');
@@ -97,7 +99,7 @@ class AutoresponderTest extends TestCase
         $segment2 = factory(Segment::class)->create();
         $segments = $this->segmentRepository->pluck();
 
-        $response = $this->get(route('autoresponders.create', ['segments' => $segments]));
+        $response = $this->get(route('automations.create', ['segments' => $segments]));
 
         $response->assertSee($segment1->id);
         $response->assertSee($segment1->name);
@@ -108,9 +110,9 @@ class AutoresponderTest extends TestCase
     /** @test */
     function an_authenticated_user_can_create_an_autoresponder()
     {
-        $autoresponder = factory(Autoresponder::class)->make();
+        $automation = factory(Automation::class)->make();
 
-        $response = $this->post(route('autoresponders.store'), $autoresponder->toArray());
+        $response = $this->post(route('automations.store'), $automation->toArray());
 
         $response->assertStatus(302);
         $response->assertRedirect('/login');
@@ -121,9 +123,9 @@ class AutoresponderTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $autoresponder = factory(Autoresponder::class)->make();
+        $automation = factory(Automation::class)->make();
 
-        $response = $this->post(route('autoresponders.store'), $autoresponder->toArray());
+        $response = $this->post(route('automations.store'), $automation->toArray());
 
         $response->assertStatus(201);
     }
@@ -133,9 +135,9 @@ class AutoresponderTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $autoresponder = factory(AutoResponder::class)->make(['name' => null]);
+        $automation = factory(Automation::class)->make(['name' => null]);
 
-        $response = $this->post(route('autoresponders.store'), $autoresponder->toArray());
+        $response = $this->post(route('automations.store'), $automation->toArray());
 
         $response->assertSessionHasErrors('name');
     }
@@ -145,32 +147,33 @@ class AutoresponderTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $autoresponder = factory(AutoResponder::class)->make(['segment_id' => null]);
+        $automation = factory(Automation::class)->make(['segment_id' => null]);
 
-        $response = $this->post(route('autoresponders.store'), $autoresponder->toArray());
+        $response = $this->post(route('automations.store'), $automation->toArray());
 
         $response->assertSessionHasErrors('segment_id');
     }
 
     /** @test */
-    function an_authenticated_user_can_view_a_product()
+    function an_authenticated_user_can_view_a_automation()
     {
+        $this->withoutExceptionHandling();
         $this->actingAs($this->user);
 
-        $autoresponder = factory(Autoresponder::class)->create();
+        $automation = factory(Automation::class)->create();
 
-        $response = $this->get(route('autoresponders.show', ['id' => $autoresponder->id]));
+        $response = $this->get(route('automations.show', ['id' => $automation->id]));
 
         $response->assertStatus(200);
-        $response->assertSee($autoresponder->name);
+        $response->assertSee($automation->name);
     }
 
     /** @test */
-    function an_unauthenticated_user_cannot_view_a_product()
+    function an_unauthenticated_user_cannot_view_a_automation()
     {
-        $autoresponder = factory(Autoresponder::class)->create();
+        $automation = factory(Automation::class)->create();
 
-        $response = $this->get(route('autoresponders.show', ['id' => $autoresponder->id]));
+        $response = $this->get(route('automations.show', ['id' => $automation->id]));
 
         $response->assertStatus(302);
         $response->assertRedirect('/login');
@@ -181,10 +184,10 @@ class AutoresponderTest extends TestCase
     {
         $segment = factory(Segment::class)->create();
 
-        $autoresponder = factory(Autoresponder::class)->create([
+        $automation = factory(Automation::class)->create([
             'segment_id' => $segment->id,
         ]);
 
-        $this->assertEquals($segment->name, $autoresponder->segment->name);
+        $this->assertEquals($segment->name, $automation->segment->name);
     }
 }

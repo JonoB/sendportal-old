@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\AutoresponderRepositoryInterface;
+use App\Interfaces\AutomationRepositoryInterface;
 use App\Interfaces\SegmentRepositoryInterface;
 use Illuminate\Http\Request;
 
-class AutorespondersController extends Controller
+class AutomationsController extends Controller
 {
     /**
      * @var SegmentRepositoryInterface
@@ -14,20 +14,20 @@ class AutorespondersController extends Controller
     private $segmentRepository;
 
     /**
-     * @var AutoresponderRepositoryInterface
+     * @var AutomationRepositoryInterface
      */
-    private $autoresponderRepository;
+    private $automationRepository;
 
     /**
-     * AutorespondersController constructor.
+     * AutomationsController constructor.
      *
      * @param SegmentRepositoryInterface $segmentRepository
-     * @param AutoresponderRepositoryInterface $autoresponderRepository
+     * @param AutomationRepositoryInterface $automationRepository
      */
-    public function __construct(SegmentRepositoryInterface $segmentRepository, AutoresponderRepositoryInterface $autoresponderRepository)
+    public function __construct(SegmentRepositoryInterface $segmentRepository, AutomationRepositoryInterface $automationRepository)
     {
         $this->segmentRepository = $segmentRepository;
-        $this->autoresponderRepository = $autoresponderRepository;
+        $this->automationRepository = $automationRepository;
     }
 
     /**
@@ -37,8 +37,8 @@ class AutorespondersController extends Controller
      */
     public function index()
     {
-        $autoresponders = $this->autoresponderRepository->paginate();
-        return view('autoresponders.index', compact('autoresponders'));
+        $automations = $this->automationRepository->paginate();
+        return view('automations.index', compact('automations'));
     }
 
     /**
@@ -50,7 +50,7 @@ class AutorespondersController extends Controller
     {
         $segments = $this->segmentRepository->pluck();
 
-        return view('autoresponders.create', compact('segments'));
+        return view('automations.create', compact('segments'));
     }
 
     /**
@@ -66,7 +66,7 @@ class AutorespondersController extends Controller
             'name' => 'required',
             'segment_id' => 'required'
         ]);
-        $autoresponder = $this->autoresponderRepository->store($request->all());
+        $this->automationRepository->store($request->all());
 
         return response('Success', 201);
     }
@@ -80,8 +80,8 @@ class AutorespondersController extends Controller
      */
     public function show($id)
     {
-        $autoresponder = $this->autoresponderRepository->find($id);
-        return view('autoresponders.show', compact('autoresponder'));
+        $automation = $this->automationRepository->find($id);
+        return view('automations.show', compact('automation'));
     }
 
     /**

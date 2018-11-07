@@ -9,6 +9,7 @@ use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\CampaignRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Models\CampaignStatus;
+use App\Repositories\SegmentEloquentRepository;
 use App\Services\CampaignReportService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -32,21 +33,29 @@ class CampaignsController extends Controller
     protected $templateRepo;
 
     /**
+     * @var SegmentRepositoryInterface
+     */
+    protected $segmentRepository;
+
+    /**
      * CampaignsController constructor.
      *
      * @param CampaignRepositoryInterface $campaignRepository
      * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
      * @param TemplateRepositoryInterface $templateRepository
+     * @param SegmentRepositoryInterface $segmentRepository
      */
     public function __construct(
         CampaignRepositoryInterface $campaignRepository,
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
-        TemplateRepositoryInterface $templateRepository
+        TemplateRepositoryInterface $templateRepository,
+        SegmentRepositoryInterface $segmentRepository
     )
     {
         $this->campaignRepo = $campaignRepository;
         $this->campaignSubscriberRepo = $campaignSubscriberRepository;
         $this->templateRepo = $templateRepository;
+        $this->segmentRepository = $segmentRepository;
     }
 
     /**
@@ -195,7 +204,7 @@ class CampaignsController extends Controller
         }
 
         $template = $this->templateRepo->find($campaign->email->template_id);
-        $lists = $this->segment->all('name', ['subscriberCount']);
+        $lists = $this->segmentRepository->all('name', ['subscriberCount']);
 
         return view('campaigns.confirm', compact('campaign', 'template', 'lists'));
     }

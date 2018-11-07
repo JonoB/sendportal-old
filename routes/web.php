@@ -13,7 +13,7 @@ Route::middleware(['auth'])->group(function ()
     Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
-    Route::resource('automation', 'AutomationsController');
+    Route::resource('automations', 'AutomationsController');
 
     Route::resource('subscribers', 'SubscribersController');
 

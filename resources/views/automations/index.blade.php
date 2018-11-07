@@ -1,12 +1,12 @@
 @extends('common.template')
 
 @section('heading')
-    Autoresponders
+    Automations
 @endsection
 
 @section('content')
     <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('autoresponders.create') }}">Create Autoresponder</a>
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('automations.create') }}">Create Automation</a>
         <div class="clearfix"></div>
     </div>
 
@@ -20,9 +20,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($autoresponders as $autoresponder)
-                        <td><a href="{{ route('autoresponders.show', ['id' => $autoresponder->id]) }}">{{ $autoresponder->name }}</a></td>
-                        <td>{{ $autoresponder->segment->name }}</td>
+                    @foreach($automations as $automation)
+                        <td><a href="{{ route('automations.show', ['id' => $automation->id]) }}">{{ $automation->name }}</a></td>
+                        <td>{{ $automation->segment->name }}</td>
                     @endforeach
                 </tbody>
             </table>

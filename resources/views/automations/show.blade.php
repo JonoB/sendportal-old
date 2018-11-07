@@ -1,7 +1,7 @@
 @extends('common.template')
 
 @section('heading')
-    {{ $autoresponder->name }}
+    {{ $automation->name }}
 @stop
 
 @section('content')
