@@ -76,7 +76,7 @@ class SegmentsController extends Controller
      */
     public function show($id)
     {
-        return new SegmentResource($this->segments->find((int)$id));
+        return new SegmentResource($this->segments->find($id));
     }
 
     /**
@@ -91,7 +91,7 @@ class SegmentsController extends Controller
     {
         $input = $request->validated();
 
-        return new SegmentResource($this->segments->update((int)$id, $input));
+        return new SegmentResource($this->segments->update($id, $input));
     }
 
     /**
@@ -103,7 +103,7 @@ class SegmentsController extends Controller
      */
     public function destroy($id)
     {
-        $this->segments->destroy((int)$id);
+        $this->segments->destroy($id);
 
         return response(null, 204);
     }

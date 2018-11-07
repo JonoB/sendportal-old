@@ -27,7 +27,7 @@ class ApiStoreService
      *
      * @return Subscriber
      */
-    public function createOrUpdate(array $data): Subscriber
+    public function __invoke(array $data): Subscriber
     {
         if (array_get($data, 'id') !== null)
         {

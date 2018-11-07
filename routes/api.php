@@ -18,9 +18,15 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-// Subscribers
 Route::middleware('auth:api')->name('api.')->group(function()
 {
     Route::apiResource('subscribers', 'SubscribersController');
     Route::apiResource('segments', 'SegmentsController');
+
+    Route::apiResource('subscribers.segments', 'SubscriberSegmentsController')
+        ->except(['show', 'update', 'destroy']);
+    Route::put('subscribers/{subscriber}/segments', 'SubscriberSegmentsController@update')
+        ->name('subscribers.segments.update');
+    Route::delete('subscribers/{subscriber}/segments', 'SubscriberSegmentsController@destroy')
+        ->name('subscribers.segments.destroy');
 });

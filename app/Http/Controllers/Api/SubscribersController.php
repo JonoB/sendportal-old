@@ -19,23 +19,13 @@ class SubscribersController extends Controller
     protected $subscribers;
 
     /**
-     * @var ApiStoreService
-     */
-    protected $apiStoreService;
-
-    /**
-     * SubscribersController constructor.
-     *
      * @param SubscriberRepositoryInterface $subscribers
-     * @param ApiStoreService $apiStoreService
      */
     public function __construct(
-        SubscriberRepositoryInterface $subscribers,
-        ApiStoreService $apiStoreService
+        SubscriberRepositoryInterface $subscribers
     )
     {
         $this->subscribers = $subscribers;
-        $this->apiStoreService = $apiStoreService;
     }
 
     /**
@@ -54,12 +44,13 @@ class SubscribersController extends Controller
      * Store a newly created resource in storage.
      *
      * @param SubscriberStoreRequest $request
+     * @param ApiStoreService $service
      *
      * @return SubscriberResource
      */
-    public function store(SubscriberStoreRequest $request)
+    public function store(SubscriberStoreRequest $request, ApiStoreService $service)
     {
-        $subscriber = $this->apiStoreService->createOrUpdate($request->validated());
+        $subscriber = $service($request->validated());
 
         $subscriber->load('segments');
 
@@ -75,7 +66,7 @@ class SubscribersController extends Controller
      */
     public function show($id)
     {
-        return new SubscriberResource($this->subscribers->find((int)$id, ['segments']));
+        return new SubscriberResource($this->subscribers->find($id, ['segments']));
     }
 
     /**
@@ -88,7 +79,7 @@ class SubscribersController extends Controller
      */
     public function update(SubscriberUpdateRequest $request, $id)
     {
-        $subscriber = $this->subscribers->update((int)$id, $request->validated());
+        $subscriber = $this->subscribers->update($id, $request->validated());
 
         return new SubscriberResource($subscriber);
     }
@@ -102,7 +93,7 @@ class SubscribersController extends Controller
      */
     public function destroy($id)
     {
-        $this->subscribers->destroy((int)$id);
+        $this->subscribers->destroy($id);
 
         return response(null, 204);
     }

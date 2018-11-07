@@ -16,5 +16,5 @@ $factory->state(Subscriber::class, 'segmented', function (Faker $faker) {
 });
 
 $factory->afterCreatingState(Subscriber::class, 'segmented', function ($subscriber, $faker) {
-    $subscriber->segments()->save(factory(\App\Models\Segment::class)->make());
+    $subscriber->segments()->saveMany(factory(\App\Models\Segment::class, 2)->make());
 });

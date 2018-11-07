@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class SegmentApiControllerTest extends TestCase
+class SegmentsApiControllerTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;

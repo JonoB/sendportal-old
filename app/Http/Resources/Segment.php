@@ -19,8 +19,8 @@ class Segment extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'subscribers' => SubscriberResource::collection($this->whenLoaded('subscribers')),
-            'created_at' => $this->created_at,
-            'update_at' => $this->updated_at
+            'created_at' => $this->created_at->toDateTimeString(),
+            'update_at' => $this->updated_at->toDateTimeString()
         ];
     }
 }
