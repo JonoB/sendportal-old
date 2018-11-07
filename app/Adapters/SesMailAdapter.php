@@ -3,6 +3,7 @@
 namespace App\Adapters;
 
 use App\Interfaces\MailAdapterInterface;
+use Aws\Result;
 use Aws\Ses\SesClient;
 
 class SesMailAdapter extends BaseMailAdapter implements MailAdapterInterface
@@ -18,7 +19,7 @@ class SesMailAdapter extends BaseMailAdapter implements MailAdapterInterface
      * @param null
      * @return SesClient
      */
-    public function resolveClient()
+    protected function resolveClient()
     {
         if ($this->client)
         {
@@ -43,7 +44,7 @@ class SesMailAdapter extends BaseMailAdapter implements MailAdapterInterface
      * @param string $toEmail
      * @param string $subject
      * @param string $content
-     * @return \Aws\Result
+     * @return string
      */
     public function send($fromEmail, $toEmail, $subject, $content)
     {
@@ -64,8 +65,21 @@ class SesMailAdapter extends BaseMailAdapter implements MailAdapterInterface
                     ],
                 ),
             ],
+            'ConfigurationSetName' => 'Sendportal',
         ]);
 
+        return $this->resolveMessageId($result);
+    }
+
+    /**
+     * Resolve the message ID
+     * from the response
+     *
+     * @param Result $result
+     * @return string
+     */
+    protected function resolveMessageId(Result $result)
+    {
         return array_get($result->toArray(), 'MessageId');
     }
 }

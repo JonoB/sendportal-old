@@ -19,7 +19,7 @@ class SendgridMailAdapter extends BaseMailAdapter implements MailAdapterInterfac
      * @param null
      * @return SendGrid
      */
-    public function resolveClient()
+    protected function resolveClient()
     {
         if ($this->client)
         {
@@ -56,8 +56,24 @@ class SendgridMailAdapter extends BaseMailAdapter implements MailAdapterInterfac
         catch (\Exception $e)
         {
             \Log::error('Failed to send via SendGrid', ['error' => $e->getMessage()]);
+
+            return false;
         }
 
-        return $response->statusCode() == 202;
+        return $this->resolveMessageId($response);
+    }
+
+    /**
+     * Resolve the message ID
+     * from the response
+     *
+     * @param SendGrid\Response $response
+     * @return string
+     */
+    protected function resolveMessageId(Sendgrid\Response $response)
+    {
+        $response = array_get($response->headers(), 8);
+
+        return str_replace('X-Message-Id: ', '', $response);
     }
 }

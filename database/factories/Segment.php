@@ -8,3 +8,11 @@ $factory->define(Segment::class, function (Faker $faker) {
         'name' => ucwords($faker->word)
     ];
 });
+
+$factory->state(Segment::class, 'subscribed', function (Faker $faker) {
+    return [];
+});
+
+$factory->afterCreatingState(Segment::class, 'subscribed', function ($subscriber, $faker) {
+    $subscriber->subscribers()->saveMany(factory(\App\Models\Subscriber::class, 2)->make());
+});

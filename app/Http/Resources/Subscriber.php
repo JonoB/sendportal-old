@@ -21,8 +21,8 @@ class Subscriber extends JsonResource
             'last_name' => $this->last_name,
             'email' => $this->email,
             'segments' => SegmentResource::collection($this->whenLoaded('segments')),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'created_at' => $this->created_at->toDateTimeString(),
+            'updated_at' => $this->updated_at->toDateTimeString()
         ];
     }
 }

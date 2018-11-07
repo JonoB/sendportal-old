@@ -4,6 +4,7 @@ namespace App\Adapters;
 
 use App\Interfaces\MailAdapterInterface;
 use Mailgun\Mailgun;
+use Mailgun\Model\Message\SendResponse;
 
 class MailgunMailAdapter extends BaseMailAdapter implements MailAdapterInterface
 {
@@ -18,7 +19,7 @@ class MailgunMailAdapter extends BaseMailAdapter implements MailAdapterInterface
      * @param null
      * @return Mailgun
      */
-    public function resolveClient()
+    protected function resolveClient()
     {
         if ($this->client)
         {
@@ -37,15 +38,29 @@ class MailgunMailAdapter extends BaseMailAdapter implements MailAdapterInterface
      * @param string $toEmail
      * @param string $subject
      * @param string $content
-     * @return \Mailgun\Model\Message\SendResponse
+     * @return string
      */
     public function send($fromEmail, $toEmail, $subject, $content)
     {
-        return $this->resolveClient()->messages()->send(array_get($this->config, 'domain'), [
+        $result = $this->resolveClient()->messages()->send(array_get($this->config, 'domain'), [
             'from'    => $fromEmail,
             'to'      => $toEmail,
             'subject' => $subject,
             'html'    => $content,
         ]);
+
+        return $this->resolveMessageId($result);
+    }
+
+    /**
+     * Resolve the message ID
+     * from the response
+     *
+     * @param SendResponse $result
+     * @return string
+     */
+    protected function resolveMessageId(SendResponse $result)
+    {
+        return $result->getId();
     }
 }

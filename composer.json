@@ -18,7 +18,8 @@
         "ramsey/uuid": "^3.6",
         "sendgrid/sendgrid": "^7.2",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
-        "wildbit/postmark-php": "^2.6"
+        "wildbit/postmark-php": "^2.6",
+      "ext-json": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",

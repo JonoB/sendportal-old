@@ -3,6 +3,7 @@
 namespace App\Adapters;
 
 use App\Interfaces\MailAdapterInterface;
+use Postmark\Models\DynamicResponseModel;
 use Postmark\PostmarkClient;
 
 class PostmarkMailAdapter extends BaseMailAdapter implements MailAdapterInterface
@@ -18,7 +19,7 @@ class PostmarkMailAdapter extends BaseMailAdapter implements MailAdapterInterfac
      * @param null
      * @return PostmarkClient
      */
-    public function resolveClient()
+    protected function resolveClient()
     {
         if ($this->client)
         {
@@ -37,10 +38,24 @@ class PostmarkMailAdapter extends BaseMailAdapter implements MailAdapterInterfac
      * @param string $toEmail
      * @param string $subject
      * @param string $content
-     * @return \Postmark\Models\DynamicResponseModel
+     * @return string
      */
     public function send($fromEmail, $toEmail, $subject, $content)
     {
-        return $this->resolveClient()->sendEmail($fromEmail, $toEmail, $subject, $content);
+        $result = $this->resolveClient()->sendEmail($fromEmail, $toEmail, $subject, $content);
+
+        return $this->resolveMessageId($result);
+    }
+
+    /**
+     * Resolve the message ID
+     * from the response
+     *
+     * @param DynamicResponseModel $result
+     * @return string
+     */
+    protected function resolveMessageId(DynamicResponseModel $result)
+    {
+        return $result->__get('MessageID');
     }
 }
