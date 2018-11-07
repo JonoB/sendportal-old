@@ -18,7 +18,7 @@ class AddPostmarkConfigType extends Migration
 
         ConfigType::create([
             'id' => ConfigType::POSTMARK,
-            'name' => 'Mailgun',
+            'name' => 'Postmark',
             'fields' => [
                 'API Key' => 'key',
             ]
