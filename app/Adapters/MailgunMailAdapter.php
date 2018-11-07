@@ -5,13 +5,8 @@ namespace App\Adapters;
 use App\Interfaces\MailAdapterInterface;
 use Mailgun\Mailgun;
 
-class MailgunMailAdapter implements MailAdapterInterface
+class MailgunMailAdapter extends BaseMailAdapter implements MailAdapterInterface
 {
-    /**
-     * @var array
-     */
-    protected $config;
-
     /**
      * @var Mailgun
      */
@@ -33,17 +28,6 @@ class MailgunMailAdapter implements MailAdapterInterface
         $this->client = Mailgun::create(array_get($this->config, 'key'));
 
         return $this->client;
-    }
-
-    /**
-     * Set adapter config
-     *
-     * @param array $config
-     * @return null
-     */
-    public function setConfig($config)
-    {
-        $this->config = $config;
     }
 
     /**

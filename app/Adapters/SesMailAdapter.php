@@ -5,13 +5,8 @@ namespace App\Adapters;
 use App\Interfaces\MailAdapterInterface;
 use Aws\Ses\SesClient;
 
-class SesMailAdapter implements MailAdapterInterface
+class SesMailAdapter extends BaseMailAdapter implements MailAdapterInterface
 {
-    /**
-     * @var array
-     */
-    protected $config;
-
     /**
      * @var SesClient
      */
@@ -39,17 +34,6 @@ class SesMailAdapter implements MailAdapterInterface
         ]);
 
         return $this->client;
-    }
-
-    /**
-     * Set adapter config
-     *
-     * @param array $config
-     * @return null
-     */
-    public function setConfig($config)
-    {
-        $this->config = $config;
     }
 
     /**

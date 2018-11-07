@@ -6,13 +6,8 @@ use App\Interfaces\MailAdapterInterface;
 use SendGrid;
 use SendGrid\Mail\Mail;
 
-class SendgridMailAdapter implements MailAdapterInterface
+class SendgridMailAdapter extends BaseMailAdapter implements MailAdapterInterface
 {
-    /**
-     * @var array
-     */
-    protected $config;
-
     /**
      * @var
      */
@@ -34,17 +29,6 @@ class SendgridMailAdapter implements MailAdapterInterface
         $this->client = new SendGrid(array_get($this->config, 'key'));
 
         return $this->client;
-    }
-
-    /**
-     * Set adapter config
-     *
-     * @param array $config
-     * @return null
-     */
-    public function setConfig($config)
-    {
-        $this->config = $config;
     }
 
     /**
