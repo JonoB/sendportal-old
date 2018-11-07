@@ -9,6 +9,7 @@ class CampaignSubscriber extends BaseModel
     protected $fillable = [
         'campaign_id',
         'subscriber_id',
+        'message_id',
         'ip',
         'open_count',
         'click_count',

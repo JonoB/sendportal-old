@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSegmentsTable extends Migration
+class CreateCampaignStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,19 @@ class CreateSegmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('segments', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+        Schema::create('campaign_statuses', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('name');
             $table->timestamps();
         });
+
+        DB::table('campaign_statuses')
+            ->insert([
+               ['name' => 'Draft'],
+               ['name' => 'Queued'],
+               ['name' => 'Sending'],
+               ['name' => 'Sent'],
+            ]);
     }
 
     /**
@@ -27,6 +35,6 @@ class CreateSegmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('segments');
+        Schema::dropIfExists('campaign_statuses');
     }
 }

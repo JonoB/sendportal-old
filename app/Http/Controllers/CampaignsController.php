@@ -24,11 +24,6 @@ class CampaignsController extends Controller
     /**
      * @var CampaignRepositoryInterface
      */
-    protected $tagRepo;
-
-    /**
-     * @var CampaignRepositoryInterface
-     */
     protected $campaignRepo;
 
     /**
@@ -37,27 +32,32 @@ class CampaignsController extends Controller
     protected $templateRepo;
 
     /**
-     * @var SubscriberListRepositoryInterface
-     */
-    protected $segmentRepository;
-
-    /**
      * CampaignsController constructor.
+     *
+     * @param CampaignRepositoryInterface $campaignRepository
+     * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
+     * @param TemplateRepositoryInterface $templateRepository
      */
     public function __construct(
-        TagRepositoryInterface $tagRepository,
         CampaignRepositoryInterface $campaignRepository,
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
-        TemplateRepositoryInterface $templateRepository,
-        SegmentRepositoryInterface $segment
+        TemplateRepositoryInterface $templateRepository
     )
     {
-        $this->tagRepo = $tagRepository;
         $this->campaignRepo = $campaignRepository;
         $this->campaignSubscriberRepo = $campaignSubscriberRepository;
         $this->templateRepo = $templateRepository;
-        $this->segment = $segment;
     }
+
+    /**
+     * Fields that belong to a campaign instead of an email.
+     *
+     * @var array
+     */
+    protected $campaignFields = [
+        'name',
+        'scheduled_at',
+    ];
 
     /**
      * Display a listing of the resource.
@@ -66,7 +66,7 @@ class CampaignsController extends Controller
      */
     public function index()
     {
-        $campaigns = $this->campaignRepo->paginate('created_atDesc', ['status', 'template']);
+        $campaigns = $this->campaignRepo->paginate('created_atDesc', ['status', 'email']);
 
         return view('campaigns.index', compact('campaigns'));
     }
@@ -78,18 +78,22 @@ class CampaignsController extends Controller
      */
     public function create()
     {
-        return view('campaigns.create');
+        $templatesAvailable = $this->templateRepo->all()->count();
+
+        return view('campaigns.create', compact('templatesAvailable'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param CampaignRequest $request
+     *
      * @return RedirectResponse
      */
     public function store(CampaignRequest $request)
     {
-        $campaign = $this->campaignRepo->store($request->all());
+        $campaign = $this->campaignRepo->store($request->only($this->campaignFields));
+        $campaign->email()->create($request->except($this->campaignFields));
 
         return redirect()->route('campaigns.template', $campaign->id);
     }
@@ -98,6 +102,7 @@ class CampaignsController extends Controller
      * Display a list of templates for selection.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function template($id)
@@ -113,19 +118,29 @@ class CampaignsController extends Controller
     /**
      * Update the template.
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function updateTemplate(Request $request, $id)
     {
+        $campaign = $this->campaignRepo->find($id);
         $templateId = $request->get('template_id');
+
+        if ( ! $templateId)
+        {
+            return redirect()->back()->withErrors([
+                'msg' => 'Your must select a template to use for this campaign',
+            ]);
+        }
+
         $template = $this->templateRepo->find($templateId);
 
         // @todo at this point we're just over-writing the campaign
         // content with the template content, but we need to cater for the
         // case when the user doesn't actually want to overwrite the campaign content
-        $this->campaignRepo->update($id, [
+        $campaign->email()->update([
             'content' => $template->content,
             'template_id' => $templateId,
         ]);
@@ -137,12 +152,13 @@ class CampaignsController extends Controller
      * Display the template for design.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function design($id)
     {
         $campaign = $this->campaignRepo->find($id);
-        $template = $this->templateRepo->find($campaign->template_id);
+        $template = $this->templateRepo->find($campaign->email->template_id);
 
         return view('campaigns.design', compact('campaign', 'template'));
     }
@@ -150,8 +166,9 @@ class CampaignsController extends Controller
     /**
      * Update the design.
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function updateDesign(Request $request, $id)
@@ -165,18 +182,19 @@ class CampaignsController extends Controller
      * Display the confirmation view.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function confirm($id)
     {
         $campaign = $this->campaignRepo->find($id);
 
-        if ($campaign->status_id > 1)
+        if ($campaign->email->status_id > 1)
         {
             return redirect()->route('campaigns.status', $id);
         }
 
-        $template = $this->templateRepo->find($campaign->template_id);
+        $template = $this->templateRepo->find($campaign->email->template_id);
         $lists = $this->segment->all('name', ['subscriberCount']);
 
         return view('campaigns.confirm', compact('campaign', 'template', 'lists'));
@@ -185,22 +203,27 @@ class CampaignsController extends Controller
     /**
      * Dispatch the campaign.
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function send(Request $request, $id)
     {
         $campaign = $this->campaignRepo->find($id);
 
-        if ($campaign->status_id > 1)
+        if ($campaign->email->status_id > 1)
         {
             return redirect()->route('campaigns.status', $id);
         }
 
         // @todo validation that at least one list has been selected
-        $campaign = $this->campaignRepo->update($id, [
+
+        $campaign->update([
             'scheduled_at' => Carbon::now(),
+        ]);
+
+        $campaign->email()->update([
             'status_id' => CampaignStatus::STATUS_QUEUED,
         ]);
 
@@ -213,6 +236,7 @@ class CampaignsController extends Controller
      * Display the status view.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function status($id)
@@ -226,14 +250,17 @@ class CampaignsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $campaign = $this->campaignRepo->find($id);
+        $campaign = $this->campaignRepo->with('email')->find($id);
 
-        // @todo we need to check campaign status here and
-        // redirect if its not in draft
+        if ( ! $campaign->email->status == CampaignStatus::STATUS_DRAFT)
+        {
+            return redirect(route('campaign.index'));
+        }
 
         return view('campaigns.edit', compact('campaign'));
     }
@@ -241,26 +268,28 @@ class CampaignsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request  $request
-     * @param int  $id
+     * @param CampaignRequest $request
+     * @param int $id
+     *
      * @return RedirectResponse
      */
     public function update(CampaignRequest $request, $id)
     {
-        // @todo we need to check campaign status here and
-        // redirect if its not in draft
+        $campaign = $this->campaignRepo->find($id);
 
-        $updateData = $request->only([
-            'name',
+        if ( ! $campaign->email->status == CampaignStatus::STATUS_DRAFT)
+        {
+            return redirect(route('campaign.index'));
+        }
+
+        $emailUpdateFields = [
             'subject',
             'from_email',
             'from_name',
-        ]);
+        ];
 
-        $update['track_opens'] = $request->get('track_opens', 0);
-        $update['track_clicks'] = $request->get('track_clicks', 0);
-
-        $campaign = $this->campaignRepo->update($id, $updateData);
+        $this->campaignRepo->update($id, $request->only($this->campaignFields));
+        $campaign->email()->update($request->only($emailUpdateFields));
 
         return redirect()->route('campaigns.template', $campaign->id);
     }
@@ -269,20 +298,20 @@ class CampaignsController extends Controller
      * Show campaign report view
      *
      * @param $id
+     *
      * @return \Illuminate\Contracts\View\Factory|RedirectResponse|\Illuminate\View\View
      */
     public function report($id)
     {
-        $campaign = $this->campaignRepo->find($id);
+        $campaign = $this->campaignRepo->with('email')->find($id);
 
-        if ($campaign->status_id == CampaignStatus::STATUS_DRAFT)
+        if ($campaign->email->status_id == CampaignStatus::STATUS_DRAFT)
         {
             return redirect()->route('campaigns.edit', $id);
         }
 
-        if ($campaign->status_id == CampaignStatus::STATUS_SENT)
+        if ($campaign->email->status_id == CampaignStatus::STATUS_SENT)
         {
-
             return view('campaigns.report', compact('campaign', 'chartData'));
         }
 
@@ -293,18 +322,19 @@ class CampaignsController extends Controller
      * Show campaign recipients view
      *
      * @param $id
+     *
      * @return \Illuminate\Contracts\View\Factory|RedirectResponse|\Illuminate\View\View
      */
     public function recipients($id)
     {
-        $campaign = $this->campaignRepo->find($id);
+        $campaign = $this->campaignRepo->with('email')->find($id);
 
-        if ($campaign->status_id == CampaignStatus::STATUS_DRAFT)
+        if ($campaign->email->status_id == CampaignStatus::STATUS_DRAFT)
         {
             return redirect()->route('campaigns.edit', $id);
         }
 
-        if ($campaign->status_id == CampaignStatus::STATUS_SENT)
+        if ($campaign->email->status_id == CampaignStatus::STATUS_SENT)
         {
             $recipients = $this->campaignSubscriberRepo->paginate('created_at', [], 50, ['campaign_id' => $id]);
 
@@ -318,6 +348,7 @@ class CampaignsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -326,6 +357,4 @@ class CampaignsController extends Controller
         // redirect if its not in draft
         //
     }
-
-
 }

@@ -43,14 +43,14 @@ class CampaignReportsController extends Controller
      */
     public function report($id)
     {
-        $campaign = $this->campaignRepo->find($id);
+        $campaign = $this->campaignRepo->with('email')->find($id);
 
-        if ($campaign->status_id == CampaignStatus::STATUS_DRAFT)
+        if ($campaign->email->status_id == CampaignStatus::STATUS_DRAFT)
         {
             return redirect()->route('campaigns.edit', $id);
         }
 
-        if ($campaign->status_id != CampaignStatus::STATUS_SENT)
+        if ($campaign->email->status_id != CampaignStatus::STATUS_SENT)
         {
             return redirect()->route('campaigns.status', $id);
 
@@ -71,14 +71,14 @@ class CampaignReportsController extends Controller
      */
     public function recipients($id)
     {
-        $campaign = $this->campaignRepo->find($id);
+        $campaign = $this->campaignRepo->with('email')->find($id);
 
-        if ($campaign->status_id == CampaignStatus::STATUS_DRAFT)
+        if ($campaign->email->status_id == CampaignStatus::STATUS_DRAFT)
         {
             return redirect()->route('campaigns.edit', $id);
         }
 
-        if ($campaign->status_id == CampaignStatus::STATUS_SENT)
+        if ($campaign->email->status_id == CampaignStatus::STATUS_SENT)
         {
             $recipients = $this->contactCampaignRepo->paginate('created_at', [], 50, ['campaign_id' => $id]);
 

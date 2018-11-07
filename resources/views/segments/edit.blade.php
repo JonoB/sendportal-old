@@ -1,12 +1,12 @@
 @extends('common.template')
 
 @section('heading')
-    Edit List : {{ $segment->name }}
+    Edit Segment : {{ $segment->name }}
 @stop
 
 @section('content')
 
-    {!! Form::model($segment, ['method' => 'put', 'route' => ['segments.update', $segment->id]]) !!}
+    {!! Form::model($segment, ['method' => 'put', 'class' => 'form-horizontal', 'route' => ['segments.update', $segment->id]]) !!}
 
     @include('segments.partials.form')
 

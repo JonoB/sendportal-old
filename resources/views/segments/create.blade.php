@@ -1,12 +1,12 @@
 @extends('common.template')
 
 @section('heading')
-    New List
+    New Segment
 @stop
 
 @section('content')
 
-    {!! Form::open(['route' => ['segments.store']]) !!}
+    {!! Form::open(['route' => ['segments.store'], 'class' => 'form-horizontal']) !!}
 
     @include('segments.partials.form')
 

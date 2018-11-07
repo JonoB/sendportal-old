@@ -18,7 +18,6 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Segments</th>
-                        <th>Tags</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -31,10 +30,9 @@
                                 </a>
                             </td>
                             <td><a href="mailto:{{ $subscriber->email }}">{{ $subscriber->email }}</a></td>
-                            <td>{{ $subscriber->segments()->count() }}</td>
                             <td>
-                                @foreach($subscriber->tags as $tag)
-                                    <span class="label label-default">{{ $tag->name }}</span>
+                                @foreach($subscriber->segments as $segment)
+                                    <span class="label label-default">{{ $segment->name }}</span>
                                 @endforeach
                             </td>
                             <td><a href="{{ route('subscribers.edit', $subscriber->id) }}">Edit</a></td>

@@ -18,9 +18,24 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-// Subscribers
 Route::middleware('auth:api')->name('api.')->group(function()
 {
     Route::apiResource('subscribers', 'SubscribersController');
     Route::apiResource('segments', 'SegmentsController');
+
+    Route::apiResource('subscribers.segments', 'SubscriberSegmentsController')
+        ->except(['show', 'update', 'destroy']);
+    Route::put('subscribers/{subscriber}/segments', 'SubscriberSegmentsController@update')
+        ->name('subscribers.segments.update');
+    Route::delete('subscribers/{subscriber}/segments', 'SubscriberSegmentsController@destroy')
+        ->name('subscribers.segments.destroy');
+
+    Route::apiResource('segments.subscribers', 'SegmentSubscribersController')
+        ->except(['show', 'update', 'destroy']);
+    Route::put('segments/{segment}/subscribers', 'SegmentSubscribersController@update')
+        ->name('segments.subscribers.update');
+    Route::delete('segments/{segment}/subscribers', 'SegmentSubscribersController@destroy')
+        ->name('segments.subscribers.destroy');
 });
+
+Route::post('webhooks/aws', 'AwsWebhooksController@handle');

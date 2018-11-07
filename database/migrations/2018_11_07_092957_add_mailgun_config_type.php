@@ -1,10 +1,11 @@
 <?php
 
+use App\Models\ConfigType;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTagsTable extends Migration
+class AddMailgunConfigType extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +14,16 @@ class CreateTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tags', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name');
-            $table->timestamps();
-        });
+        ConfigType::unguard();
+
+        ConfigType::create([
+            'id' => ConfigType::MAILGUN,
+            'name' => 'Mailgun',
+            'fields' => [
+                'API Key' => 'key',
+                'Domain' => 'domain'
+            ]
+        ]);
     }
 
     /**
@@ -27,6 +33,6 @@ class CreateTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tags');
+        //
     }
 }

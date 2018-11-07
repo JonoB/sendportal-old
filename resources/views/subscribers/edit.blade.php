@@ -6,17 +6,9 @@
 
 @section('content')
 
-    {!! Form::model($subscriber, ['method' => 'put', 'route' => ['subscribers.update', $subscriber->id]]) !!}
+    {!! Form::model($subscriber, ['method' => 'put', 'class' => 'form-horizontal', 'route' => ['subscribers.update', $subscriber->id]]) !!}
 
     @include('subscribers.partials.form')
-
-    <label for="">Tags</label>
-
-    @foreach($tags as $tag)
-
-        {!! Form::checkboxField('tags[]', $tag->name, $tag->id, ['checked' => in_array($tag->id, $selectedTags)]) !!}
-
-    @endforeach
 
     {!! Form::submitButton('Save') !!}
 
