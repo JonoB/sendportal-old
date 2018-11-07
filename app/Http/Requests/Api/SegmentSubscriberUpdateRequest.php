@@ -25,7 +25,7 @@ class SegmentSubscriberUpdateRequest extends FormRequest
     {
         return [
             'subscribers' => ['array', 'required'],
-            'subscribers.*' => ['string']
+            'subscribers.*' => ['integer']
         ];
     }
 }

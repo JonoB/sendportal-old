@@ -25,7 +25,7 @@ class SubscriberSegmentDestroyRequest extends FormRequest
     {
         return [
             'segments' => ['array', 'required'],
-            'segments.*' => ['string']
+            'segments.*' => ['integer']
         ];
     }
 }

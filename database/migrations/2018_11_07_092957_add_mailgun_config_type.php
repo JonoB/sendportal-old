@@ -1,10 +1,11 @@
 <?php
 
+use App\Models\ConfigType;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTemplatesTable extends Migration
+class AddMailgunConfigType extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +14,16 @@ class CreateTemplatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('templates', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name');
-            $table->text('content')->nullable();
-            $table->timestamps();
-        });
+        ConfigType::unguard();
+
+        ConfigType::create([
+            'id' => ConfigType::MAILGUN,
+            'name' => 'Mailgun',
+            'fields' => [
+                'API Key' => 'key',
+                'Domain' => 'domain'
+            ]
+        ]);
     }
 
     /**
@@ -28,6 +33,6 @@ class CreateTemplatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('templates');
+        //
     }
 }

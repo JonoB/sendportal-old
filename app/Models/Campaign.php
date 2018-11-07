@@ -2,12 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\Uuid;
-
 class Campaign extends BaseModel
 {
-    use Uuid;
-
     protected $fillable = [
         'template_id',
         'status_id',

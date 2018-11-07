@@ -35,6 +35,11 @@
                     <i class="fa fa-list"></i> <span>Segments</span>
                 </a>
             </li>
+            <li class="{{ Request::is('config*') ? 'active' : '' }}">
+                <a href="{{ route('config.index') }}">
+                    <i class="fa fa-cog"></i> <span>Configurations</span>
+                </a>
+            </li>
             <li>
                 <a href="">
                     <i class="fa fa-dashboard"></i> <span>Drafts</span>

@@ -34,7 +34,7 @@ class SubscribersController extends Controller
      */
     public function index()
     {
-        $subscribers = $this->subscriberRepository->paginate('first_name', ['tags']);
+        $subscribers = $this->subscriberRepository->paginate('first_name');
 
         return view('subscribers.index', compact('subscribers'));
     }
@@ -97,13 +97,7 @@ class SubscribersController extends Controller
     {
         $subscriber = $this->subscriberRepository->find($id);
 
-        $data = [
-            'subscriber' => $subscriber,
-            'tags' => $tagRepository->all(),
-            'selectedTags' => selectedOptions('tags', $subscriber)
-        ];
-
-        return view('subscribers.edit', $data);
+        return view('subscribers.edit', compact('subscriber'));
     }
 
     /**

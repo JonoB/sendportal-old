@@ -15,8 +15,8 @@ class CreateSegmentSubscriberTable extends Migration
     {
         Schema::create('segment_subscriber', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('segment_id', 36);
-            $table->char('subscriber_id', 36);
+            $table->unsignedInteger('segment_id');
+            $table->unsignedInteger('subscriber_id');
             $table->timestamp('unsubscribed_at')->nullable()->index();
             $table->timestamps();
 

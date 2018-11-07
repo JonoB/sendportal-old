@@ -1,10 +1,11 @@
 <?php
 
+use App\Models\ConfigType;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSegmentsTable extends Migration
+class AddPostmarkConfigType extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +14,15 @@ class CreateSegmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('segments', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name');
-            $table->timestamps();
-        });
+        ConfigType::unguard();
+
+        ConfigType::create([
+            'id' => ConfigType::POSTMARK,
+            'name' => 'Postmark',
+            'fields' => [
+                'API Key' => 'key',
+            ]
+        ]);
     }
 
     /**
@@ -27,6 +32,6 @@ class CreateSegmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('segments');
+        //
     }
 }

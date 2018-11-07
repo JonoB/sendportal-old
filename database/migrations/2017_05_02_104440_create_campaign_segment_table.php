@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSubscriberTagTable extends Migration
+class CreateCampaignSegmentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateSubscriberTagTable extends Migration
      */
     public function up()
     {
-        Schema::create('subscriber_tag', function (Blueprint $table) {
+        Schema::create('campaign_segment', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('subscriber_id', 36);
-            $table->char('tag_id', 36);
+            $table->unsignedInteger('segment_id');
+            $table->unsignedInteger('campaign_id');
             $table->timestamps();
 
-            $table->foreign('subscriber_id')->references('id')->on('subscribers');
-            $table->foreign('tag_id')->references('id')->on('tags');
+            $table->foreign('segment_id')->references('id')->on('segments');
+            $table->foreign('campaign_id')->references('id')->on('campaigns');
         });
     }
 
@@ -31,6 +31,6 @@ class CreateSubscriberTagTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subscriber_tag');
+        Schema::dropIfExists('campaign_segment');
     }
 }
