@@ -5,12 +5,7 @@ namespace App\Http\Controllers;
 use App\Interfaces\AutomationRepositoryInterface;
 use App\Interfaces\SegmentRepositoryInterface;
 use App\Http\Requests\CampaignRequest;
-use App\Interfaces\CampaignSubscriberRepositoryInterface;
-use App\Interfaces\TemplateRepositoryInterface;
-use App\Models\CampaignStatus;
-use App\Services\CampaignReportService;
-use Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
+use App\Models\AutomationStep;
 use Illuminate\Http\Request;
 
 class AutomationsController extends Controller
@@ -58,7 +53,7 @@ class AutomationsController extends Controller
     {
         $segments = $this->segmentRepository->pluck();
 
-        return view('automations.create', compact('segments'));
+        return view('automations.create', compact('segments', 'automationUnits'));
     }
 
     /**

@@ -11,5 +11,7 @@ $factory->define(AutomationStep::class, function (Faker $faker) {
         {
             return factory(Automation::class)->create()->id;
         },
+        'delay' => null,
+        'delay_unit' => null,
     ];
 });

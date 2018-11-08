@@ -28,22 +28,35 @@ class AutomationStepEmailController extends Controller
     private $automationSteps;
 
     /**
+     * @var AutomationRepositoryInterface
+     */
+    private $automations;
+
+    /**
      * AutomationEmailsController constructor.
      *
-     * @param AutomationRepositoryInterface $automations
+     * @param AutomationStepRepositoryInterface $automationSteps
      * @param TemplateRepositoryInterface $templates
      * @param EmailRepositoryInterface $emails
+     * @param AutomationRepositoryInterface $automations
      */
-    public function __construct(AutomationStepRepositoryInterface $automationSteps, TemplateRepositoryInterface $templates, EmailRepositoryInterface $emails)
+    public function __construct(
+        AutomationStepRepositoryInterface $automationSteps,
+        TemplateRepositoryInterface $templates,
+        EmailRepositoryInterface $emails,
+        AutomationRepositoryInterface $automations
+    )
     {
         $this->templates = $templates;
         $this->emails = $emails;
         $this->automationSteps = $automationSteps;
+        $this->automations = $automations;
     }
 
     public function create($automationId, $automationStepId)
     {
-        $automationStep = $this->automationSteps->find($automationStepId);
+        $automationStep = $this->automationSteps->findStepForAutomation($automationId, $automationStepId);
+
         $templates = $this->templates->pluck();
 
         return view('automations.steps.email.create', compact('automationStep', 'templates'));
@@ -55,6 +68,7 @@ class AutomationStepEmailController extends Controller
 
         return redirect()->route('automations.steps.email.content.edit', [$email->mailable->automation->id, $email->mailable->id]);
     }
+    /*
 
     public function edit($automationId, $emailId)
     {
@@ -70,4 +84,6 @@ class AutomationStepEmailController extends Controller
 
         return redirect()->route('automations.show', $automationId);
     }
+
+    */
 }

@@ -179,6 +179,27 @@ body {
     background-color: #3c8dbc;
 }
 
+.choose-delay input
+{
+    width: 75px;
+    margin-left: 5px;
+}
+
+.choose-delay select
+{
+    margin-right: 5px;
+}
+
+.actions-bar
+{
+    margin-bottom: 4rem;
+}
+
+.automation-box-padding
+{
+    padding: 1rem 2rem;
+}
+
 @media (min-width: 767px) {
     .skin-blue .main-header .logo {
         background-color: #3c8dbc;

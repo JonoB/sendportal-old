@@ -16,6 +16,8 @@ class CreateAutomationStepsTable extends Migration
         Schema::create('automation_steps', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->integer('delay')->nullable();
+            $table->integer('delay_unit')->nullable();
             $table->unsignedInteger('automation_id');
             $table->timestamps();
 
