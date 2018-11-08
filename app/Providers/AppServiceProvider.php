@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\EmailRepositoryInterface;
+use App\Interfaces\EmailWebhookServiceInterface;
 use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\ContentUrlServiceInterface;
@@ -24,6 +25,7 @@ use App\Repositories\SegmentEloquentRepository;
 use App\Repositories\TagEloquentRepository;
 use App\Repositories\TemplateEloquentRepository;
 use App\Services\ContentUrlService;
+use App\Services\EmailWebhookService;
 use App\Services\GenerateOpenTrackingImageService;
 use App\Services\CampaignContentService;
 use App\Services\CampaignDispatchService;
@@ -66,5 +68,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TemplateRepositoryInterface::class, TemplateEloquentRepository::class);
         $this->app->bind(ConfigRepositoryInterface::class, ConfigEloquentRepository::class);
         $this->app->bind(EmailRepositoryInterface::class, EmailEloquentRepository::class);
+        $this->app->bind(EmailWebhookServiceInterface::class, EmailWebhookService::class);
     }
 }

@@ -3,10 +3,27 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
+use App\Interfaces\EmailWebhookServiceInterface;
 
 class AwsWebhooksController extends Controller
 {
+
+    /**
+     * @var EmailWebhookServiceInterface
+     */
+    protected $emailWebhookService;
+
+    /**
+     * @param EmailWebhookServiceInterface $emailWebhookService
+     */
+    public function __construct(
+        EmailWebhookServiceInterface $emailWebhookService
+    )
+    {
+        $this->emailWebhookService = $emailWebhookService;
+    }
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -75,7 +92,9 @@ class AwsWebhooksController extends Controller
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-examples.html#event-publishing-retrieving-sns-click
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-contents.html#event-publishing-retrieving-sns-contents-click-object
-        \Log::info('click', [$messageId]);
+        $link = array_get($event, 'click.link');
+
+        $this->emailWebhookService->handleClick($messageId, $link);
     }
 
     /**
@@ -86,8 +105,10 @@ class AwsWebhooksController extends Controller
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-contents.html#event-publishing-retrieving-sns-contents-open-object
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-examples.html#event-publishing-retrieving-sns-open
+        $ipAddress = array_get($event, 'open.ipAddress');
+        $timestamp = Carbon::createFromFormat(Carbon::ATOM, array_get($event, 'open.timestamp'));
 
-        \Log::info('open', [$messageId]);
+        $this->emailWebhookService->handleOpen($messageId, $timestamp, $ipAddress);
     }
 
     /**
@@ -98,7 +119,6 @@ class AwsWebhooksController extends Controller
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-contents.html#event-publishing-retrieving-sns-contents-reject-object
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-examples.html#event-publishing-retrieving-sns-reject
-        \Log::info('reject', [$messageId]);
     }
 
     /**
@@ -108,7 +128,9 @@ class AwsWebhooksController extends Controller
     protected function handleDelivery($messageId, array $event)
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/notification-contents.html#delivery-
-        \Log::info('delivery', [$messageId]);
+        $timestamp = Carbon::createFromFormat(Carbon::ATOM, array_get($event, 'delivery.timestamp'));
+
+        $this->emailWebhookService->handleDelivery($messageId, $timestamp);
     }
 
     /**
@@ -118,8 +140,8 @@ class AwsWebhooksController extends Controller
     protected function handleComplaint($messageId, array $event)
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/notification-contents.html#complaint-object
-        $complaint = array_get($event, 'complaint');
-        $feedbackType = array_get($complaint, 'complaintFeedbackType');
+        // $complaint = array_get($event, 'complaint');
+        // $feedbackType = array_get($complaint, 'complaintFeedbackType');
 
         // abuse — Indicates unsolicited email or some other kind of email abuse.
         // auth-failure — Email authentication failure report.
@@ -127,7 +149,9 @@ class AwsWebhooksController extends Controller
         // not-spam — Indicates that the entity providing the report does not consider the message to be spam. This may be used to correct a message that was incorrectly tagged or categorized as spam.
         // other — Indicates any other feedback that does not fit into other registered types.
         // virus — Reports that a virus is found in the originating message.
-        \Log::info('complaint', [$messageId]);
+        //
+        // https://aws.amazon.com/blogs/messaging-and-targeting/handling-bounces-and-complaints/
+        $this->emailWebhookService->handleComplaint($messageId);
     }
 
     /**
@@ -137,14 +161,12 @@ class AwsWebhooksController extends Controller
     protected function handleBounce($messageId, array $event)
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/notification-contents.html#bounce-object
-        $bounce = array_get($event, 'bounce');
-        $bounceType = array_get($bounce, 'bounceType');
+        $bounceType = array_get($event, 'bounce.bounceType');
 
+        // https://aws.amazon.com/blogs/messaging-and-targeting/handling-bounces-and-complaints/
         if (strtolower($bounceType) == 'permanent')
         {
-            // unsubscribe
+            $this->emailWebhookService->handlePermanentBounce($messageId);
         }
-
-        \Log::info('bounce', [$messageId]);
     }
 }
