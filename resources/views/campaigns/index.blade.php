@@ -35,13 +35,13 @@
                             @endif
                         </td>
                         <td>
-                            @if($campaign->status_id == \App\Models\CampaignStatus::STATUS_DRAFT)
+                            @if($campaign->status_id === \App\Models\CampaignStatus::STATUS_DRAFT)
                                 <span class="label label-default">{{ $campaign->status->name }}</span>
-                            @elseif($campaign->status_id == \App\Models\CampaignStatus::STATUS_QUEUED)
+                            @elseif($campaign->status_id === \App\Models\CampaignStatus::STATUS_QUEUED)
                                 <span class="label label-warning">{{ $campaign->status->name }}</span>
-                            @elseif($campaign->status_id == \App\Models\CampaignStatus::STATUS_SENDING)
+                            @elseif($campaign->status_id === \App\Models\CampaignStatus::STATUS_SENDING)
                                 <span class="label label-info">{{ $campaign->status->name }}</span>
-                            @elseif($campaign->status_id == \App\Models\CampaignStatus::STATUS_SENT)
+                            @elseif($campaign->status_id === \App\Models\CampaignStatus::STATUS_SENT)
                                 <span class="label label-success">{{ $campaign->status->name }}</span>
                             @endif
                         </td>
@@ -53,7 +53,7 @@
                             <td>{{ number_format($campaign->email->click_ratio * 100, 1) . '%' }}</td>
                             <td>
                                 @if($campaign->email->content === null)
-                                    <a href="{{ route('emails.design', ['id' => $campaign->email->id]) }}">
+                                    <a href="{{ route('campaigns.emails.content.edit', [$campaign->id, $campaign->email->id]) }}">
                                         Edit Content
                                     </a>
                                 @endif
