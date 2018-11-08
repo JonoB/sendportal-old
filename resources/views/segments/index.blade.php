@@ -13,11 +13,13 @@
       </ol>
 @endsection
 
+@section('actions')
+    <a class="btn btn-primary btn-sm btn-flat" href="{{ route('segments.create') }}">
+        <i class="fa fa-plus"></i> Create Segment
+    </a>
+@endsection
+
 @section('content')
-    <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('segments.create') }}">Create Segment</a>
-        <div class="clearfix"></div>
-    </div>
 
     <div class="box box-primary">
         <div class="box-body no-padding">
@@ -37,7 +39,7 @@
                                     {{ $segment->name }}
                                 </a>
                             </td>
-                            <td>{{ $segment->subscribers()->count() }}</td>
+                            <td>{{ $segment->subscribers_count }}</td>
                             <td><a href="{{ route('segments.edit', $segment->id) }}">Edit</a></td>
                         </tr>
                     @endforeach

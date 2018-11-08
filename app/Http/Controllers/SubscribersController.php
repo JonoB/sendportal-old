@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubscriberRequest;
+use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class SubscribersController extends Controller
 {
@@ -36,6 +38,23 @@ class SubscribersController extends Controller
         $subscribers = $this->subscriberRepository->paginate('first_name');
 
         return view('subscribers.index', compact('subscribers'));
+    }
+
+    /**
+     * Export Subscribers
+     *
+     * @return string|\Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function export()
+    {
+        $subscribers = $this->subscriberRepository->export(['id', 'hash', 'email', 'first_name', 'last_name', 'created_at']);
+
+        if ( ! $subscribers->count())
+        {
+            return redirect()->route('subscribers.index')->withErrors('There are no subscribers to export');
+        }
+
+        return (new FastExcel($subscribers))->download(sprintf('subscribers-%s.csv', date('Y-m-d-H-m-s')));
     }
 
     /**
@@ -80,11 +99,17 @@ class SubscribersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, TagRepositoryInterface $tagRepository)
+    public function edit($id, TagRepositoryInterface $tagRepository, SegmentRepositoryInterface $segmentRepository)
     {
-        $subscriber = $this->subscriberRepository->find($id);
+        $subscriber = $this->subscriberRepository->find($id, ['segments']);
 
-        return view('subscribers.edit', compact('subscriber'));
+        $data = [
+            'subscriber' => $subscriber,
+            'segments' => $segmentRepository->all(),
+            'selectedSegments' => selectedOptions('segments', $subscriber)
+        ];
+
+        return view('subscribers.edit', $data);
     }
 
     /**

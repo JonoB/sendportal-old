@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\CampaignStatus;
 use App\Models\Email;
 use App\Models\Template;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -18,21 +19,11 @@ class EmailTest extends TestCase
      */
     private $user;
 
-    protected function __setUp()
+    protected function setUp()
     {
         parent::setUp();
 
         $this->user = factory(User::class)->create();
-    }
-
-    /** @test */
-    function an_email_has_a_related_status()
-    {
-        $email = factory(Email::class)->create([
-            'status_id' => CampaignStatus::STATUS_DRAFT,
-        ]);
-
-        $this->assertNotNull($email->status->name);
     }
 
     /** @test */

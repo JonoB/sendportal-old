@@ -8,6 +8,6 @@
 
 @section('content')
 
-{{ $campaign->email->status->name }}
+{{ $campaign->status->name }}
 
 @stop

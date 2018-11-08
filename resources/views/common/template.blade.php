@@ -43,14 +43,24 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <div class="content-wrapper-inner">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-                    @yield('heading')
-                </h1>
 
-                @yield('breadcrumbs')
-            </section>
+            <div class="row">
+                <div class="col-sm-6">
+                    <section class="content-header">
+                        <h1>
+                            @yield('heading')
+                        </h1>
+
+                        @yield('breadcrumbs')
+                    </section>
+                </div>
+                <div class="col-sm-6">
+                    <div class="actions-container pull-right">
+                        @yield('actions')
+                    </div>
+                </div>
+            </div>
+
             <section class="content">
                 @include('common.messages')
                 @yield('content')

@@ -28,9 +28,6 @@ class CampaignRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
-            'subject' => 'required|max:255',
-            'from_name' => 'required|max:255',
-            'from_email' => 'required|email|max:255',
         ];
     }
 }

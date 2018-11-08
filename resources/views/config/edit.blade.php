@@ -16,11 +16,13 @@
 
 @section('content')
 
-    {!! Form::open(['method' => 'post', 'route' => ['config.update', $configType->id]]) !!}
+    {!! Form::open(['method' => 'post', 'route' => ['config.update', $config->id]]) !!}
+
+    {!! Form::textField('name', 'Name', $config->name) !!}
 
     @foreach($configType->fields as $name => $field)
 
-        {!! Form::textField($field, $name, array_get($settings, $field)) !!}
+        {!! Form::textField($field, $name, array_get($config->settings, $field)) !!}
 
     @endforeach
 

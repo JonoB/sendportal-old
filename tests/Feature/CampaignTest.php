@@ -21,6 +21,9 @@ class CampaignTest extends TestCase
      */
     private $user;
 
+    /**
+     * @var CampaignRepositoryInterface
+     */
     private $campaignRepository;
 
     protected function setUp()
@@ -32,23 +35,45 @@ class CampaignTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_can_create_a_campaign()
+    function the_campaign_index_can_be_viewed()
     {
         $this->actingAs($this->user);
 
-        $emailData = [
-            'subject' => 'A Subject',
-            'content' => 'Some content',
-            'from_name' => 'Josh',
-            'from_email' => 'josh@mettle.io',
-        ];
+        $response = $this->get(route('campaigns.index'));
 
-        $campaign = factory(Campaign::class)->make($emailData);
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    function unauthenticated_users_can_not_view_the_campaign_index()
+    {
+        $response = $this->get(route('campaigns.index'));
+
+        $this->assertRedirectToLogin($response);
+    }
+
+    /** @test */
+    function the_campaign_index_tells_you_if_a_campaign_does_not_have_an_email()
+    {
+        $this->actingAs($this->user);
+
+        factory(Campaign::class)->create();
+
+        $response = $this->get(route('campaigns.index'));
+
+        $response->assertSee('No Email');
+    }
+
+    /** @test */
+    function campaigns_can_be_created()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->make();
 
         $this->post(route('campaigns.store'), $campaign->toArray());
 
         $this->assertDatabaseHas('campaigns', ['name' => $campaign->name]);
-        $this->assertDatabaseHas('emails', $emailData);
     }
 
     /** @test */
@@ -65,12 +90,11 @@ class CampaignTest extends TestCase
 
         $response = $this->post(route('campaigns.store'), $campaign->toArray());
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
+        $this->assertRedirectToLogin($response);
     }
 
     /** @test */
-    function an_authenticated_user_can_update_a_campaign()
+    function campaigns_can_be_updated()
     {
         $this->actingAs($this->user);
 
@@ -121,35 +145,181 @@ class CampaignTest extends TestCase
 
         $response = $this->put(route('campaigns.update', ['id' => $campaign->id]), $modifiedData);
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
+        $this->assertRedirectToLogin($response);
     }
 
     /** @test */
-    function an_email_is_created_when_a_campaign_is_stored()
+    function a_user_is_redirected_to_the_email_creation_wizard_when_a_campaign_is_created()
+    {
+        $this->actingAs($this->user);
+        $campaign = factory(Campaign::class)->make();
+
+        $response = $this->post(route('campaigns.store'), $campaign->toArray());
+        $campaign = $this->campaignRepository->findBy('name', $campaign->name);
+
+        $response->assertStatus(302);
+        $response->assertRedirect("/campaigns/{$campaign->id}/emails/create");
+    }
+
+    /** @test */
+    function a_campaign_can_have_one_emails()
+    {
+        $campaign = factory(Campaign::class)->create();
+
+        $email = [
+            'subject' => 'Test Email 1',
+            'from_email' => 'test1@email.com',
+            'from_name' => 'Test 1',
+        ];
+
+        $campaign->email()->create($email);
+
+        foreach ($email as $key => $value)
+        {
+            $this->assertEquals($campaign->email->toArray()[$key], $value);
+        }
+    }
+
+    /** @test */
+    function the_campaign_email_create_view_can_viewed()
     {
         $this->actingAs($this->user);
 
+        $campaign = factory(Campaign::class)->create();
+
+        $response = $this->get(route('campaigns.emails.create', ['id' => $campaign->id]));
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    function an_authenticated_user_cannot_view_the_campaign_email_create_view()
+    {
+        $campaign = factory(Campaign::class)->create();
+
+        $response = $this->get(route('campaigns.emails.create', ['id' => $campaign->id]));
+
+        $this->assertRedirectToLogin($response);
+    }
+
+    /** @test */
+    function a_user_can_create_an_email_for_a_campaign()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->create();
+
         $emailData = [
-            'template_id' => factory(Template::class)->create()->id,
-            'subject' => 'A Subject',
-            'content' => 'Some content',
-            'from_name' => 'Josh',
-            'from_email' => 'josh@mettle.io',
-            'open_count' => 0,
-            'click_count' => 0,
-            'status_id' => 1,
+            'subject' => 'Test Email',
+            'template_id' => 1,
+            'from_email' => 'test@email.com',
+            'from_name' => 'Seymour Greentests',
         ];
 
-        $campaign = factory(Campaign::class)->make($emailData);
+        $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
 
-        $this->post(route('campaigns.store'), $campaign->toArray());
+        $this->assertDatabaseHas('emails', $emailData);
+    }
 
-        $createdCampaign = $this->campaignRepository->all()->first();
+    /** @test */
+    function a_campaign_email_requires_a_subject()
+    {
+        $this->actingAs($this->user);
 
-        foreach ($emailData as $key => $value)
-        {
-            $this->assertEquals($createdCampaign->email->$key, $emailData[$key]);
-        }
+        $campaign = factory(Campaign::class)->create();
+
+        $emailData = [
+            'subject' => null,
+            'template_id' => 1,
+            'from_email' => 'test@email.com',
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
+
+        $response->assertSessionHasErrors('subject');
+        $this->assertDatabaseMissing('emails', $emailData);
+    }
+
+    /** @test */
+    function a_campaign_email_requires_a_template_id()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Subject',
+            'template_id' => null,
+            'from_email' => 'test@email.com',
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
+
+        $response->assertSessionHasErrors('template_id');
+        $this->assertDatabaseMissing('emails', $emailData);
+    }
+
+    /** @test */
+    function a_campaign_email_requires_a_from_email()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Subject',
+            'template_id' => 1,
+            'from_email' => null,
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
+
+        $response->assertSessionHasErrors('from_email');
+        $this->assertDatabaseMissing('emails', $emailData);
+    }
+
+    /** @test */
+    function a_campaign_email_from_email_must_be_an_email()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Subject',
+            'template_id' => 1,
+            'from_email' => 'what did you call me',
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
+
+        $response->assertSessionHasErrors('from_email');
+        $this->assertDatabaseMissing('emails', $emailData);
+    }
+
+    /** @test */
+    function a_campaign_email_requires_a_from_name()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Subject',
+            'template_id' => 1,
+            'from_email' => 'test@email.com',
+            'from_name' => null,
+        ];
+
+        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
+
+        $response->assertSessionHasErrors('from_name');
+        $this->assertDatabaseMissing('emails', $emailData);
     }
 }

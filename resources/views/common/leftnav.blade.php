@@ -11,8 +11,8 @@
                     <i class="fa fa-send"></i> <span>Campaigns</span>
                 </a>
             </li>
-            <li class="{{ request()->is('automation*') ? 'active' : '' }}">
-                <a href="{{ route('automation.index') }}">
+            <li class="{{ request()->is('automations*') ? 'active' : '' }}">
+                <a href="{{ route('automations.index') }}">
                     <i class="fa fa-refresh"></i> <span>Automation</span>
                 </a>
             </li>
@@ -33,7 +33,7 @@
             </li>
             <li class="{{ request()->is('config*') ? 'active' : '' }}">
                 <a href="{{ route('config.index') }}">
-                    <i class="fa fa-cog"></i> <span>Configurations</span>
+                    <i class="fa fa-envelope"></i> <span>Providers</span>
                 </a>
             </li>
         </ul>

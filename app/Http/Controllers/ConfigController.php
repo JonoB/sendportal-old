@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\ConfigRepositoryInterface;
+use App\Models\Config;
 use Illuminate\Http\Request;
 
 class ConfigController extends Controller
@@ -18,7 +19,8 @@ class ConfigController extends Controller
      *
      * @param ConfigRepositoryInterface $configRepo
      */
-    public function __construct(
+    public function __construct
+    (
         ConfigRepositoryInterface $configRepo
     )
     {
@@ -32,35 +34,90 @@ class ConfigController extends Controller
      */
     public function index()
     {
-        $configurations = $this->configRepo->getConfigTypes();
+        $configurations = $this->configRepo->all();
 
         return view('config.index', compact('configurations'));
     }
 
     /**
-     * @param $configTypeId
+     * Display the form for creating
+     * a configuration set
+     *
+     * @param null
+     * @return null
+     */
+    public function create()
+    {
+        $configTypes = $this->configRepo->getConfigTypes()->pluck('name', 'id');
+
+        return view('config.create', compact('configTypes'));
+    }
+
+    /**
+     * Store a new configuration set
+     *
+     * @param Request $request
+     * @return null
+     */
+    public function store(Request $request)
+    {
+        $configType = $this->configRepo->findType($request->type_id);
+
+        $settings = $request->only(array_values($configType->fields));
+
+        $this->configRepo->store([
+            'name' => $request->name,
+            'type_id' => $configType->id,
+            'settings' => $settings,
+        ]);
+
+        return redirect()->route('config.index');
+    }
+
+    /**
+     * @param $configId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($configTypeId)
+    public function edit($configId)
     {
-        $configType = $this->configRepo->findType($configTypeId);
-        $settings = $this->configRepo->findSettings($configTypeId);
+        $configTypes = $this->configRepo->getConfigTypes()->pluck('name', 'id');
+        $config = $this->configRepo->find($configId);
 
-        return view('config.edit', compact('settings', 'configType'));
+        $configType = $this->configRepo->findType($config->type_id);
+        // $settings = $this->configRepo->findSettings($config->type_id);
+
+        return view('config.edit', compact('configTypes', 'config', 'configType'));
     }
 
     /**
      * @param Request $request
-     * @param $configTypeId
+     * @param integer $configId
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $configTypeId)
+    public function update(Request $request, $configId)
+    {
+        $config = $this->configRepo->find($configId, ['type']);
+
+        $settings = $request->only(array_values($config->type->fields));
+
+        $config->name = $request->name;
+        $config->settings = $settings;
+        $config->save();
+
+        return redirect()->route('config.index');
+    }
+
+    /**
+     * Return the fields for
+     * a given ConfigType
+     *
+     * @param integer $configTypeId
+     * @return null
+     */
+    public function configTypeAjax($configTypeId)
     {
         $configType = $this->configRepo->findType($configTypeId);
-        $newSettings = $request->only(array_values($configType->fields));
 
-        $this->configRepo->updateSettings($configTypeId, $newSettings);
-
-        return redirect()->back();
+        return response()->json($configType->fields);
     }
 }

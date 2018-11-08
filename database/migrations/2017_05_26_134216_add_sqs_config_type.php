@@ -20,9 +20,10 @@ class AddSqsConfigType extends Migration
             'id' => ConfigType::AWS_SNS,
             'name' => 'AWS SQS',
             'fields' => [
-                'AWS access key' => 'key',
-                'AWS secret access key' => 'secret',
+                'AWS Access Key' => 'key',
+                'AWS Secret Access Key' => 'secret',
                 'AWS Region' => 'region',
+                'Configuration Set Name' => 'configuration_set_name',
             ]
         ]);
     }

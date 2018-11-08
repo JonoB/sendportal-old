@@ -16,8 +16,11 @@ class CreateCampaignsTable extends Migration
         Schema::create('campaigns', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->unsignedInteger('status_id')->default(1);
             $table->timestamp('scheduled_at')->nullable();
             $table->timestamps();
+
+            $table->foreign('status_id')->references('id')->on('campaign_statuses');
         });
     }
 
