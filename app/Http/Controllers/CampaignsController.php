@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CampaignRequest;
 use App\Http\Requests\CampaignStoreRequest;
+use App\Http\Requests\CampaignUpdateRequest;
 use App\Interfaces\CampaignRepositoryInterface;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\SegmentRepositoryInterface;
@@ -120,9 +120,9 @@ class CampaignsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param string $id
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function edit($id)
     {
@@ -130,10 +130,10 @@ class CampaignsController extends Controller
 
         if ( ! isset($campaign->email))
         {
-            return redirect(route('campaigns.emails.create', ['campaign' => $campaign->id]));
+            return redirect(route('campaigns.emails.create', $campaign->id));
         }
 
-        elseif ( ! $campaign->status_id == CampaignStatus::STATUS_DRAFT)
+        if ($campaign->status_id !== CampaignStatus::STATUS_DRAFT)
         {
             return redirect(route('campaign.index'));
         }
@@ -144,12 +144,12 @@ class CampaignsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param CampaignRequest $request
-     * @param int $id
+     * @param CampaignUpdateRequest $request
+     * @param string $id
      *
      * @return RedirectResponse
      */
-    public function update(CampaignRequest $request, $id)
+    public function update(CampaignUpdateRequest $request, $id)
     {
         $campaign = $this->campaigns->find($id);
 
