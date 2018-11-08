@@ -23,11 +23,12 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-master",
+        "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
+        "laravel/telescope": "^0.1.7",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "^7.0",
-        "filp/whoops": "~2.0"
+        "roave/security-advisories": "dev-master"
     },
     "autoload": {
         "classmap": [

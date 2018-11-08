@@ -122,6 +122,6 @@ class TemplatesController extends Controller
 
         return redirect()
             ->back()
-            ->with('success', 'Successfully deleted the template.');
+            ->with('success', 'Template successfully deleted.');
     }
 }
