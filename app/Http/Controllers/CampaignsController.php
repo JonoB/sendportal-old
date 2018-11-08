@@ -184,10 +184,10 @@ class CampaignsController extends Controller
 
         if ( ! isset($campaign->email))
         {
-            return redirect(route('emails.create', ['campaign' => $campaign->id]));
+            return redirect(route('campaigns.emails.create', ['campaign' => $campaign->id]));
         }
 
-        else if ( ! $campaign->status_id == CampaignStatus::STATUS_DRAFT)
+        elseif ( ! $campaign->status_id == CampaignStatus::STATUS_DRAFT)
         {
             return redirect(route('campaign.index'));
         }

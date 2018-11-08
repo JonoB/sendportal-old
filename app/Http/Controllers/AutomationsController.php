@@ -4,6 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Interfaces\AutomationRepositoryInterface;
 use App\Interfaces\SegmentRepositoryInterface;
+use App\Http\Requests\CampaignRequest;
+use App\Interfaces\CampaignSubscriberRepositoryInterface;
+use App\Interfaces\TemplateRepositoryInterface;
+use App\Models\CampaignStatus;
+use App\Services\CampaignReportService;
+use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class AutomationsController extends Controller
@@ -38,6 +45,7 @@ class AutomationsController extends Controller
     public function index()
     {
         $automations = $this->automationRepository->paginate();
+
         return view('automations.index', compact('automations'));
     }
 
@@ -73,6 +81,18 @@ class AutomationsController extends Controller
     }
 
     /**
+     * Edit the specified resource.
+     *
+     * @param  int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int $id
@@ -82,19 +102,8 @@ class AutomationsController extends Controller
     public function show($id)
     {
         $automation = $this->automationRepository->find($id, ['emails']);
-        return view('automations.show', compact('automation'));
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return view('automations.show', compact('automation'));
     }
 
     /**
@@ -113,7 +122,7 @@ class AutomationsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return \Illuminate\Http\Response
      */
