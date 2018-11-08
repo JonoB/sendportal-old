@@ -2,9 +2,45 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+
 class Email extends BaseModel
 {
+    /**
+     * @var array
+     */
     protected $guarded = [];
+
+    /**
+     * The mailable relationship.
+     *
+     * @return MorphTo
+     */
+    public function mailable(): MorphTo
+    {
+        return $this->morphTo();
+    }
+
+    /**
+     * The email's status.
+     *
+     * @return BelongsTo
+     */
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(CampaignStatus::class);
+    }
+
+    /**
+     * The email's template.
+     *
+     * @return BelongsTo
+     */
+    public function template(): BelongsTo
+    {
+        return $this->belongsTo(Template::class);
+    }
 
     /**
      * Get the email's open ratio as an attribute.
@@ -37,32 +73,12 @@ class Email extends BaseModel
     }
 
     /**
-     * The mailable relationship.
+     * Get the full content for this email, including the template content
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return string
      */
-    public function mailable()
+    public function getFullContentAttribute(): string
     {
-        return $this->morphTo();
-    }
-
-    /**
-     * The email's status.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function status()
-    {
-        return $this->belongsTo(CampaignStatus::class);
-    }
-
-    /**
-     * The email's template.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function template()
-    {
-        return $this->belongsTo(Template::class);
+        return str_replace('{{ content }}', $this->content, $this->template->content);
     }
 }
