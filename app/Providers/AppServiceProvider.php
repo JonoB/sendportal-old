@@ -2,13 +2,7 @@
 
 namespace App\Providers;
 
-use App\Interfaces\CampaignSubscriberRepositoryInterface;
-use App\Interfaces\EmailRepositoryInterface;
 use App\Interfaces\EmailWebhookServiceInterface;
-use App\Interfaces\SegmentRepositoryInterface;
-use App\Interfaces\SubscriberRepositoryInterface;
-use App\Interfaces\ContentUrlServiceInterface;
-use App\Interfaces\GenerateOpenTrackingImageInterface;
 use App\Interfaces\AutomationRepositoryInterface;
 use App\Interfaces\CampaignContentServiceInterface;
 use App\Interfaces\CampaignDispatchInterface;
@@ -34,9 +28,7 @@ use App\Repositories\SegmentEloquentRepository;
 use App\Repositories\SubscriberEloquentRepository;
 use App\Repositories\TagEloquentRepository;
 use App\Repositories\TemplateEloquentRepository;
-use App\Services\ContentUrlService;
 use App\Services\EmailWebhookService;
-use App\Services\GenerateOpenTrackingImageService;
 use App\Services\CampaignContentService;
 use App\Services\CampaignDispatchService;
 use App\Services\CampaignReportService;

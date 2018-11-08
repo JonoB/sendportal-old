@@ -47,14 +47,25 @@ class SubscribersController extends Controller
      */
     public function export()
     {
-        $subscribers = $this->subscriberRepository->export(['id', 'hash', 'email', 'first_name', 'last_name', 'created_at']);
+        $subscribers = $this->subscriberRepository->all('id', ['segments']);
 
         if ( ! $subscribers->count())
         {
             return redirect()->route('subscribers.index')->withErrors('There are no subscribers to export');
         }
 
-        return (new FastExcel($subscribers))->download(sprintf('subscribers-%s.csv', date('Y-m-d-H-m-s')));
+        return (new FastExcel($subscribers))->download(sprintf('subscribers-%s.csv', date('Y-m-d-H-m-s')), function ($subscriber)
+        {
+            return [
+                'id' => $subscriber->id,
+                'hash' => $subscriber->hash,
+                'email' => $subscriber->email,
+                'first_name' => $subscriber->first_name,
+                'last_name' => $subscriber->last_name,
+                'created_at' => $subscriber->created_at,
+                'segments' => $subscriber->segments->implode('name', ';')
+            ];
+        });
     }
 
     /**
