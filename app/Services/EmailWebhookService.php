@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Interfaces\EmailWebhookServiceInterface;
+use App\Models\Campaign;
 use App\Models\CampaignLink;
 use App\Models\UnsubscribeEventType;
 use Carbon\Carbon;
@@ -17,20 +18,22 @@ class EmailWebhookService implements EmailWebhookServiceInterface
      */
     public function handleClick($messageId, $link)
     {
+        $campaignSubscriber = \DB::table('campaign_subscriber')->where('message_id', $messageId)->first();
         \DB::table('campaign_subscriber')->where('message_id', $messageId)->increment('click_count');
 
-        $campaignId = \DB::table('campaign_subscriber')->where('message_id', $messageId)->value('campaign_id');
-
-        if ( ! $campaignId)
+        if ( ! $campaignSubscriber->click_count)
         {
-            return;
+            \DB::table('emails')
+                ->where('mailable_id', $campaignSubscriber->campaign_id)
+                ->where('mailable_type', Campaign::class)
+                ->increment('click_count');
         }
 
         CampaignLink::updateOrCreate([
-            'identifier' => md5($campaignId . '_' . $link),
+            'identifier' => md5($campaignSubscriber->campaign_id . '_' . $link),
         ], [
             'link' => $link,
-            'campaign_id' => $campaignId,
+            'campaign_id' => $campaignSubscriber->campaign_id,
             'click_count' => \DB::raw('click_count+1')
         ]);
     }
@@ -42,7 +45,16 @@ class EmailWebhookService implements EmailWebhookServiceInterface
      */
     public function handleOpen($messageId, Carbon $timestamp, $ipAddress)
     {
+        $campaignSubscriber = \DB::table('campaign_subscriber')->where('message_id', $messageId)->first();
         \DB::table('campaign_subscriber')->where('message_id', $messageId)->increment('open_count');
+
+        if ( ! $campaignSubscriber->open_count)
+        {
+            \DB::table('emails')
+                ->where('mailable_id', $campaignSubscriber->campaign_id)
+                ->where('mailable_type', Campaign::class)
+                ->increment('open_count');
+        }
 
         \DB::table('campaign_subscriber')->where('message_id', $messageId)->whereNull('opened_at')->update([
             'opened_at' => $timestamp,
