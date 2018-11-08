@@ -6,12 +6,12 @@
 
 @section('content')
 
-    {!! Form::open(['method' => 'post', 'route' => 'config.store']) !!}
+    {!! Form::open(['method' => 'post', 'route' => 'providers.store']) !!}
 
     {!! Form::textField('name', 'Name') !!}
-    {!! Form::selectField('type_id', 'Provider', $configTypes) !!}
+    {!! Form::selectField('type_id', 'Provider', $providerTypes) !!}
 
-    <div id="config-fields"></div>
+    <div id="provider-fields"></div>
 
     {!! Form::submitButton('Save') !!}
     {!! Form::close() !!}
@@ -21,7 +21,7 @@
 @section('js')
     <script>
 
-        var url = '{{ route('config.ajax', 1) }}';
+        var url = '{{ route('providers.ajax', 1) }}';
 
         $(function()
         {
@@ -29,17 +29,18 @@
 
             $('#id-field-type_id').on('change', function()
             {
+                console.log(this.value)
                 createFields(this.value);
             });
         });
 
-        function createFields(configTypeId)
+        function createFields(providerTypeId)
         {
-            url = url.substring(0, url.length - 1) + configTypeId;
+            url = url.substring(0, url.length - 1) + providerTypeId;
 
             $.get(url, function(result)
             {
-                $('#config-fields').html('');
+                $('#provider-fields').html('');
 
                 $.each(result, function(name, field)
                 {
@@ -52,7 +53,7 @@
                     string += '" class="form-control" name="' + field;
                     string += '" type="text"></div></div>';
 
-                    $('#config-fields').append(string);
+                    $('#provider-fields').append(string);
                 })
             });
         }

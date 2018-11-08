@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\ConfigType;
+use App\Models\ProviderType;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSendgridConfigType extends Migration
+class AddMailgunProviderType extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +14,14 @@ class AddSendgridConfigType extends Migration
      */
     public function up()
     {
-        ConfigType::unguard();
+        ProviderType::unguard();
 
-        ConfigType::create([
-            'id' => ConfigType::SENDGRID,
-            'name' => 'SendGrid',
+        ProviderType::create([
+            'id' => ProviderType::MAILGUN,
+            'name' => 'Mailgun',
             'fields' => [
                 'API Key' => 'key',
+                'Domain' => 'domain'
             ]
         ]);
     }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateConfigurationTables extends Migration
+class CreateProviderTables extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateConfigurationTables extends Migration
      */
     public function up()
     {
-        \Schema::create('config_types', function($table)
+        \Schema::create('provider_types', function($table)
         {
             $table->increments('id');
             $table->string('name');
@@ -21,7 +21,7 @@ class CreateConfigurationTables extends Migration
             $table->timestamps();
         });
 
-        \Schema::create('configs', function($table)
+        \Schema::create('providers', function($table)
         {
             $table->increments('id');
             $table->string('name')->nullable();
@@ -29,7 +29,7 @@ class CreateConfigurationTables extends Migration
             $table->mediumText('settings');
             $table->timestamps();
 
-            $table->foreign('type_id')->references('id')->on('config_types');
+            $table->foreign('type_id')->references('id')->on('provider_types');
         });
     }
 
@@ -40,7 +40,7 @@ class CreateConfigurationTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('configs');
-        Schema::dropIfExists('config_types');
+        Schema::dropIfExists('providers');
+        Schema::dropIfExists('provider_types');
     }
 }
