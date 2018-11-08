@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Subscribers\ApiSubscriberService;
-use Illuminate\Http\Request;
+use App\Http\Requests\SubscribersImportRequest;
 use Rap2hpoutre\FastExcel\FastExcel;
 
 class SubscribersImportController extends Controller
@@ -36,10 +36,10 @@ class SubscribersImportController extends Controller
     /**
      * Store the Subscribers from the uploaded file
      *
-     * @param  Request $request
+     * @param  SubscribersImportRequest $request
      * @return Redirect
      */
-    public function store(Request $request)
+    public function store(SubscribersImportRequest $request)
     {
         if ($request->file('file')->isValid())
         {
@@ -47,6 +47,7 @@ class SubscribersImportController extends Controller
 
             $subscribers = (new FastExcel)->import(storage_path('app/'. $path), function ($line)
             {
+                // TODO: validate each row beforehand
                 try {
                     $this->subscriberService->store(array_only($line, ['email', 'first_name', 'last_name']));
                 } catch (\Exception $e) {
