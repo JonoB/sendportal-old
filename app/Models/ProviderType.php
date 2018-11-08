@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class ConfigType extends BaseModel
+class ProviderType extends BaseModel
 {
 
     const AWS_SNS = 1;

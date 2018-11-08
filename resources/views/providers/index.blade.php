@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('config.create') }}">Add Provider</a>
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('providers.create') }}">Add Provider</a>
         <div class="clearfix"></div>
     </div>
 
@@ -21,11 +21,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($configurations as $configuration)
+                    @foreach($providers as $provider)
                         <tr>
-                            <td>{{ $configuration->name }}</td>
-                            <td>{{ $configuration->type->name }}</td>
-                            <td><a href="{{ route('config.edit', $configuration->id) }}">Edit</a></td>
+                            <td>{{ $provider->name }}</td>
+                            <td>{{ $provider->type->name }}</td>
+                            <td><a href="{{ route('providers.edit', $provider->id) }}">Edit</a></td>
                         </tr>
                     @endforeach
                 </tbody>
