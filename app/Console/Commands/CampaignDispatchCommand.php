@@ -193,7 +193,7 @@ class CampaignDispatchCommand extends Command
 
     /**
      * Handle an individual subscriber
-     * 
+     *
      * @param Campaign $campaign
      * @param Subscriber $subscriber
      */
@@ -261,20 +261,6 @@ class CampaignDispatchCommand extends Command
     protected function getQueuedCampaigns(): EloquentCollection
     {
         return $this->campaignRepo->queuedCampaigns();
-    }
-
-    /**
-     * Load active subscribers for a single segment
-     *
-     * @todo this needs to be improved so that we chunk items
-     *
-     * @param Segment $segment
-     *
-     * @return Collection
-     */
-    protected function getActiveSegmentSubscribers(Segment $segment): Collection
-    {
-        return ;
     }
 
     /**
