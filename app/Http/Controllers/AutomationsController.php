@@ -66,9 +66,10 @@ class AutomationsController extends Controller
             'name' => 'required',
             'segment_id' => 'required'
         ]);
-        $this->automationRepository->store($request->all());
 
-        return response('Success', 201);
+        $automation = $this->automationRepository->store($request->all());
+
+        return redirect(route('automations.show', ['id' => $automation->id]));
     }
 
     /**
@@ -80,7 +81,7 @@ class AutomationsController extends Controller
      */
     public function show($id)
     {
-        $automation = $this->automationRepository->find($id);
+        $automation = $this->automationRepository->find($id, ['emails']);
         return view('automations.show', compact('automation'));
     }
 

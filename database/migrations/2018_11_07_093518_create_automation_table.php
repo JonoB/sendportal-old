@@ -14,7 +14,7 @@ class CreateAutomationTable extends Migration
     public function up()
     {
         Schema::create('automations', function (Blueprint $table) {
-            $table->unsignedInteger('id')->primary();
+            $table->increments('id');
             $table->string('name');
             $table->unsignedInteger('segment_id');
             $table->timestamps();

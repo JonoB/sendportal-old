@@ -10,4 +10,9 @@ class Automation extends BaseModel
     {
         return $this->belongsTo(Segment::class);
     }
+
+    public function emails()
+    {
+        return $this->morphMany(Email::class, 'mailable');
+    }
 }
