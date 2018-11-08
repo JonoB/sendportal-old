@@ -86,8 +86,9 @@ class CampaignsController extends Controller
     public function index()
     {
         $campaigns = $this->campaignRepo->paginate('created_atDesc', ['status', 'email']);
+        $providerCount = $this->providers->getCount();
 
-        return view('campaigns.index', compact('campaigns'));
+        return view('campaigns.index', compact('campaigns', 'providerCount'));
     }
 
     /**
@@ -202,7 +203,9 @@ class CampaignsController extends Controller
             return redirect(route('campaign.index'));
         }
 
-        return view('campaigns.edit', compact('campaign'));
+        $providers = $this->providers->all();
+
+        return view('campaigns.edit', compact('campaign', 'providers'));
     }
 
     /**

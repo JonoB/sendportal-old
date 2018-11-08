@@ -20,6 +20,9 @@
                     <th>Name</th>
                     <th>Status</th>
                     <th>Template</th>
+                    @if ($providerCount > 1)
+                        <th>Provider</th>
+                    @endif
                     <th>Sent</th>
                     <th>Opened</th>
                     <th>Clicked</th>
@@ -50,6 +53,9 @@
 
                         @if(isset($campaign->email))
                             <td>{{ $campaign->email->template->name }}</td>
+                            @if ($providerCount > 1)
+                                <th>{{ $campaign->provider->name }}</th>
+                            @endif
                             <td>{{ formatValue($campaign->email->sent_count) }}</td>
                             <td>{{ number_format($campaign->email->open_ratio * 100, 1) . '%' }}</td>
                             <td>{{ number_format($campaign->email->click_ratio * 100, 1) . '%' }}</td>
@@ -64,6 +70,9 @@
                             <td>
                                 <span class="label label-danger">No Email</span>
                             </td>
+                            @if ($providerCount > 1)
+                                <th>{{  $campaign->provider->name }}</th>
+                            @endif
                             <td>N/A</td>
                             <td>N/A</td>
                             <td>N/A</td>
