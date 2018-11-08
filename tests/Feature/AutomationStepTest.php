@@ -30,7 +30,7 @@ class AutomationStepTest extends TestCase
     {
         $this->actingAs($this->user);
         $automation = factory(Automation::class)->create();
-        $response = $this->get(route('automations.steps.create', [$automation->automation->id]));
+        $response = $this->get(route('automations.steps.create', [$automation->id]));
 
         $response->assertStatus(200);
     }

@@ -15,13 +15,16 @@ Route::middleware(['auth'])->group(function ()
 
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
+
+    Route::get('automations/{automation}/steps/{step}/email/content', 'AutomationStepEmailContentController@edit')
+        ->name('automations.steps.email.content.edit');
+    Route::put('automations/{automation}/steps/{step}/email/content', 'AutomationStepEmailContentController@update')
+        ->name('automations.steps.email.content.update');
+
     // Automations
     Route::resource('automations', 'AutomationsController');
     Route::resource('automations.steps', 'AutomationStepsController');
     Route::resource('automations.steps.email', 'AutomationStepEmailController');
-
-    Route::get('automations/{automation}/steps/{automationStep}/email/content/edit', 'AutomationStepEmailContentController@edit')
-        ->name('automations.steps.email.content.edit');
 
     Route::resource('automations.emails', 'AutomationEmailsController')->except([
         'index',

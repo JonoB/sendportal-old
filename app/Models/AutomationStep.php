@@ -12,6 +12,7 @@ class AutomationStep extends Model
     {
         return $this->belongsTo(Automation::class);
     }
+
     public function email()
     {
         return $this->morphOne(Email::class, 'mailable');

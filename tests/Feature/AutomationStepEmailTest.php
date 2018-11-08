@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\AutomationStep;
+use App\Models\Template;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -15,7 +16,6 @@ class AutomationStepEmailTest extends TestCase
      * @var User
      */
     private $user;
-
 
     protected function setUp()
     {
@@ -153,7 +153,6 @@ class AutomationStepEmailTest extends TestCase
         $this->actingAs($this->user);
 
         $automationStep = factory(AutomationStep::class)->create();
-
         $emailData = [
             'subject' => 'Test Subject',
             'template_id' => 1,
@@ -166,4 +165,52 @@ class AutomationStepEmailTest extends TestCase
         $response->assertSessionHasErrors('from_name');
         $this->assertDatabaseMissing('emails', $emailData);
     }
+
+    /** @test */
+    function the_automation_step_email_content_edit_page_can_be_viewed()
+    {
+        $this->actingAs($this->user);
+
+        $automationStep = factory(AutomationStep::class)->create();
+        $automationStep->email()->create([
+            'subject' => 'Test Subject',
+            'template_id' => factory(Template::class)->create()->id,
+            'from_email' => 'josh@mettle.io',
+            'from_name' => 'Joshua Franks'
+        ]);
+
+        $response = $this->get(route('automations.steps.email.content.edit', [$automationStep->automation->id, $automationStep->id]));
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    function automation_step_email_content_can_be_updated()
+    {
+        $this->actingAs($this->user);
+
+        $automationStep = factory(AutomationStep::class)->create();
+        $automationStep->email()->create([
+            'subject' => 'Test Subject',
+            'template_id' => factory(Template::class)->create()->id,
+            'from_email' => 'josh@mettle.io',
+            'from_name' => 'Joshua Franks'
+        ]);
+
+        $this->assertNull($automationStep->email->content);
+
+        $newData = [
+            'content' => 'New Content'
+        ];
+
+        $response = $this->put(route('automations.steps.email.content.update', [$automationStep->automation->id, $automationStep->id]), $newData);
+
+        $response->assertRedirect(route('automations.show', [$automationStep->automation->id]));
+
+        $automationStep->load('email');
+        $this->assertNotNull($automationStep->email->content);
+        $this->assertEquals($newData['content'], $automationStep->email->content);
+    }
+
+    
 }

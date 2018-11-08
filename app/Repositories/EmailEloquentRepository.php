@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\EmailRepositoryInterface;
 use App\Models\Automation;
+use App\Models\AutomationStep;
 use App\Models\Campaign;
 use App\Models\CampaignStatus;
 use App\Models\Email;
@@ -66,6 +67,40 @@ class EmailEloquentRepository extends BaseEloquentRepository implements EmailRep
     public function updateCampaignEmail(int $campaignId, array $data): Email
     {
         $email = $this->findCampaignEmail($campaignId);
+
+        $email->update($data);
+
+        return $email;
+    }
+
+    /**
+     * Find the email associated with the given campaign
+     *
+     * @param int $automationStepId
+     * @param array $relations
+     *
+     * @return Email
+     */
+    public function findAutomationStepEmail(int $automationStepId, array $relations = []): Email
+    {
+        return $this->getQueryBuilder()
+            ->where('mailable_id', $automationStepId)
+            ->where('mailable_type', AutomationStep::class)
+            ->with($relations)
+            ->firstOrFail();
+    }
+
+    /**
+     * Update a campaign's email
+     *
+     * @param int $automationStepId
+     * @param array $data
+     *
+     * @return Email
+     */
+    public function updateAutomationStepEmail(int $automationStepId, array $data): Email
+    {
+        $email = $this->findAutomationStepEmail($automationStepId);
 
         $email->update($data);
 

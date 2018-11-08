@@ -6,7 +6,8 @@
 
 @section('actions')
     <a class="btn btn-primary btn-sm btn-flat"
-        href="{{ route('automations.steps.create', ['automation' => $automation->id]) }}"><i class="fa fa-plus"></i> Add Automation Step
+       href="{{ route('automations.steps.create', ['automation' => $automation->id]) }}"><i class="fa fa-plus"></i> Add
+        Automation Step
     </a>
 @endsection
 
@@ -25,24 +26,22 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($automation->emails as $email)
+                @foreach($automation->steps as $step)
                     <tr>
-                        <td>{{ $email->subject }}</td>
-                        <td>{{ $email->from_name }}</td>
-                        <td>{{ $email->from_email }}</td>
+                        <td>{{ $step->email->subject }}</td>
+                        <td>{{ $step->email->from_name }}</td>
+                        <td>{{ $step->email->from_email }}</td>
                         <td>
-                            @if($email->template == null)
+                            @if($step->email->template == null)
                                 <span class="label label-danger">Not Set</span>
                             @else
-                                {{ $email->template->name }}
+                                {{ $step->email->template->name }}
                             @endif
                         </td>
                         <td>
-                            @if($email->content == null)
-                                <a href="#">
-                                    Edit Content
-                                </a>
-                            @endif
+                            <a href="{{ route('automations.steps.email.content.edit', [$automation->id, $step->id]) }}">
+                                Edit Content
+                            </a>
                         </td>
                     </tr>
                 @endforeach

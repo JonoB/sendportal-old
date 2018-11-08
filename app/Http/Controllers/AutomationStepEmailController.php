@@ -41,19 +41,19 @@ class AutomationStepEmailController extends Controller
         $this->automationSteps = $automationSteps;
     }
 
-    public function create($automationStepId)
+    public function create($automationId, $automationStepId)
     {
         $automationStep = $this->automationSteps->find($automationStepId);
         $templates = $this->templates->pluck();
 
-        return view('automations.steps.emails.create', compact('automationStep', 'templates'));
+        return view('automations.steps.email.create', compact('automationStep', 'templates'));
     }
 
-    public function store(AutomationEmailStoreRequest $request, $automationStepId)
+    public function store(AutomationEmailStoreRequest $request, $automationId, $automationStepId)
     {
         $email = $this->emails->storeMailable(AutomationStep::class, $automationStepId, $request->validated());
 
-        return redirect()->route('automations.show', [$email->mailable->automation->id]);
+        return redirect()->route('automations.steps.email.content.edit', [$email->mailable->automation->id, $email->mailable->id]);
     }
 
     public function edit($automationId, $emailId)
