@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('automations.create') }}">Create Automation</a>
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('automations.create') }}">New Automation</a>
         <div class="clearfix"></div>
     </div>
 
