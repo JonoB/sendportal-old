@@ -32,7 +32,7 @@ class CampaignTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_can_create_a_campaign()
+    function campaigns_can_be_created()
     {
         $this->actingAs($this->user);
 
@@ -62,7 +62,7 @@ class CampaignTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_can_update_a_campaign()
+    function campaigns_can_be_updated()
     {
         $this->actingAs($this->user);
 
@@ -131,7 +131,7 @@ class CampaignTest extends TestCase
     }
 
     /** @test */
-    function a_campaign_can_have_many_emails()
+    function a_campaign_can_have_one_emails()
     {
         $automation = factory(Campaign::class)->create();
 
