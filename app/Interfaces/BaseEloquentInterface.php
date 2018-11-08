@@ -137,4 +137,12 @@ interface BaseEloquentInterface extends BaseInterface
      * @return void
      */
     public function setValidator($validator);
+
+    /**
+     * Get count of records
+     *
+     * @param null
+     * @return integer
+     */
+    public function getCount();
 }
