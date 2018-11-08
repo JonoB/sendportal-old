@@ -163,14 +163,7 @@ body {
 }
 
 .sidebar-menu i {
-    color: #bec8cc;
     margin-right: 1rem;
-}
-
-.skin-blue .main-header .logo {
-    background-color: #3c8dbc;
-    text-align: left;
-    padding-left: 3rem
 }
 
 .sidebar-toggle {
@@ -182,31 +175,27 @@ body {
     margin-left: 0 !important;
 }
 
-.no-templates
-{
-    margin-top: 4rem;
-    padding: 4rem;
-    border-top: #c41310 4px solid;
-    background-color: #dd4b39 !important;
-    color: white;
-    border-radius: 0.5rem;
+.callout.callout-danger {
+    background-color: #f5ddda !important;
+    color: #c23321 !important;
 }
 
-.no-templates h4
-{
-    font-weight: bold;
+.callout.callout-danger a {
+    color: #c23321 !important;
 }
 
-.no-templates a
-{
-    color: white;
-    font-weight: bold;
+.main-header .logo {
+    text-align: left;
+    padding: 0 18px;
+}
+
+.skin-blue .main-header .logo:hover {
+    background-color: #3c8dbc;
 }
 
 @media (min-width: 767px) {
     .skin-blue .main-header .logo {
         background-color: #3c8dbc;
-        text-align: center;
     }
 
     .box {

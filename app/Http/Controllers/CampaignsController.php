@@ -32,21 +32,29 @@ class CampaignsController extends Controller
     protected $templateRepo;
 
     /**
+     * @var SegmentRepositoryInterface
+     */
+    protected $segment;
+
+    /**
      * CampaignsController constructor.
      *
      * @param CampaignRepositoryInterface $campaignRepository
      * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
      * @param TemplateRepositoryInterface $templateRepository
+     * @param SegmentRepositoryInterface $segment
      */
     public function __construct(
         CampaignRepositoryInterface $campaignRepository,
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
-        TemplateRepositoryInterface $templateRepository
+        TemplateRepositoryInterface $templateRepository,
+        SegmentRepositoryInterface $segment
     )
     {
         $this->campaignRepo = $campaignRepository;
         $this->campaignSubscriberRepo = $campaignSubscriberRepository;
         $this->templateRepo = $templateRepository;
+        $this->segment = $segment;
     }
 
     /**
