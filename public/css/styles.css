@@ -48,33 +48,27 @@ body {
 
 /* Authentication Styling **/
 
-.min-h-screen
-{
+.min-h-screen {
     min-height: 100vh;
 }
 
-.d-flex
-{
+.d-flex {
     display: flex;
 }
 
-.d-inline-block
-{
+.d-inline-block {
     display: inline-block;
 }
 
-.items-center
-{
+.items-center {
     align-items: center;
 }
 
-.justify-center
-{
+.justify-center {
     justify-content: center;
 }
 
-.login-body h1
-{
+.login-body h1 {
     margin: 0;
     padding-bottom: 4rem;
     text-align: center;
@@ -82,8 +76,7 @@ body {
     color: #3c8dbc;
 }
 
-.login-container
-{
+.login-container {
     margin: 6rem 0;
     background-color: white;
     padding: 6rem;
@@ -93,9 +86,8 @@ body {
     0 5px 15px 0 rgba(0,0,0,0.08);
 }
 
-.login-row
-{
-    margin-top: 4rem;
+.login-body {
+    width: 100%;
 }
 
 .form-check-label
@@ -105,25 +97,11 @@ body {
     color: #929ca0;
 }
 
-.login-body
-{
-    width: 100%;
-}
-
-.col-form-label
-{
-    padding-left: 0;
-    margin-bottom: 1rem;
-    color: #929ca0;
-}
-
-.mb-0
-{
+.mb-0 {
     margin-bottom: 0 !important;
 }
 
-.form-group
-{
+.form-group {
     margin-bottom: 2rem;
 }
 

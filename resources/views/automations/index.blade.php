@@ -6,7 +6,7 @@
 
 @section('actions')
     <a class="btn btn-primary btn-sm btn-flat" href="{{ route('automations.create') }}">
-        <i class="fa fa-plus"></i> Create Automation
+        <i class="fa fa-plus"></i> New Automation
     </a>
 @endsection
 

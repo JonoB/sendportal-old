@@ -6,7 +6,7 @@
 
 @section('actions')
     <a class="btn btn-primary btn-sm btn-flat" href="{{ route('templates.create') }}">
-        <i class="fa fa-plus"></i> Create Template
+        <i class="fa fa-plus"></i> New Template
     </a>
 @endsection
 
