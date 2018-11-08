@@ -188,7 +188,7 @@ class CampaignsController extends Controller
         }
 
         $template = $this->templates->find($campaign->email->template_id);
-        $segments = $this->segments->all('name', ['subscriberCount']);
+        $segments = $this->segments->all('name');
 
         return view('campaigns.confirm', compact('campaign', 'template', 'segments'));
     }

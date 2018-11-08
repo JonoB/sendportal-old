@@ -16,7 +16,7 @@
             <div class="checkbox">
                 <label>
                     <input name="lists[]" type="checkbox" value="{{ $segment->id }}">
-                    {{ $segment->name }} ({{ $list->subscribers()->count() }} subscribers)
+                    {{ $segment->name }} ({{ $segment->subscribers()->count() }} subscribers)
                 </label>
             </div>
         @endforeach
