@@ -104,18 +104,18 @@ class CampaignDispatchCommand extends Command
      */
     public function handle()
     {
-        if ( ! $campaigns = $this->getQueuedCampaigns())
+        if ( ! $emails = $this->getQueuedCampaigns())
         {
             $this->line('No queued campaigns; nothing more to do here');
 
             return;
         }
 
-        $this->info('Number of campaigns in queued status: ' . \count($campaigns));
+        $this->info('Number of campaigns in queued status: ' . \count($emails));
 
-        foreach ($campaigns as $campaign)
+        foreach ($emails as $email)
         {
-            $this->handleCampaign($campaign);
+            $this->handleCampaign($email->mailable);
         }
     }
 
