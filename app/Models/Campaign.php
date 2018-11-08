@@ -45,4 +45,15 @@ class Campaign extends BaseModel
     {
         return $this->belongsTo(CampaignStatus::class, 'status_id');
     }
+
+    /**
+     * Config relationship method
+     *
+     * @param null
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function config()
+    {
+        return $this->belongsTo(Config::class);
+    }
 }

@@ -191,8 +191,10 @@ class CampaignDispatchCommand extends Command
      */
     protected function dispatch(Campaign $campaign, Subscriber $subscriber, string $content): void
     {
+        $mailService = strtolower(str_replace(' ', '', $campaign->config->type->name));
+
         $messageId = $this->campaignDispatchService->send(
-            'ses',
+            $mailService,
             $campaign->email->from_email,
             $subscriber->email,
             $campaign->email->subject,
