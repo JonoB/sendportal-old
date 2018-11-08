@@ -23,6 +23,7 @@ class AddSqsConfigType extends Migration
                 'AWS Access Key' => 'key',
                 'AWS Secret Access Key' => 'secret',
                 'AWS Region' => 'region',
+                'Configuration Set Name' => 'configuration_set_name',
             ]
         ]);
     }
