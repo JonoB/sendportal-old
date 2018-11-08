@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CampaignRequest;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
+use App\Interfaces\ConfigRepositoryInterface;
 use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\CampaignRepositoryInterface;
@@ -38,24 +39,32 @@ class CampaignsController extends Controller
     protected $segmentRepository;
 
     /**
+     * @var ConfigRepositoryInterface
+     */
+    private $configRepo;
+
+    /**
      * CampaignsController constructor.
      *
      * @param CampaignRepositoryInterface $campaignRepository
      * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
      * @param TemplateRepositoryInterface $templateRepository
      * @param SegmentRepositoryInterface $segmentRepository
+     * @param ConfigRepositoryInterface $configRepo
      */
     public function __construct(
         CampaignRepositoryInterface $campaignRepository,
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
         TemplateRepositoryInterface $templateRepository,
-        SegmentRepositoryInterface $segmentRepository
+        SegmentRepositoryInterface $segmentRepository,
+        ConfigRepositoryInterface $configRepo
     )
     {
         $this->campaignRepo = $campaignRepository;
         $this->campaignSubscriberRepo = $campaignSubscriberRepository;
         $this->templateRepo = $templateRepository;
         $this->segmentRepository = $segmentRepository;
+        $this->configRepo = $configRepo;
     }
 
     /**
@@ -89,8 +98,9 @@ class CampaignsController extends Controller
     public function create()
     {
         $templatesAvailable = $this->templateRepo->all()->count();
+        $providersAvailable = $this->configRepo->all()->count();
 
-        return view('campaigns.create', compact('templatesAvailable'));
+        return view('campaigns.create', compact('templatesAvailable', 'providersAvailable'));
     }
 
     /**
