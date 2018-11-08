@@ -6,9 +6,9 @@ use App\Adapters\MailgunMailAdapter;
 use App\Adapters\PostmarkMailAdapter;
 use App\Adapters\SendgridMailAdapter;
 use App\Adapters\SesMailAdapter;
-use App\Interfaces\ConfigRepositoryInterface;
+use App\Interfaces\ProviderRepositoryInterface;
 use App\Interfaces\MailAdapterInterface;
-use App\Models\ConfigType;
+use App\Models\ProviderType;
 
 class MailAdapterFactory
 {
@@ -20,19 +20,19 @@ class MailAdapterFactory
     protected $adapters = [];
 
     /**
-     * @var ConfigRepositoryInterface
+     * @var ProviderRepositoryInterface
      */
-    protected $configRepo;
+    protected $providerRepo;
 
     /**
-     * @param ConfigRepositoryInterface $configRepo
+     * @param ProviderRepositoryInterface $providerRepo
      */
     public function __construct
     (
-        ConfigRepositoryInterface $configRepo
+        ProviderRepositoryInterface $providerRepo
     )
     {
-        $this->configRepo = $configRepo;
+        $this->providerRepo = $providerRepo;
     }
 
     /**
@@ -105,7 +105,7 @@ class MailAdapterFactory
     {
         $adapter = new SesMailAdapter();
 
-        $config = $this->configRepo->findSettings(ConfigType::AWS_SNS);
+        $config = $this->providerRepo->findSettings(ProviderType::AWS_SNS);
 
         $adapter->setConfig($config);
 
@@ -123,7 +123,7 @@ class MailAdapterFactory
     {
         $adapter = new SendgridMailAdapter();
 
-        $config = $this->configRepo->findSettings(ConfigType::SENDGRID);
+        $config = $this->providerRepo->findSettings(ProviderType::SENDGRID);
 
         $adapter->setConfig($config);
 
@@ -141,7 +141,7 @@ class MailAdapterFactory
     {
         $adapter = new MailgunMailAdapter();
 
-        $config = $this->configRepo->findSettings(ConfigType::MAILGUN);
+        $config = $this->providerRepo->findSettings(ProviderType::MAILGUN);
 
         $adapter->setConfig($config);
 
@@ -159,7 +159,7 @@ class MailAdapterFactory
     {
         $adapter = new PostmarkMailAdapter();
 
-        $config = $this->configRepo->findSettings(ConfigType::POSTMARK);
+        $config = $this->providerRepo->findSettings(ProviderType::POSTMARK);
 
         $adapter->setConfig($config);
 

@@ -31,8 +31,8 @@
                     <i class="fa fa-list"></i> <span>Segments</span>
                 </a>
             </li>
-            <li class="{{ request()->is('config*') ? 'active' : '' }}">
-                <a href="{{ route('config.index') }}">
+            <li class="{{ request()->is('providers*') ? 'active' : '' }}">
+                <a href="{{ route('providers.index') }}">
                     <i class="fa fa-envelope"></i> <span>Providers</span>
                 </a>
             </li>

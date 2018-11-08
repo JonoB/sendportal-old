@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\ConfigType;
+use App\Models\ProviderType;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPostmarkConfigType extends Migration
+class AddSendgridProviderType extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,11 @@ class AddPostmarkConfigType extends Migration
      */
     public function up()
     {
-        ConfigType::unguard();
+        ProviderType::unguard();
 
-        ConfigType::create([
-            'id' => ConfigType::POSTMARK,
-            'name' => 'Postmark',
+        ProviderType::create([
+            'id' => ProviderType::SENDGRID,
+            'name' => 'SendGrid',
             'fields' => [
                 'API Key' => 'key',
             ]

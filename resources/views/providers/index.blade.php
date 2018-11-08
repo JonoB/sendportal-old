@@ -13,7 +13,6 @@
 @endsection
 
 @section('content')
-
     <div class="box box-primary">
         <div class="box-body no-padding">
             <table class="table table-bordered table-responsive">
@@ -25,11 +24,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($configurations as $configuration)
+                    @foreach($providers as $provider)
                         <tr>
-                            <td>{{ $configuration->name }}</td>
-                            <td>{{ $configuration->type->name }}</td>
-                            <td><a href="{{ route('config.edit', $configuration->id) }}">Edit</a></td>
+                            <td>{{ $provider->name }}</td>
+                            <td>{{ $provider->type->name }}</td>
+                            <td><a href="{{ route('providers.edit', $provider->id) }}">Edit</a></td>
                         </tr>
                     @endforeach
                 </tbody>

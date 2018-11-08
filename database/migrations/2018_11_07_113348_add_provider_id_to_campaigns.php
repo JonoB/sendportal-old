@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddConfigIdToCampaigns extends Migration
+class AddProviderIdToCampaigns extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class AddConfigIdToCampaigns extends Migration
     {
         Schema::table('campaigns', function (Blueprint $table) {
             $table->unsignedInteger('config_id')->after('name')->nullable();
-            $table->foreign('config_id')->references('id')->on('configs');
+            $table->foreign('config_id')->references('id')->on('providers');
         });
     }
 
