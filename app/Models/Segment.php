@@ -7,7 +7,7 @@ class Segment extends BaseModel
     ];
 
     protected $withCount = [
-        'subscribers', 'active_subscribers'
+        'subscribers'
     ];
 
     /**
@@ -17,19 +17,6 @@ class Segment extends BaseModel
      */
     public function subscribers()
     {
-        return $this->belongsToMany(Subscriber::class)
-            ->withTimestamps()
-            ->withPivot('unsubscribed_at');
-    }
-
-    /**
-     * Active Subscribers of this Segment
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function active_subscribers()
-    {
-        return $this->subscribers()
-            ->whereNull('unsubscribed_at');
+        return $this->belongsToMany(Subscriber::class)->withTimestamps();
     }
 }

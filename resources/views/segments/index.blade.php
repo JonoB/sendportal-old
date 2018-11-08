@@ -17,7 +17,6 @@
                     <tr>
                         <th>Name</th>
                         <th>Subscribers</th>
-                        <th>Active Subscribers</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -30,7 +29,6 @@
                                 </a>
                             </td>
                             <td>{{ $segment->subscribers_count }}</td>
-                            <td>{{ $segment->active_subscribers_count }}</td>
                             <td><a href="{{ route('segments.edit', $segment->id) }}">Edit</a></td>
                         </tr>
                     @endforeach

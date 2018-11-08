@@ -14,26 +14,6 @@
 
     @include('segments.partials.form')
 
-    <div class="form-group form-group-subscribers">
-        <label for="id-field-subscribers" class="control-label col-sm-2">Subscribers</label>
-        <div class="col-sm-10">
-            <select name="subscribers[]" id="id-field-subscribers" multiple="multiple">
-                @foreach($subscribers as $subscriber)
-                    @if (in_array($subscriber->id, $segment->subscribers->pluck('id')->toArray()))
-                        @php
-                            $existing = $segment->subscribers->first(function ($existing) use ($subscriber) {
-                                return $existing->id === $subscriber->id;
-                            });
-                        @endphp
-                        <option value="{{ $subscriber->id }}" {{ optional($existing->pivot)->unsubscribed_at ? 'disabled' : null }}>{{ $subscriber->full_name }}</option>
-                    @else
-                        <option value="{{ $subscriber->id }}">{{ $subscriber->full_name }}</option>
-                    @endif
-                @endforeach
-            </select>
-        </div>
-    </div>
-
     {!! Form::submitButton('Save') !!}
 
     {!! Form::close() !!}

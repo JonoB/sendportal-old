@@ -14,6 +14,17 @@
 
     @include('subscribers.partials.form')
 
+    <div class="form-group form-group-subscribers">
+        <label for="id-field-subscribers" class="control-label col-sm-2">Segments</label>
+        <div class="col-sm-10">
+            <select name="segments[]" id="id-field-subscribers" multiple="multiple">
+                @foreach($segments as $segment)
+                    <option value="{{ $segment->id }}">{{ $segment->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+
     {!! Form::submitButton('Save') !!}
 
     {!! Form::close() !!}
@@ -24,27 +35,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
 
     <script>
-        $('select[name="tags[]"]').selectize({
-            items: {!! json_encode($selectedTags) !!}
-        });
-
         $('select[name="segments[]"]').selectize({
-            items: {!! $subscriber->segments->pluck('id')->toJson() !!},
-            render: {
-                item: function (value, escape) {
-                    var out = '';
-
-                    if (value.disabled) {
-                        out += '<del>' + escape(value.text) + '</del>';
-                    } else {
-                        out += escape(value.text);
-                    }
-
-                    out = '<div class="item" data-value="' + escape(value) + '">' + out + '</div>';
-
-                    return out;
-                }
-            }
+            plugins: ['remove_button'],
+            items: {!! $subscriber->segments->pluck('id')->toJson() !!}
         });
     </script>
 @stop

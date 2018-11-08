@@ -83,9 +83,15 @@ class SubscribersController extends Controller
      */
     public function edit($id, TagRepositoryInterface $tagRepository, SegmentRepositoryInterface $segmentRepository)
     {
-        $subscriber = $this->subscriberRepository->find($id);
+        $subscriber = $this->subscriberRepository->find($id, ['segments']);
 
-        return view('subscribers.edit', compact('subscriber'));
+        $data = [
+            'subscriber' => $subscriber,
+            'segments' => $segmentRepository->all(),
+            'selectedSegments' => selectedOptions('segments', $subscriber)
+        ];
+
+        return view('subscribers.edit', $data);
     }
 
     /**
