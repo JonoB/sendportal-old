@@ -4,12 +4,13 @@
     Providers
 @endsection
 
-@section('content')
-    <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('providers.create') }}">Add Provider</a>
-        <div class="clearfix"></div>
-    </div>
+@section('actions')
+    <a class="btn btn-primary btn-sm btn-flat" href="{{ route('config.create') }}">
+        <i class="fa fa-plus"></i> Add Provider
+    </a>
+@endsection
 
+@section('content')
     <div class="box box-primary">
         <div class="box-body no-padding">
             <table class="table table-bordered table-responsive">
