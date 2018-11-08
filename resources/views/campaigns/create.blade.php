@@ -6,14 +6,6 @@
     Create Campaign
 @stop
 
-@section('breadcrumbs')
-    <ol class="breadcrumb">
-        <li><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><a href="{{ route('campaigns.index') }}"><i class="fa fa-send"></i> Campaigns</a></li>
-        <li class="active">Create Campaign</li>
-      </ol>
-@endsection
-
 @section('content')
 
 	@if( ! $templatesAvailable)

@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', 'Automations')
+
 @section('heading')
     Automations
 @endsection

@@ -2,13 +2,6 @@
 
 @section('title', 'Campaigns')
 
-@section('breadcrumbs')
-    <ol class="breadcrumb">
-        <li><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Campaigns</li>
-    </ol>
-@endsection
-
 @section('heading')
     Campaigns
 @endsection

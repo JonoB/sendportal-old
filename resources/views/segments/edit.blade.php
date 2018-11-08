@@ -10,14 +10,6 @@
     Edit Segment : {{ $segment->name }}
 @stop
 
-@section('breadcrumbs')
-    <ol class="breadcrumb">
-        <li><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><a href="{{ route('segments.index') }}"><i class="fa fa-list"></i> Segments</a></li>
-        <li class="active">Edit Segment : {{ $segment->name }}</li>
-      </ol>
-@endsection
-
 @section('content')
 
     {!! Form::model($segment, ['method' => 'put', 'class' => 'form-horizontal', 'route' => ['segments.update', $segment->id]]) !!}

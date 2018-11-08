@@ -50,8 +50,6 @@
                         <h1>
                             @yield('heading')
                         </h1>
-
-                        @yield('breadcrumbs')
                     </section>
                 </div>
                 <div class="col-sm-6">
