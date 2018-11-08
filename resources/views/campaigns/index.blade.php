@@ -60,18 +60,14 @@
                             </td>
                         @else
                             <td>
-                                @if( ! isset($campaign->email))
-                                    <span class="label label-danger">No Email</span>
-                                @endif
+                                <span class="label label-danger">No Email</span>
                             </td>
                             <td>N/A</td>
                             <td>N/A</td>
                             <td>N/A</td>
                             <td>
-                                @if(! isset($campaign->email))
-                                    <a href="{{ route('campaigns.emails.create', ['id' => $campaign->id]) }}">Create Email</a>
-                                @endif
-                            </td>
+                                <a href="{{ route('campaigns.emails.create', ['id' => $campaign->id]) }}">Create
+                                    Email</a>
                             </td>
                         @endif
                     </tr>
