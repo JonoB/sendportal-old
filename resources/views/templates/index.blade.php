@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', 'Email Templates')
+
 @section('heading')
     Email Templates
 @endsection

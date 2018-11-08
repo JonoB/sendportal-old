@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', 'Segments')
+
 @section('heading')
     Segments
 @endsection

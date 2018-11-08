@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', 'Campaign Status')
+
 @section('heading')
     Campaign Status
 @stop

@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', 'Configurations')
+
 @section('heading')
     Configurations
 @endsection

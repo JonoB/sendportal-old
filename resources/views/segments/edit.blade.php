@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', "Edit Segment : {$segment->name}")
+
 @section('heading')
     Edit Segment : {{ $segment->name }}
 @stop

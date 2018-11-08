@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', "Subscriber : {$subscriber->full_name}")
+
 @section('heading')
     Subscriber : {{ $subscriber->full_name }}
 @stop

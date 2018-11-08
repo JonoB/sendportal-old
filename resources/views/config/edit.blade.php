@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', "Update : {$configType->name} settings")
+
 @section('heading')
     Update : {{ $configType->name }} settings
 @stop
