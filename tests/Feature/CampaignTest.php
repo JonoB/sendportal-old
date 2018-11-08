@@ -164,7 +164,7 @@ class CampaignTest extends TestCase
     /** @test */
     function a_campaign_can_have_one_emails()
     {
-        $automation = factory(Campaign::class)->create();
+        $campaign = factory(Campaign::class)->create();
 
         $email = [
             'subject' => 'Test Email 1',
@@ -172,11 +172,11 @@ class CampaignTest extends TestCase
             'from_name' => 'Test 1',
         ];
 
-        $automation->email()->create($email);
+        $campaign->email()->create($email);
 
         foreach ($email as $key => $value)
         {
-            $this->assertEquals($automation->email->toArray()[$key], $value);
+            $this->assertEquals($campaign->email->toArray()[$key], $value);
         }
     }
 
@@ -209,7 +209,7 @@ class CampaignTest extends TestCase
 
         $this->actingAs($this->user);
 
-        $automation = factory(Campaign::class)->create();
+        $campaign = factory(Campaign::class)->create();
 
         $emailData = [
             'subject' => 'Test Email',
@@ -218,7 +218,7 @@ class CampaignTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $this->post(route('campaigns.emails.store', [$automation->id]), $emailData);
+        $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
 
         $this->assertDatabaseHas('emails', $emailData);
     }
@@ -228,7 +228,7 @@ class CampaignTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $automation = factory(Campaign::class)->create();
+        $campaign = factory(Campaign::class)->create();
 
         $emailData = [
             'subject' => null,
@@ -237,7 +237,7 @@ class CampaignTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $response = $this->post(route('campaigns.emails.store', [$automation->id]), $emailData);
+        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
 
         $response->assertSessionHasErrors('subject');
         $this->assertDatabaseMissing('emails', $emailData);
@@ -248,7 +248,7 @@ class CampaignTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $automation = factory(Campaign::class)->create();
+        $campaign = factory(Campaign::class)->create();
 
         $emailData = [
             'subject' => 'Test Subject',
@@ -257,7 +257,7 @@ class CampaignTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $response = $this->post(route('campaigns.emails.store', [$automation->id]), $emailData);
+        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
 
         $response->assertSessionHasErrors('template_id');
         $this->assertDatabaseMissing('emails', $emailData);
@@ -268,7 +268,7 @@ class CampaignTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $automation = factory(Campaign::class)->create();
+        $campaign = factory(Campaign::class)->create();
 
         $emailData = [
             'subject' => 'Test Subject',
@@ -277,7 +277,7 @@ class CampaignTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $response = $this->post(route('campaigns.emails.store', [$automation->id]), $emailData);
+        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
 
         $response->assertSessionHasErrors('from_email');
         $this->assertDatabaseMissing('emails', $emailData);
@@ -288,7 +288,7 @@ class CampaignTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $automation = factory(Campaign::class)->create();
+        $campaign = factory(Campaign::class)->create();
 
         $emailData = [
             'subject' => 'Test Subject',
@@ -297,7 +297,7 @@ class CampaignTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $response = $this->post(route('campaigns.emails.store', [$automation->id]), $emailData);
+        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
 
         $response->assertSessionHasErrors('from_email');
         $this->assertDatabaseMissing('emails', $emailData);
@@ -308,7 +308,7 @@ class CampaignTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $automation = factory(Campaign::class)->create();
+        $campaign = factory(Campaign::class)->create();
 
         $emailData = [
             'subject' => 'Test Subject',
@@ -317,7 +317,7 @@ class CampaignTest extends TestCase
             'from_name' => null,
         ];
 
-        $response = $this->post(route('campaigns.emails.store', [$automation->id]), $emailData);
+        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
 
         $response->assertSessionHasErrors('from_name');
         $this->assertDatabaseMissing('emails', $emailData);
