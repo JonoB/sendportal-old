@@ -1,12 +1,12 @@
 @extends('common.template')
 
 @section('heading')
-    Create Automations
+    New Automation
 @stop
 
 @section('content')
 
-    {!! Form::open(array('route' => array('automations.store'))) !!}
+    {!! Form::open(['route' => 'automations.store', 'class' => 'form-horizontal']) !!}
 
     @include('automations.partials.form')
 

@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-6">
         {!! Form::textField('name', 'Automation Name') !!}
-        {!! Form::select('segment_id', $segments) !!}
+        {!! Form::selectField('segment_id', 'Segment', $segments) !!}
 
         {!! Form::submitButton('Save and continue') !!}
         {!! Form::close() !!}

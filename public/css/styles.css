@@ -48,33 +48,27 @@ body {
 
 /* Authentication Styling **/
 
-.min-h-screen
-{
+.min-h-screen {
     min-height: 100vh;
 }
 
-.d-flex
-{
+.d-flex {
     display: flex;
 }
 
-.d-inline-block
-{
+.d-inline-block {
     display: inline-block;
 }
 
-.items-center
-{
+.items-center {
     align-items: center;
 }
 
-.justify-center
-{
+.justify-center {
     justify-content: center;
 }
 
-.login-body h1
-{
+.login-body h1 {
     margin: 0;
     padding-bottom: 4rem;
     text-align: center;
@@ -82,8 +76,7 @@ body {
     color: #3c8dbc;
 }
 
-.login-container
-{
+.login-container {
     margin: 6rem 0;
     background-color: white;
     padding: 6rem;
@@ -93,9 +86,8 @@ body {
     0 5px 15px 0 rgba(0,0,0,0.08);
 }
 
-.login-row
-{
-    margin-top: 4rem;
+.login-body {
+    width: 100%;
 }
 
 .form-check-label
@@ -105,25 +97,11 @@ body {
     color: #929ca0;
 }
 
-.login-body
-{
-    width: 100%;
-}
-
-.col-form-label
-{
-    padding-left: 0;
-    margin-bottom: 1rem;
-    color: #929ca0;
-}
-
-.mb-0
-{
+.mb-0 {
     margin-bottom: 0 !important;
 }
 
-.form-group
-{
+.form-group {
     margin-bottom: 2rem;
 }
 
@@ -132,7 +110,7 @@ body {
 .main-sidebar {
     background-color: #ecf0f5 !important;
     padding-top: 12px;
-    padding-left: 12px;
+    padding-left: 24px;
 }
 
 .main-sidebar li.active a {
@@ -154,7 +132,7 @@ body {
 .sidebar-menu li a {
     color: #7b8488 !important;
     border: 0 !important;
-    padding: 8px;
+    padding: 8px 0;
 }
 
 .sidebar-menu > li > a:hover {
@@ -175,7 +153,7 @@ body {
     margin-left: 0 !important;
 }
 
-.callout.callout-danger {
+.callout.callout-danger, .alert.alert-danger {
     background-color: #f5ddda !important;
     color: #c23321 !important;
 }
@@ -184,9 +162,17 @@ body {
     color: #c23321 !important;
 }
 
+.form-group.has-error label {
+    color: #c23321;
+}
+
+.form-group.has-error .form-control, .form-group.has-error .input-group-addon {
+    border-color: #c23321;
+}
+
 .main-header .logo {
     text-align: left;
-    padding: 0 18px;
+    padding-left: 24px;
 }
 
 .skin-blue .main-header .logo:hover {
@@ -196,10 +182,6 @@ body {
 @media (min-width: 767px) {
     .skin-blue .main-header .logo {
         background-color: #3c8dbc;
-    }
-
-    .box {
-        margin-top: 2rem;
     }
 
     .sidebar-menu {
