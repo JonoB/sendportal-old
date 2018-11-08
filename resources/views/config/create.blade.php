@@ -8,6 +8,7 @@
 
     {!! Form::open(['method' => 'post', 'route' => 'config.store']) !!}
 
+    {!! Form::textField('name', 'Name') !!}
     {!! Form::selectField('type_id', 'Provider', $configTypes) !!}
 
     <div id="config-fields"></div>
@@ -15,6 +16,9 @@
     {!! Form::submitButton('Save') !!}
     {!! Form::close() !!}
 
+@stop
+
+@section('js')
     <script>
 
         var url = '{{ route('config.ajax', 1) }}';
@@ -54,5 +58,4 @@
         }
 
     </script>
-
-@stop
+@endsection

@@ -16,14 +16,16 @@
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Provider</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($configurations as $configType)
+                    @foreach($configurations as $configuration)
                         <tr>
-                            <td>{{ $configType->name }}</td>
-                            <td><a href="{{ route('config.edit', $configType->id) }}">Edit</a></td>
+                            <td>{{ $configuration->name }}</td>
+                            <td>{{ $configuration->type->name }}</td>
+                            <td><a href="{{ route('config.edit', $configuration->id) }}">Edit</a></td>
                         </tr>
                     @endforeach
                 </tbody>
