@@ -1,12 +1,12 @@
 @extends('common.template')
 
 @section('heading')
-    Providers
+    Automations
 @endsection
 
 @section('content')
     <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('config.create') }}">Add Provider</a>
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('automations.create') }}">Create Automation</a>
         <div class="clearfix"></div>
     </div>
 
@@ -16,17 +16,13 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Provider</th>
-                        <th>Actions</th>
+                        <th>Segments</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($configurations as $configuration)
-                        <tr>
-                            <td>{{ $configuration->name }}</td>
-                            <td>{{ $configuration->type->name }}</td>
-                            <td><a href="{{ route('config.edit', $configuration->id) }}">Edit</a></td>
-                        </tr>
+                    @foreach($automations as $automation)
+                        <td><a href="{{ route('automations.show', ['id' => $automation->id]) }}">{{ $automation->name }}</a></td>
+                        <td>{{ $automation->segment->name }}</td>
                     @endforeach
                 </tbody>
             </table>

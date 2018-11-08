@@ -24,6 +24,7 @@ class CreateConfigurationTables extends Migration
         \Schema::create('configs', function($table)
         {
             $table->increments('id');
+            $table->string('name')->nullable();
             $table->unsignedInteger('type_id');
             $table->mediumText('settings');
             $table->timestamps();

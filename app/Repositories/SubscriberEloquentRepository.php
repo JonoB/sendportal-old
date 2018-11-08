@@ -31,6 +31,18 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
     }
 
     /**
+     * Sync Segments to a Subscriber.
+     *
+     * @param  Subscriber $subscriber
+     * @param  array      $segments
+     * @return mixed
+     */
+    public function syncSegments(Subscriber $subscriber, array $segments = [])
+    {
+        return $subscriber->segments()->sync($segments);
+    }
+
+    /**
      * Update the Subscriber
      *
      * @param int $id The model id
@@ -41,7 +53,9 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
     {
         $this->instance = $this->find($id);
 
-        $this->executeUpdate($id, $data);
+        $this->executeUpdate($id, array_except($data, ['segments']));
+
+        $this->syncSegments($this->instance, array_get($data, 'segments', []));
 
         return $this->instance;
     }

@@ -18,7 +18,6 @@ class CreateEmailsTable extends Migration
             $table->unsignedInteger('mailable_id')->index();
             $table->string('mailable_type');
             $table->unsignedInteger('template_id')->nullable();
-            $table->unsignedInteger('status_id')->default(1);
             $table->string('subject')->nullable();
             $table->text('content')->nullable();
             $table->string('from_name')->nullable();
@@ -27,8 +26,6 @@ class CreateEmailsTable extends Migration
             $table->mediumInteger('open_count')->nullable()->default(0);
             $table->mediumInteger('click_count')->nullable()->default(0);
             $table->timestamps();
-
-            $table->foreign('status_id')->references('id')->on('campaign_statuses');
         });
     }
 
