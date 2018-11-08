@@ -5,9 +5,11 @@
 
 <div class="row template-editor-container">
     <div class="col-sm-6">
-
-        {!! Form::textareaField('content') !!}
-
+        <div class="form-group form-group-content">
+            <textarea name="content" id="id-field-content" class="form-control" cols="50" rows="10">
+                {{ $template->content }}
+            </textarea>
+        </div>
     </div>
 
     <div class="col-sm-6">
