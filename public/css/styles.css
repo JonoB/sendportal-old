@@ -166,12 +166,6 @@ body {
     margin-right: 1rem;
 }
 
-.skin-blue .main-header .logo {
-    background-color: #3c8dbc;
-    text-align: left;
-    padding-left: 3rem
-}
-
 .sidebar-toggle {
     color: white !important;
     background-color: #3c8dbc !important;
@@ -190,10 +184,18 @@ body {
     color: #c23321 !important;
 }
 
+.main-header .logo {
+    text-align: left;
+    padding: 0 18px;
+}
+
+.skin-blue .main-header .logo:hover {
+    background-color: #3c8dbc;
+}
+
 @media (min-width: 767px) {
     .skin-blue .main-header .logo {
         background-color: #3c8dbc;
-        text-align: center;
     }
 
     .box {
