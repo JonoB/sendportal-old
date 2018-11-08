@@ -108,7 +108,19 @@ class AutomationTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_can_create_an_autoresponder()
+    function an_authenticated_user_can_create_an_automation()
+    {
+        $this->actingAs($this->user);
+
+        $automation = factory(Automation::class)->make();
+
+        $this->post(route('automations.store'), $automation->toArray());
+
+        $this->assertDatabaseHas('automations', $automation->toArray());
+    }
+
+    /** @test */
+    function an_unauthenticated_user_cannot_create_an_autoamation()
     {
         $automation = factory(Automation::class)->make();
 
@@ -119,19 +131,7 @@ class AutomationTest extends TestCase
     }
 
     /** @test */
-    function an_unauthenticated_user_cannot_create_an_autoresponder()
-    {
-        $this->actingAs($this->user);
-
-        $automation = factory(Automation::class)->make();
-
-        $response = $this->post(route('automations.store'), $automation->toArray());
-
-        $response->assertStatus(201);
-    }
-
-    /** @test */
-    function an_autoresponder_requires_a_name()
+    function an_automation_requires_a_name()
     {
         $this->actingAs($this->user);
 
@@ -143,7 +143,7 @@ class AutomationTest extends TestCase
     }
 
     /** @test */
-    function an_autoresponder_requires_a_segment()
+    function an_automation_requires_a_segment()
     {
         $this->actingAs($this->user);
 
@@ -180,7 +180,7 @@ class AutomationTest extends TestCase
     }
 
     /** @test */
-    function an_autoresponder_has_a_relationship_with_a_segment()
+    function an_automation_has_a_relationship_with_a_segment()
     {
         $segment = factory(Segment::class)->create();
 
@@ -189,5 +189,155 @@ class AutomationTest extends TestCase
         ]);
 
         $this->assertEquals($segment->name, $automation->segment->name);
+    }
+
+    /** @test */
+    function an_automation_can_have_many_emails()
+    {
+        $automation = factory(Automation::class)->create();
+
+        $emails = [
+            [
+                'subject' => 'Test Email 1',
+                'from_email' => 'test1@email.com',
+                'from_name' => 'Test 1',
+            ],
+            [
+                'subject' => 'Test Email 2',
+                'from_email' => 'test2@email.com',
+                'from_name' => 'Test 2',
+            ],
+        ];
+
+        $automation->emails()->createMany($emails);
+
+        foreach($emails as $index => $email)
+        {
+            foreach($email as $key => $value)
+            {
+                $this->assertEquals($automation->emails->toArray()[$index][$key], $value);
+            }
+        }
+    }
+
+    /** @test */
+    function a_user_can_create_an_email_for_an_automation()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->actingAs($this->user);
+
+        $automation = factory(Automation::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Email',
+            'template_id' => 1,
+            'from_email' => 'test@email.com',
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $this->post(route('automations.emails.store', [$automation->id]), $emailData);
+
+        $this->assertDatabaseHas('emails', $emailData);
+    }
+
+    /** @test */
+    function an_automation_email_requires_a_subject()
+    {
+        $this->actingAs($this->user);
+
+        $automation = factory(Automation::class)->create();
+
+        $emailData = [
+            'subject' => null,
+            'template_id' => 1,
+            'from_email' => 'test@email.com',
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $response = $this->post(route('automations.emails.store', [$automation->id]), $emailData);
+
+        $response->assertSessionHasErrors('subject');
+        $this->assertDatabaseMissing('emails', $emailData);
+    }
+
+    /** @test */
+    function an_automation_email_requires_a_template_id()
+    {
+        $this->actingAs($this->user);
+
+        $automation = factory(Automation::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Subject',
+            'template_id' => null,
+            'from_email' => 'test@email.com',
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $response = $this->post(route('automations.emails.store', [$automation->id]), $emailData);
+
+        $response->assertSessionHasErrors('template_id');
+        $this->assertDatabaseMissing('emails', $emailData);
+    }
+
+    /** @test */
+    function an_automation_email_requires_a_from_email()
+    {
+        $this->actingAs($this->user);
+
+        $automation = factory(Automation::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Subject',
+            'template_id' => 1,
+            'from_email' => null,
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $response = $this->post(route('automations.emails.store', [$automation->id]), $emailData);
+
+        $response->assertSessionHasErrors('from_email');
+        $this->assertDatabaseMissing('emails', $emailData);
+    }
+
+    /** @test */
+    function an_automation_email_from_email_must_be_an_email()
+    {
+        $this->actingAs($this->user);
+
+        $automation = factory(Automation::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Subject',
+            'template_id' => 1,
+            'from_email' => 'what did you call me',
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $response = $this->post(route('automations.emails.store', [$automation->id]), $emailData);
+
+        $response->assertSessionHasErrors('from_email');
+        $this->assertDatabaseMissing('emails', $emailData);
+    }
+
+    /** @test */
+    function an_automation_email_requires_a_from_name()
+    {
+        $this->actingAs($this->user);
+
+        $automation = factory(Automation::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Subject',
+            'template_id' => 1,
+            'from_email' => 'test@email.com',
+            'from_name' => null,
+        ];
+
+        $response = $this->post(route('automations.emails.store', [$automation->id]), $emailData);
+
+        $response->assertSessionHasErrors('from_name');
+        $this->assertDatabaseMissing('emails', $emailData);
     }
 }

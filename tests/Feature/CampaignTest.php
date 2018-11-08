@@ -127,7 +127,7 @@ class CampaignTest extends TestCase
         $campaign = $this->campaignRepository->findBy('name', $campaign->name);
 
         $response->assertStatus(302);
-        $response->assertRedirect("/emails/create?campaign={$campaign->id}");
+        $response->assertRedirect("/campaigns/{$campaign->id}/emails/create");
 
     }
 }
