@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCampaignsTable extends Migration
+class CreateAutomationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateCampaignsTable extends Migration
      */
     public function up()
     {
-        Schema::create('campaigns', function (Blueprint $table) {
+        Schema::create('automations', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->unsignedInteger('status_id')->default(1);
-            $table->timestamp('scheduled_at')->nullable();
+            $table->unsignedInteger('segment_id');
             $table->timestamps();
 
-            $table->foreign('status_id')->references('id')->on('campaign_statuses');
+            $table->foreign('segment_id')->references('id')->on('segments');
         });
     }
 
@@ -31,6 +30,6 @@ class CreateCampaignsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('campaigns');
+        Schema::dropIfExists('automation');
     }
 }

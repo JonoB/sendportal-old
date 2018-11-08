@@ -36,19 +36,11 @@ class CampaignTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $emailData = [
-            'subject' => 'A Subject',
-            'content' => 'Some content',
-            'from_name' => 'Josh',
-            'from_email' => 'josh@mettle.io',
-        ];
-
-        $campaign = factory(Campaign::class)->make($emailData);
+        $campaign = factory(Campaign::class)->make();
 
         $this->post(route('campaigns.store'), $campaign->toArray());
 
         $this->assertDatabaseHas('campaigns', ['name' => $campaign->name]);
-        $this->assertDatabaseHas('emails', $emailData);
     }
 
     /** @test */
@@ -126,30 +118,16 @@ class CampaignTest extends TestCase
     }
 
     /** @test */
-    function an_email_is_created_when_a_campaign_is_stored()
+    function a_user_is_redirected_to_the_email_creation_wizard_when_a_campaign_is_created()
     {
         $this->actingAs($this->user);
+        $campaign = factory(Campaign::class)->make();
 
-        $emailData = [
-            'template_id' => factory(Template::class)->create()->id,
-            'subject' => 'A Subject',
-            'content' => 'Some content',
-            'from_name' => 'Josh',
-            'from_email' => 'josh@mettle.io',
-            'open_count' => 0,
-            'click_count' => 0,
-            'status_id' => 1,
-        ];
+        $response = $this->post(route('campaigns.store'), $campaign->toArray());
+        $campaign = $this->campaignRepository->findBy('name', $campaign->name);
 
-        $campaign = factory(Campaign::class)->make($emailData);
+        $response->assertStatus(302);
+        $response->assertRedirect("/emails/create?campaign={$campaign->id}");
 
-        $this->post(route('campaigns.store'), $campaign->toArray());
-
-        $createdCampaign = $this->campaignRepository->all()->first();
-
-        foreach ($emailData as $key => $value)
-        {
-            $this->assertEquals($createdCampaign->email->$key, $emailData[$key]);
-        }
     }
 }

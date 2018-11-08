@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\CampaignStatus;
 use App\Models\Email;
 use App\Models\Template;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -18,11 +19,30 @@ class EmailTest extends TestCase
      */
     private $user;
 
-    protected function __setUp()
+    protected function setUp()
     {
         parent::setUp();
 
         $this->user = factory(User::class)->create();
+    }
+
+    /** @test */
+    function an_authenticated_user_can_visit_the_create_page()
+    {
+        $this->actingAs($this->user);
+
+        $response = $this->get(route('automations.create'));
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    function an_unauthenticated_user_cannot_visit_the_create_page()
+    {
+        $response = $this->get(route('automations.create'));
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
     }
 
     /** @test */

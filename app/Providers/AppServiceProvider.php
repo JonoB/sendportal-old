@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Interfaces\AutomationRepositoryInterface;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\EmailRepositoryInterface;
 use App\Interfaces\SegmentRepositoryInterface;
@@ -15,6 +16,7 @@ use App\Interfaces\CampaignRepositoryInterface;
 use App\Interfaces\CampaignUrlsRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
+use App\Repositories\AutomationEloquentRepository;
 use App\Repositories\EmailEloquentRepository;
 use App\Repositories\SubscriberEloquentRepository;
 use App\Repositories\CampaignSubscriberEloquentRepository;
@@ -29,7 +31,6 @@ use App\Services\CampaignContentService;
 use App\Services\CampaignDispatchService;
 use App\Services\CampaignReportService;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Schema;
 use App\Interfaces\ConfigRepositoryInterface;
 use App\Repositories\ConfigEloquentRepository;
 
@@ -65,6 +66,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TagRepositoryInterface::class, TagEloquentRepository::class);
         $this->app->bind(TemplateRepositoryInterface::class, TemplateEloquentRepository::class);
         $this->app->bind(ConfigRepositoryInterface::class, ConfigEloquentRepository::class);
+        $this->app->bind(AutomationRepositoryInterface::class, AutomationEloquentRepository::class);
         $this->app->bind(EmailRepositoryInterface::class, EmailEloquentRepository::class);
     }
 }

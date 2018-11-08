@@ -21,33 +21,51 @@
                     <th>Sent</th>
                     <th>Opened</th>
                     <th>Clicked</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($campaigns as $campaign)
                     <tr>
                         <td>
-                            @if ($campaign->email->status_id == \App\Models\CampaignStatus::STATUS_DRAFT)
+                            @if ( ! isset($campaign->email) || $campaign->status_id == \App\Models\CampaignStatus::STATUS_DRAFT)
                                 <a href="{{ route('campaigns.edit', $campaign->id) }}">{{ $campaign->name }}</a>
                             @else
                                 <a href="{{ route('campaigns.report', $campaign->id) }}">{{ $campaign->name }}</a>
                             @endif
                         </td>
                         <td>
-                            @if($campaign->email->status_id == \App\Models\CampaignStatus::STATUS_DRAFT)
-                                <span class="label label-default">{{ $campaign->email->status->name }}</span>
-                            @elseif($campaign->email->status_id == \App\Models\CampaignStatus::STATUS_QUEUED)
-                                <span class="label label-warning">{{ $campaign->email->status->name }}</span>
-                            @elseif($campaign->email->status_id == \App\Models\CampaignStatus::STATUS_SENDING)
-                                <span class="label label-info">{{ $campaign->email->status->name }}</span>
-                            @elseif($campaign->email->status_id == \App\Models\CampaignStatus::STATUS_SENT)
-                                <span class="label label-success">{{ $campaign->email->status->name }}</span>
+                            @if($campaign->status_id == \App\Models\CampaignStatus::STATUS_DRAFT)
+                                <span class="label label-default">{{ $campaign->status->name }}</span>
+                            @elseif($campaign->status_id == \App\Models\CampaignStatus::STATUS_QUEUED)
+                                <span class="label label-warning">{{ $campaign->status->name }}</span>
+                            @elseif($campaign->status_id == \App\Models\CampaignStatus::STATUS_SENDING)
+                                <span class="label label-info">{{ $campaign->status->name }}</span>
+                            @elseif($campaign->status_id == \App\Models\CampaignStatus::STATUS_SENT)
+                                <span class="label label-success">{{ $campaign->status->name }}</span>
                             @endif
                         </td>
-                        <td>{{ $campaign->email->template->name }}</td>
-                        <td>{{ formatValue($campaign->email->sent_count) }}</td>
-                        <td>{{ number_format($campaign->email->open_ratio * 100, 1) . '%' }}</td>
-                        <td>{{ number_format($campaign->email->click_ratio * 100, 1) . '%' }}</td>
+
+                        @if(isset($campaign->email))
+                            <td>{{ $campaign->email->template->name }}</td>
+                            <td>{{ formatValue($campaign->email->sent_count) }}</td>
+                            <td>{{ number_format($campaign->email->open_ratio * 100, 1) . '%' }}</td>
+                            <td>{{ number_format($campaign->email->click_ratio * 100, 1) . '%' }}</td>
+                            <td>
+                                @if($campaign->email->content === null)
+                                    <a href="{{ route('emails.design', ['id' => $campaign->email->id]) }}">
+                                        Edit Content
+                                    </a>
+                                @endif
+                            </td>
+                        @else
+                            <td>N/A</td>
+                            <td>N/A</td>
+                            <td>N/A</td>
+                            <td>N/A</td>
+                            <td><a href="{{ route('emails.create', ['campaign' => $campaign->id]) }}">Update</a>
+                            </td>
+                        @endif
                     </tr>
                 @endforeach
                 </tbody>
