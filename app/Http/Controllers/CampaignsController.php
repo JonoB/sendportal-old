@@ -141,8 +141,9 @@ class CampaignsController extends Controller
     public function edit($id)
     {
         $campaign = $this->campaigns->find($id);
+        $providers = $this->providers->all();
 
-        return view('campaigns.edit', compact('campaign'));
+        return view('campaigns.edit', compact('campaign', 'providers'));
     }
 
     /**
