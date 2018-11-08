@@ -6,7 +6,7 @@ class Campaign extends BaseModel
 {
     protected $fillable = [
         'name',
-        'config_id',
+        'provider_id',
         'status_id',
         'scheduled_at'
     ];
@@ -47,13 +47,13 @@ class Campaign extends BaseModel
     }
 
     /**
-     * Config relationship method
+     * Provider relationship method
      *
      * @param null
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function config()
+    public function provider()
     {
-        return $this->belongsTo(Config::class);
+        return $this->belongsTo(Provider::class);
     }
 }

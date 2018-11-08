@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CampaignRequest;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
-use App\Interfaces\ConfigRepositoryInterface;
+use App\Interfaces\ProviderRepositoryInterface;
 use App\Interfaces\SegmentRepositoryInterface;
-use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\CampaignRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Models\CampaignStatus;
@@ -39,9 +38,9 @@ class CampaignsController extends Controller
     protected $segmentRepository;
 
     /**
-     * @var ConfigRepositoryInterface
+     * @var ProviderRepositoryInterface
      */
-    private $configRepo;
+    private $providers;
 
     /**
      * CampaignsController constructor.
@@ -50,21 +49,21 @@ class CampaignsController extends Controller
      * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
      * @param TemplateRepositoryInterface $templateRepository
      * @param SegmentRepositoryInterface $segmentRepository
-     * @param ConfigRepositoryInterface $configRepo
+     * @param ProviderRepositoryInterface $providers
      */
     public function __construct(
         CampaignRepositoryInterface $campaignRepository,
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
         TemplateRepositoryInterface $templateRepository,
         SegmentRepositoryInterface $segmentRepository,
-        ConfigRepositoryInterface $configRepo
+        ProviderRepositoryInterface $providers
     )
     {
         $this->campaignRepo = $campaignRepository;
         $this->campaignSubscriberRepo = $campaignSubscriberRepository;
         $this->templateRepo = $templateRepository;
         $this->segmentRepository = $segmentRepository;
-        $this->configRepo = $configRepo;
+        $this->providers = $providers;
     }
 
     /**
@@ -74,7 +73,7 @@ class CampaignsController extends Controller
      */
     protected $campaignFields = [
         'name',
-        'config_id',
+        'provider_id',
         'status_id',
         'scheduled_at',
     ];
@@ -99,7 +98,7 @@ class CampaignsController extends Controller
     public function create()
     {
         $templatesAvailable = $this->templateRepo->all()->count();
-        $providers = $this->configRepo->all();
+        $providers = $this->providers->all();
 
         return view('campaigns.create', compact('templatesAvailable', 'providers'));
     }
