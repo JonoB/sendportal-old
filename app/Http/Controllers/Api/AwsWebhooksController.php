@@ -106,7 +106,7 @@ class AwsWebhooksController extends Controller
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-contents.html#event-publishing-retrieving-sns-contents-open-object
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-examples.html#event-publishing-retrieving-sns-open
         $ipAddress = array_get($event, 'open.ipAddress');
-        $timestamp = Carbon::createFromFormat(Carbon::ATOM, array_get($event, 'open.timestamp'));
+        $timestamp = Carbon::parse(array_get($event, 'open.timestamp'));
 
         $this->emailWebhookService->handleOpen($messageId, $timestamp, $ipAddress);
     }
@@ -128,7 +128,7 @@ class AwsWebhooksController extends Controller
     protected function handleDelivery($messageId, array $event)
     {
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/notification-contents.html#delivery-
-        $timestamp = Carbon::createFromFormat(Carbon::ATOM, array_get($event, 'delivery.timestamp'));
+        $timestamp = Carbon::parse(array_get($event, 'delivery.timestamp'));
 
         $this->emailWebhookService->handleDelivery($messageId, $timestamp);
     }

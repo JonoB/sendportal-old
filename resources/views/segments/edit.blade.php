@@ -21,7 +21,7 @@
                     return $existing->id === $subscriber->id;
                 });
 
-                $label = $subscriber->full_name . ($existing->pivot->unsubscribed_at ? ' (' . $existing->pivot->unsubscribed_at . ')' : '');
+                $label = $subscriber->full_name . ($existing->unsubscribed_at ? ' (' . $existing->unsubscribed_at . ')' : '');
             @endphp
             {!! Form::checkboxField('subscribers[]',  $label, $subscriber->id) !!}
         @else

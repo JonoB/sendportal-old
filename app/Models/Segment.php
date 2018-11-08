@@ -9,8 +9,7 @@ class Segment extends BaseModel
     public function subscribers()
     {
         return $this->belongsToMany(Subscriber::class)
-            ->withTimestamps()
-            ->withPivot('unsubscribed_at');
+            ->withTimestamps();
     }
 
     public function active_subscribers()
