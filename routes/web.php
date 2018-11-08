@@ -60,10 +60,10 @@ Route::middleware(['auth'])->group(function ()
     Route::post('subscriptions', ['as' => 'subscriptions.update', 'uses' => 'SubscriptionsController@update']);
     Route::get('subscribe/{subscriberId}', ['as' => 'subscriptions.subscribe', 'uses' => 'SubscriptionsController@subscribe']);
 
-    Route::get('config', ['as' => 'config.index', 'uses' => 'ConfigController@index']);
-    Route::get('config/create', ['as' => 'config.create', 'uses' => 'ConfigController@create']);
-    Route::get('config/type/{id}', ['as' => 'config.ajax', 'uses' => 'ConfigController@configTypeAjax']);
-    Route::post('config', ['as' => 'config.store', 'uses' => 'ConfigController@store']);
-    Route::get('config/{id}/edit', ['as' => 'config.edit', 'uses' => 'ConfigController@edit']);
-    Route::post('config/{id}', ['as' => 'config.update', 'uses' => 'ConfigController@update']);
+    Route::get('providers', ['as' => 'providers.index', 'uses' => 'ProvidersController@index']);
+    Route::get('providers/create', ['as' => 'providers.create', 'uses' => 'ProvidersController@create']);
+    Route::get('providers/type/{id}', ['as' => 'providers.ajax', 'uses' => 'ProvidersController@providersTypeAjax']);
+    Route::post('providers', ['as' => 'providers.store', 'uses' => 'ProvidersController@store']);
+    Route::get('providers/{id}/edit', ['as' => 'providers.edit', 'uses' => 'ProvidersController@edit']);
+    Route::post('providers/{id}', ['as' => 'providers.update', 'uses' => 'ProvidersController@update']);
 });
