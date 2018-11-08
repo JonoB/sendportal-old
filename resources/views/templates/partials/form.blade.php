@@ -6,6 +6,6 @@
 
 @include('templates.partials.editor')
 
-{!! Form::submitButton('Save Template') !!}
+<button class="btn btn-primary" type="submit">Save Template</button>
 
 {!! Form::close() !!}

@@ -4,6 +4,13 @@
     Configurations
 @endsection
 
+@section('breadcrumbs')
+    <ol class="breadcrumb">
+        <li><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">Configurations</li>
+      </ol>
+@endsection
+
 @section('content')
 
     <div class="box box-primary">

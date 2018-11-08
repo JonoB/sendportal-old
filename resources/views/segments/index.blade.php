@@ -4,6 +4,13 @@
     Segments
 @endsection
 
+@section('breadcrumbs')
+    <ol class="breadcrumb">
+        <li><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">Segments</li>
+      </ol>
+@endsection
+
 @section('content')
     <div class="actions-container">
         <a class="btn btn-primary btn-flat pull-right" href="{{ route('segments.create') }}">Create Segment</a>
