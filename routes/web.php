@@ -14,6 +14,12 @@ Route::middleware(['auth'])->group(function ()
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
     Route::resource('automations', 'AutomationsController');
+    Route::resource('automations.steps', 'AutomationStepsController');
+    Route::resource('automations.steps.email', 'AutomationStepEmailController');
+
+    Route::get('automations/{automation}/steps/{automationStep}/email/content/edit', 'AutomationStepEmailContentController@edit')
+        ->name('automations.steps.email.content.edit');
+
     Route::resource('automations.emails', 'AutomationEmailsController')->except([
         'index',
         'show',
@@ -21,7 +27,6 @@ Route::middleware(['auth'])->group(function ()
     Route::get('automations/{$id}/confirm', ['as' => 'automations.confirm', 'uses' => 'AutomationsController@confirm']);
 
     Route::get('automations/{automation}/emails/{email}/content', ['as' => 'automations.emails.content.edit', 'uses' => 'AutomationEmailContentController@edit']);
-
 
     Route::get('subscribers/export', ['as' => 'subscribers.export', 'uses' => 'SubscribersController@export']);
     Route::get('subscribers/import', ['as' => 'subscribers.import', 'uses' => 'SubscribersImportController@show']);

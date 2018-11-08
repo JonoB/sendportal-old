@@ -6,7 +6,7 @@
 
 @section('actions')
     <a class="btn btn-primary btn-sm btn-flat"
-        href="{{ route('automations.emails.create', ['automation' => $automation->id]) }}"><i class="fa fa-plus"></i> Add Email
+        href="{{ route('automations.steps.create', ['automation' => $automation->id]) }}"><i class="fa fa-plus"></i> Add Automation Step
     </a>
 @endsection
 
