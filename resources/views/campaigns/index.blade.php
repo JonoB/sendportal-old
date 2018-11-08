@@ -53,17 +53,25 @@
                             <td>{{ number_format($campaign->email->click_ratio * 100, 1) . '%' }}</td>
                             <td>
                                 @if($campaign->email->content === null)
-                                    <a href="{{ route('emails.design', ['id' => $campaign->email->id]) }}">
+                                    <a href="#">
                                         Edit Content
                                     </a>
                                 @endif
                             </td>
                         @else
+                            <td>
+                                @if( ! isset($campaign->email))
+                                    <span class="label label-danger">No Email</span>
+                                @endif
+                            </td>
                             <td>N/A</td>
                             <td>N/A</td>
                             <td>N/A</td>
-                            <td>N/A</td>
-                            <td><a href="{{ route('emails.create', ['campaign' => $campaign->id]) }}">Update</a>
+                            <td>
+                                @if(! isset($campaign->email))
+                                    <a href="{{ route('campaigns.emails.create', ['id' => $campaign->id]) }}">Create Email</a>
+                                @endif
+                            </td>
                             </td>
                         @endif
                     </tr>
