@@ -4,11 +4,13 @@
     Email Templates
 @endsection
 
+@section('actions')
+    <a class="btn btn-primary btn-sm btn-flat" href="{{ route('templates.create') }}">
+        <i class="fa fa-plus"></i> Create Template
+    </a>
+@endsection
+
 @section('content')
-    <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('templates.create') }}">Create Template</a>
-        <div class="clearfix"></div>
-    </div>
 
     @include('templates.partials.grid')
 

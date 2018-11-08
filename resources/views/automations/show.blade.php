@@ -4,12 +4,13 @@
     {{ $automation->name }}
 @stop
 
+@section('actions')
+    <a class="btn btn-primary btn-sm btn-flat"
+        href="{{ route('automations.emails.create', ['automation' => $automation->id]) }}"><i class="fa fa-plus"></i> Add Email
+    </a>
+@endsection
+
 @section('content')
-    <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right"
-           href="{{ route('automations.emails.create', ['automation' => $automation->id]) }}">Add Email</a>
-        <div class="clearfix"></div>
-    </div>
 
     <div class="box box-primary">
         <div class="box-body no-padding">

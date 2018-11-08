@@ -4,11 +4,13 @@
     Automations
 @endsection
 
+@section('actions')
+    <a class="btn btn-primary btn-sm btn-flat" href="{{ route('automations.create') }}">
+        <i class="fa fa-plus"></i> Create Automation
+    </a>
+@endsection
+
 @section('content')
-    <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('automations.create') }}">Create Automation</a>
-        <div class="clearfix"></div>
-    </div>
 
     <div class="box box-primary">
         <div class="box-body no-padding">
