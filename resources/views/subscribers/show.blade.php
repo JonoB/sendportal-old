@@ -24,16 +24,6 @@
                 @endforeach
             </ul>
         </div>
-
-        <div class="col-md-6">
-            <h4>{{ $subscriber->tags()->count() }} Tags</h4>
-
-            <ul>
-                @foreach ($subscriber->tags as $tag)
-                    <li>{{ $tag->name }}</li>
-                @endforeach
-            </ul>
-        </div>
     </div>
 
 @stop
