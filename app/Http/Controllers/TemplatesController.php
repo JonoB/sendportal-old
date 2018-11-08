@@ -60,18 +60,6 @@ class TemplatesController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param string $id
-     *
-     * @return Response
-     */
-    public function show($id)
-    {
-        return view('templates.show');
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param string $id
@@ -122,6 +110,6 @@ class TemplatesController extends Controller
 
         return redirect()
             ->back()
-            ->with('success', 'Successfully deleted the template.');
+            ->with('success', 'Template successfully deleted.');
     }
 }

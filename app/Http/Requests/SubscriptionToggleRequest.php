@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CampaignStoreRequest extends FormRequest
+class SubscriptionToggleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,15 +24,7 @@ class CampaignStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
-                'required',
-                'max:255'
-            ],
-            'provider_id' => [
-                'required',
-                'integer',
-                'exists:providers,id',
-            ]
+            'is_unsubscribed' => ['boolean', 'required']
         ];
     }
 }

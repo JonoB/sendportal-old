@@ -13,15 +13,6 @@ class EmailEloquentRepository extends BaseEloquentRepository implements EmailRep
 {
     protected $modelName = Email::class;
 
-    public function queuedCampaigns()
-    {
-        return $this->getQueryBuilder()
-            ->where('status_id', CampaignStatus::STATUS_QUEUED)
-            ->where('mailable_type', 'App\Models\Campaign')
-            ->with('mailable.segments')
-            ->get();
-    }
-
     /**
      * Store an email linked against a polymorphic type
      *

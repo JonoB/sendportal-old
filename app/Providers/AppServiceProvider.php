@@ -2,20 +2,21 @@
 
 namespace App\Providers;
 
+use App\Interfaces\CampaignSubscriberRepositoryInterface;
+use App\Interfaces\EmailRepositoryInterface;
+use App\Interfaces\EmailWebhookServiceInterface;
+use App\Interfaces\SegmentRepositoryInterface;
+use App\Interfaces\SubscriberRepositoryInterface;
+use App\Interfaces\ContentUrlServiceInterface;
+use App\Interfaces\GenerateOpenTrackingImageInterface;
 use App\Interfaces\AutomationRepositoryInterface;
 use App\Interfaces\AutomationStepRepositoryInterface;
 use App\Interfaces\CampaignContentServiceInterface;
 use App\Interfaces\CampaignDispatchInterface;
 use App\Interfaces\CampaignReportServiceInterface;
 use App\Interfaces\CampaignRepositoryInterface;
-use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\CampaignUrlsRepositoryInterface;
-use App\Interfaces\ContentUrlServiceInterface;
-use App\Interfaces\EmailRepositoryInterface;
-use App\Interfaces\GenerateOpenTrackingImageInterface;
 use App\Interfaces\ProviderRepositoryInterface;
-use App\Interfaces\SegmentRepositoryInterface;
-use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Repositories\AutomationEloquentRepository;
@@ -29,13 +30,12 @@ use App\Repositories\ProviderEloquentRepository;
 use App\Repositories\SegmentEloquentRepository;
 use App\Repositories\TagEloquentRepository;
 use App\Repositories\TemplateEloquentRepository;
-
+use App\Services\ContentUrlService;
+use App\Services\EmailWebhookService;
+use App\Services\GenerateOpenTrackingImageService;
 use App\Services\CampaignContentService;
 use App\Services\CampaignDispatchService;
 use App\Services\CampaignReportService;
-use App\Services\ContentUrlService;
-use App\Services\GenerateOpenTrackingImageService;
-
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -74,5 +74,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(EmailRepositoryInterface::class, EmailEloquentRepository::class);
         $this->app->bind(AutomationStepRepositoryInterface::class, AutomationStepEloquentRepository::class);
         $this->app->bind(AutomationStepRepositoryInterface::class, AutomationStepEloquentRepository::class);
+        $this->app->bind(EmailWebhookServiceInterface::class, EmailWebhookService::class);
     }
 }

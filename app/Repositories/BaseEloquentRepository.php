@@ -61,8 +61,7 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
 
         $this->parseOrder($orderBy);
 
-        // $parameters can be extended in child classes for filtering
-        $parameters = [];
+        $instance = $this->applyFilters($instance, $parameters);
 
         return $instance->with($relations)
             ->orderBy($this->getOrderBy(), $this->getOrderDirection())
@@ -84,12 +83,23 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
 
         $this->parseOrder($orderBy);
 
-        // $parameters can be extended in child classes for filtering
-        $parameters = [];
+        $instance = $this->applyFilters($instance, $parameters);
 
         return $instance->with($relations)
             ->orderBy($this->getOrderBy(), $this->getOrderDirection())
             ->paginate($paginate);
+    }
+
+    /**
+     * Apply parameters, which can be extended in child classes for filtering
+     *
+     * @param $query
+     * @param array $filters
+     * @return mixed
+     */
+    protected function applyFilters($instance, array $filters = [])
+    {
+        return $instance;
     }
 
     /**
@@ -352,7 +362,7 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      */
     public function getQueryBuilder()
     {
-        return $this->getNewInstance();
+        return $this->getNewInstance()->newQuery();
     }
 
     /**
@@ -516,5 +526,16 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     public function setValidator($validator)
     {
         $this->validator = $validator;
+    }
+
+    /**
+     * Get count of records
+     *
+     * @param null
+     * @return integer
+     */
+    public function getCount()
+    {
+        return $this->getNewInstance()->count();
     }
 }

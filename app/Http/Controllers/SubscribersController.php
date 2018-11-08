@@ -35,7 +35,7 @@ class SubscribersController extends Controller
      */
     public function index()
     {
-        $subscribers = $this->subscriberRepository->paginate('first_name');
+        $subscribers = $this->subscriberRepository->paginate('first_name', ['segments'], 50, request()->all());
 
         return view('subscribers.index', compact('subscribers'));
     }
