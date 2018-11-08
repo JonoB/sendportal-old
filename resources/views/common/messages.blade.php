@@ -1,3 +1,9 @@
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 @if (isset($errors) and count($errors) > 0)
     <div class="alert alert-danger">
         <?php $allErrors = $errors->getMessages(); ?>
