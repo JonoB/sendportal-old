@@ -21,6 +21,9 @@ class CampaignTest extends TestCase
      */
     private $user;
 
+    /**
+     * @var CampaignRepositoryInterface
+     */
     private $campaignRepository;
 
     protected function setUp()
@@ -29,6 +32,36 @@ class CampaignTest extends TestCase
 
         $this->user = factory(User::class)->create();
         $this->campaignRepository = $this->app->make(CampaignEloquentRepository::class);
+    }
+
+    /** @test */
+    function the_campaign_index_can_be_viewed()
+    {
+        $this->actingAs($this->user);
+
+        $response = $this->get(route('campaigns.index'));
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    function unauthenticated_users_can_not_view_the_campaign_index()
+    {
+        $response = $this->get(route('campaigns.index'));
+
+        $this->assertRedirectToLogin($response);
+    }
+
+    /** @test */
+    function the_campaign_index_tells_you_if_a_campaign_does_not_have_an_email()
+    {
+        $this->actingAs($this->user);
+
+        factory(Campaign::class)->create();
+
+        $response = $this->get(route('campaigns.index'));
+
+        $response->assertSee('No Email');
     }
 
     /** @test */
@@ -57,8 +90,7 @@ class CampaignTest extends TestCase
 
         $response = $this->post(route('campaigns.store'), $campaign->toArray());
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
+        $this->assertRedirectToLogin($response);
     }
 
     /** @test */
@@ -113,8 +145,7 @@ class CampaignTest extends TestCase
 
         $response = $this->put(route('campaigns.update', ['id' => $campaign->id]), $modifiedData);
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
+        $this->assertRedirectToLogin($response);
     }
 
     /** @test */
@@ -147,6 +178,28 @@ class CampaignTest extends TestCase
         {
             $this->assertEquals($automation->email->toArray()[$key], $value);
         }
+    }
+
+    /** @test */
+    function the_campaign_email_create_view_can_viewed()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->create();
+
+        $response = $this->get(route('campaigns.emails.create', ['id' => $campaign->id]));
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    function an_authenticated_user_cannot_view_the_campaign_email_create_view()
+    {
+        $campaign = factory(Campaign::class)->create();
+
+        $response = $this->get(route('campaigns.emails.create', ['id' => $campaign->id]));
+
+        $this->assertRedirectToLogin($response);
     }
 
     /** @test */

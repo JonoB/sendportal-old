@@ -52,8 +52,7 @@ class AutomationTest extends TestCase
     {
         $response = $this->get(route('automations.index'));
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
+        $this->assertRedirectToLogin($response);
     }
 
     /** @test */
@@ -86,8 +85,7 @@ class AutomationTest extends TestCase
     {
         $response = $this->get(route('automations.create'));
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
+        $this->assertRedirectToLogin($response);
     }
 
     /** @test */
@@ -126,8 +124,7 @@ class AutomationTest extends TestCase
 
         $response = $this->post(route('automations.store'), $automation->toArray());
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
+        $this->assertRedirectToLogin($response);
     }
 
     /** @test */
@@ -175,8 +172,7 @@ class AutomationTest extends TestCase
 
         $response = $this->get(route('automations.show', ['id' => $automation->id]));
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
+        $this->assertRedirectToLogin($response);
     }
 
     /** @test */
