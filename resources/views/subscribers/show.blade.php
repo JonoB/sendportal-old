@@ -12,17 +12,13 @@
 
             <ul>
                 @foreach ($subscriber->segments as $segment)
-                    <li><a href="{{ route('segments.edit', $segment->id) }}">{{ $segment->name }}</a></li>
-                @endforeach
-            </ul>
-        </div>
-
-        <div class="col-md-6">
-            <h4>{{ $subscriber->tags()->count() }} Tags</h4>
-
-            <ul>
-                @foreach ($subscriber->tags as $tag)
-                    <li>{{ $tag->name }}</li>
+                    <li>
+                        @if($segment->pivot->unsubscribed_at)
+                            <del><a href="{{ route('segments.edit', $segment->id) }}">{{ $segment->name }}</a></del>
+                        @else
+                            <a href="{{ route('segments.edit', $segment->id) }}">{{ $segment->name }}</a>
+                        @endif
+                    </li>
                 @endforeach
             </ul>
         </div>
