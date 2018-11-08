@@ -39,7 +39,7 @@
                         </td>
                         <td>
                             @if($email->content == null)
-                                <a href="{{ route('emails.design', ['id' => $email->id]) }}">
+                                <a href="#">
                                     Edit Content
                                 </a>
                             @endif
