@@ -10,41 +10,53 @@ Auth::routes();
 Route::middleware(['auth'])->group(function ()
 {
     Route::get('/logout', ['as' => 'dashboard', 'uses' => 'Auth\LoginController@logout']);
+
     Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
+
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
+    // Automations
     Route::resource('automations', 'AutomationsController');
     Route::resource('automations.emails', 'AutomationEmailsController')->except([
         'index',
         'show',
     ]);
+    Route::get('automations/{automation}/emails/{email}/content', ['as' => 'automations.emails.content.edit', 'uses' => 'AutomationEmailContentController@edit']);
     Route::get('automations/{$id}/confirm', ['as' => 'automations.confirm', 'uses' => 'AutomationsController@confirm']);
 
-    Route::get('automations/{automation}/emails/{email}/content', ['as' => 'automations.emails.content.edit', 'uses' => 'AutomationEmailContentController@edit']);
-
-
+    // Subscribers
     Route::get('subscribers/export', ['as' => 'subscribers.export', 'uses' => 'SubscribersController@export']);
     Route::get('subscribers/import', ['as' => 'subscribers.import', 'uses' => 'SubscribersImportController@show']);
     Route::post('subscribers/import', ['as' => 'subscribers.import.store', 'uses' => 'SubscribersImportController@store']);
     Route::resource('subscribers', 'SubscribersController');
 
+    // Segments
     Route::resource('segments', 'SegmentsController');
 
+    // Campaigns
     Route::resource('campaigns', 'CampaignsController');
     Route::resource('campaigns.emails', 'CampaignEmailsController')->except([
         'index',
         'show',
     ]);
-    Route::get('campaigns/{campaign}/emails/{email}/content', ['as' => 'campaigns.emails.content.edit', 'uses' => 'CampaignEmailContentController@edit']);
-    Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
+    Route::get('campaigns/{campaign}/email/content', 'CampaignEmailContentController@edit')
+        ->name('campaigns.emails.content.edit');
+    Route::put('campaigns/{campaign}/email/content', 'CampaignEmailContentController@update')
+        ->name('campaigns.emails.content.update');
 
-    Route::put('campaigns/{id}/send', ['as' => 'campaigns.send', 'uses' => 'CampaignsController@send']);
     Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
 
     Route::get('campaigns/{id}/report', ['as' => 'campaigns.report', 'uses' => 'CampaignReportsController@report']);
     Route::get('campaigns/{id}/recipients', ['as' => 'campaigns.recipients', 'uses' => 'CampaignReportsController@recipients']);
 
-    Route::resource('templates', 'TemplatesController');
+    Route::get('campaigns/{id}/confirm', 'CampaignsController@confirm')
+        ->name('campaigns.confirm');
+    Route::put('campaigns/{id}/send', 'CampaignsController@send')
+        ->name('campaigns.send');
+
+    // Templates
+    Route::resource('templates', 'TemplatesController')
+        ->except(['show']);
 
     Route::get('tracker/opens/{campaignId}/{contactId}', ['as' => 'tracker.opens', 'uses' => 'TrackerController@opens']);
     Route::get('tracker/clicks/{campaignId}/{contactId}/{linkId}', ['as' => 'tracker.clicks', 'uses' => 'TrackerController@clicks']);

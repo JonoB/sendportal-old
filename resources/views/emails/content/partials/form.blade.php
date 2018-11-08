@@ -5,7 +5,8 @@
 
 <div class="row template-editor-container">
     <div class="col-sm-6">
-        {!! Form::textareaField('content') !!}
+        {!! Form::textareaField('content', null, $email->content ?? null) !!}
+        {!! Form::hidden('template_content', $email->template->content) !!}
     </div>
 
     <div class="col-sm-6">
@@ -38,8 +39,10 @@
         function copyEditorToIframe(html) {
             const iframe = document.getElementById('js-template-iframe');
             const iframedoc = iframe.contentDocument || iframe.contentWindow.document;
+            const templateContent = document.querySelector('input[name="template_content"]').value;
 
-            iframedoc.body.innerHTML = html;
+            // NOTE(david): the @{{ content }} is so that blade doesn't interpret it as a variable
+            iframedoc.body.innerHTML = templateContent.replace('@{{ content }}', html);
         }
     </script>
 @endsection

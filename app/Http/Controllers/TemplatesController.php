@@ -2,34 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TemplateRequest;
+use App\Http\Requests\TemplateStoreRequest;
+use App\Http\Requests\TemplateUpdateRequest;
 use App\Interfaces\TemplateRepositoryInterface;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 
 class TemplatesController extends Controller
 {
     /**
      * @var TemplateRepositoryInterface
      */
-    protected $templateRepository;
+    protected $templates;
 
     /**
-     * TemplatesController constructor.
-     *
-     * @param TemplateRepositoryInterface $templateRepository
+     * @param TemplateRepositoryInterface $templates
      */
-    public function __construct(TemplateRepositoryInterface $templateRepository)
+    public function __construct(TemplateRepositoryInterface $templates)
     {
-        $this->templateRepository = $templateRepository;
+        $this->templates = $templates;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
-        $templates = $this->templateRepository->paginate('name');
+        $templates = $this->templates->paginate('name');
 
         return view('templates.index', compact('templates'));
     }
@@ -37,7 +38,7 @@ class TemplatesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -47,36 +48,27 @@ class TemplatesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param TemplateStoreRequest $request
+     *
+     * @return RedirectResponse
      */
-    public function store(TemplateRequest $request)
+    public function store(TemplateStoreRequest $request)
     {
-        $this->templateRepository->store($request->all());
+        $this->templates->store($request->all());
 
         return redirect()->route('templates.index');
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        return view('templates.show');
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param string $id
+     *
+     * @return Response
      */
     public function edit($id)
     {
-        $template = $this->templateRepository->find($id);
+        $template = $this->templates->find($id);
 
         return view('templates.edit', compact('template'));
     }
@@ -84,13 +76,14 @@ class TemplatesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param TemplateUpdateRequest $request
+     * @param string $id
+     *
+     * @return RedirectResponse
      */
-    public function update(TemplateRequest $request, $id)
+    public function update(TemplateUpdateRequest $request, $id)
     {
-        $this->templateRepository->update($id, $request->all());
+        $this->templates->update($id, $request->all());
 
         return redirect()->route('templates.index');
     }
@@ -98,11 +91,25 @@ class TemplatesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param string $id
+     *
+     * @return RedirectResponse
      */
     public function destroy($id)
     {
-        //
+        $template = $this->templates->find((int)$id);
+
+        if ($template->is_in_use)
+        {
+            return redirect()
+                ->back()
+                ->withErrors(['template' => 'Cannot delete a template that has been used.']);
+        }
+
+        $this->templates->destroy($template->id);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Successfully deleted the template.');
     }
 }
