@@ -128,6 +128,145 @@ class CampaignTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect("/campaigns/{$campaign->id}/emails/create");
+    }
 
+    /** @test */
+    function a_campaign_can_have_many_emails()
+    {
+        $automation = factory(Campaign::class)->create();
+
+        $email = [
+            'subject' => 'Test Email 1',
+            'from_email' => 'test1@email.com',
+            'from_name' => 'Test 1',
+        ];
+
+        $automation->email()->create($email);
+
+        foreach ($email as $key => $value)
+        {
+            $this->assertEquals($automation->email->toArray()[$key], $value);
+        }
+    }
+
+    /** @test */
+    function a_user_can_create_an_email_for_a_campaign()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->actingAs($this->user);
+
+        $automation = factory(Campaign::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Email',
+            'template_id' => 1,
+            'from_email' => 'test@email.com',
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $this->post(route('campaigns.emails.store', [$automation->id]), $emailData);
+
+        $this->assertDatabaseHas('emails', $emailData);
+    }
+
+    /** @test */
+    function a_campaign_email_requires_a_subject()
+    {
+        $this->actingAs($this->user);
+
+        $automation = factory(Campaign::class)->create();
+
+        $emailData = [
+            'subject' => null,
+            'template_id' => 1,
+            'from_email' => 'test@email.com',
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $response = $this->post(route('campaigns.emails.store', [$automation->id]), $emailData);
+
+        $response->assertSessionHasErrors('subject');
+        $this->assertDatabaseMissing('emails', $emailData);
+    }
+
+    /** @test */
+    function a_campaign_email_requires_a_template_id()
+    {
+        $this->actingAs($this->user);
+
+        $automation = factory(Campaign::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Subject',
+            'template_id' => null,
+            'from_email' => 'test@email.com',
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $response = $this->post(route('campaigns.emails.store', [$automation->id]), $emailData);
+
+        $response->assertSessionHasErrors('template_id');
+        $this->assertDatabaseMissing('emails', $emailData);
+    }
+
+    /** @test */
+    function a_campaign_email_requires_a_from_email()
+    {
+        $this->actingAs($this->user);
+
+        $automation = factory(Campaign::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Subject',
+            'template_id' => 1,
+            'from_email' => null,
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $response = $this->post(route('campaigns.emails.store', [$automation->id]), $emailData);
+
+        $response->assertSessionHasErrors('from_email');
+        $this->assertDatabaseMissing('emails', $emailData);
+    }
+
+    /** @test */
+    function a_campaign_email_from_email_must_be_an_email()
+    {
+        $this->actingAs($this->user);
+
+        $automation = factory(Campaign::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Subject',
+            'template_id' => 1,
+            'from_email' => 'what did you call me',
+            'from_name' => 'Seymour Greentests',
+        ];
+
+        $response = $this->post(route('campaigns.emails.store', [$automation->id]), $emailData);
+
+        $response->assertSessionHasErrors('from_email');
+        $this->assertDatabaseMissing('emails', $emailData);
+    }
+
+    /** @test */
+    function a_campaign_email_requires_a_from_name()
+    {
+        $this->actingAs($this->user);
+
+        $automation = factory(Campaign::class)->create();
+
+        $emailData = [
+            'subject' => 'Test Subject',
+            'template_id' => 1,
+            'from_email' => 'test@email.com',
+            'from_name' => null,
+        ];
+
+        $response = $this->post(route('campaigns.emails.store', [$automation->id]), $emailData);
+
+        $response->assertSessionHasErrors('from_name');
+        $this->assertDatabaseMissing('emails', $emailData);
     }
 }
