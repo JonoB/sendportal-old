@@ -5,7 +5,7 @@
 
 <div class="row template-editor-container">
     <div class="col-sm-6">
-        {!! Form::textareaField('content') !!}
+        {!! Form::textareaField('content', null, $email->content ?? null) !!}
         {!! Form::hidden('template_content', $email->template->content) !!}
     </div>
 

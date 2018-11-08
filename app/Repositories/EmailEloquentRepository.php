@@ -39,21 +39,36 @@ class EmailEloquentRepository extends BaseEloquentRepository implements EmailRep
     }
 
     /**
-     * Find an email ensuring it is associated with the given campaign
+     * Find the email associated with the given campaign
      *
      * @param int $campaignId
-     * @param int $emailId
      * @param array $relations
      *
      * @return Email
      */
-    public function findCampaignEmail(int $campaignId, int $emailId, array $relations = []): Email
+    public function findCampaignEmail(int $campaignId, array $relations = []): Email
     {
         return $this->getQueryBuilder()
             ->where('mailable_id', $campaignId)
             ->where('mailable_type', Campaign::class)
-            ->where('id', $emailId)
             ->with($relations)
             ->firstOrFail();
+    }
+
+    /**
+     * Update a campaign's email
+     *
+     * @param int $campaignId
+     * @param array $data
+     *
+     * @return Email
+     */
+    public function updateCampaignEmail(int $campaignId, array $data): Email
+    {
+        $email = $this->findCampaignEmail($campaignId);
+
+        $email->update($data);
+
+        return $email;
     }
 }

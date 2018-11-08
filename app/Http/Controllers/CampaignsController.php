@@ -114,7 +114,7 @@ class CampaignsController extends Controller
      */
     public function show($id)
     {
-        //
+        dd('TODO(david): implement the show view');
     }
 
     /**

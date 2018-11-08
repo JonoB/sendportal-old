@@ -54,11 +54,9 @@
                             <td>{{ number_format($campaign->email->open_ratio * 100, 1) . '%' }}</td>
                             <td>{{ number_format($campaign->email->click_ratio * 100, 1) . '%' }}</td>
                             <td>
-                                @if($campaign->email->content === null)
-                                    <a href="{{ route('campaigns.emails.content.edit', [$campaign->id, $campaign->email->id]) }}">
-                                        Edit Content
-                                    </a>
-                                @endif
+                                <a href="{{ route('campaigns.emails.content.edit', $campaign->id) }}">
+                                    Edit Content
+                                </a>
                             </td>
                         @else
                             <td>

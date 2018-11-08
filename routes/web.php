@@ -39,9 +39,9 @@ Route::middleware(['auth'])->group(function ()
         'index',
         'show',
     ]);
-    Route::get('campaigns/{campaign}/emails/{email}/content', 'CampaignEmailContentController@edit')
+    Route::get('campaigns/{campaign}/email/content', 'CampaignEmailContentController@edit')
         ->name('campaigns.emails.content.edit');
-    Route::put('campaigns/{campaign}/emails/{email}/content', 'CampaignEmailContentController@update')
+    Route::put('campaigns/{campaign}/email/content', 'CampaignEmailContentController@update')
         ->name('campaigns.emails.content.update');
 
     Route::put('campaigns/{id}/send', ['as' => 'campaigns.send', 'uses' => 'CampaignsController@send']);

@@ -30,9 +30,9 @@ class CampaignEmailContentController extends Controller
      *
      * @return View
      */
-    public function edit($campaignId, $emailId)
+    public function edit($campaignId)
     {
-        $email = $this->emails->findCampaignEmail((int)$campaignId, (int)$emailId, ['mailable', 'template']);
+        $email = $this->emails->findCampaignEmail((int)$campaignId, ['mailable', 'template']);
 
         return view('campaigns.emails.content.edit', compact('email'));
     }
@@ -46,11 +46,11 @@ class CampaignEmailContentController extends Controller
      *
      * @return RedirectResponse
      */
-    public function update(CampaignEmailContentUpdateRequest $request, $campaignId, $emailId)
+    public function update(CampaignEmailContentUpdateRequest $request, $campaignId)
     {
         $input = $request->validated();
 
-        $this->emails->update((int)$emailId, $input);
+        $this->emails->updateCampaignEmail((int)$campaignId, $input);
 
         return redirect()
             ->route('campaigns.show', $campaignId)
