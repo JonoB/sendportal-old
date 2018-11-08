@@ -6,6 +6,7 @@ class Campaign extends BaseModel
 {
     protected $fillable = [
         'name',
+        'config_id',
         'status_id',
         'scheduled_at'
     ];

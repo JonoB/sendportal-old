@@ -6,7 +6,7 @@
 
 @section('content')
 
-	@if( ! $templatesAvailable || ! $providersAvailable)
+	@if( ! $templatesAvailable || $providers->count() === 0)
         @if( ! $templatesAvailable)
             <div class="callout callout-danger">
                 <h4>You haven't created any templates!</h4>
@@ -14,7 +14,7 @@
                 </p>
             </div>
         @endif
-        @if( ! $providersAvailable)
+        @if($providers->count() === 0)
             <div class="callout callout-danger">
                 <h4>You haven't added any providers!</h4>
                 <p>Before you can create a campaign, you must first <a href="{{ route('config.create') }}">add a provider</a>.

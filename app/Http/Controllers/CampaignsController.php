@@ -74,6 +74,7 @@ class CampaignsController extends Controller
      */
     protected $campaignFields = [
         'name',
+        'config_id',
         'status_id',
         'scheduled_at',
     ];
@@ -98,9 +99,9 @@ class CampaignsController extends Controller
     public function create()
     {
         $templatesAvailable = $this->templateRepo->all()->count();
-        $providersAvailable = $this->configRepo->all()->count();
+        $providers = $this->configRepo->all();
 
-        return view('campaigns.create', compact('templatesAvailable', 'providersAvailable'));
+        return view('campaigns.create', compact('templatesAvailable', 'providers'));
     }
 
     /**
