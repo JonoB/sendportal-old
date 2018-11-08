@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Interfaces\EmailWebhookServiceInterface;
+use App\Models\CampaignLink;
 use App\Models\UnsubscribeEventType;
 use Carbon\Carbon;
 
@@ -25,17 +26,12 @@ class EmailWebhookService implements EmailWebhookServiceInterface
             return;
         }
 
-        $identifier = md5($campaignId . '_' . $link);
-        $query = 'INSERT INTO campaign_links (identifier, link, campaign_id, click_count, created_at, updated_at) VALUES (?, ?, ?, 1, ?, ?) ';
-        $query.= 'ON DUPLICATE KEY UPDATE click_count=click_count+1, updated_at = ?;';
-
-        \DB::insert($query, [
-            $identifier,
-            $link,
-            $campaignId,
-            now(),
-            now(),
-            now()
+        CampaignLink::updateOrCreate([
+            'identifier' => md5($campaignId . '_' . $link),
+        ], [
+            'link' => $link,
+            'campaign_id' => $campaignId,
+            'click_count' => \DB::raw('click_count+1')
         ]);
     }
 
