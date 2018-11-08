@@ -161,10 +161,23 @@ class CampaignDispatchCommand extends Command
     {
         $this->line("- Handling Campaign Segment ID: {$segment->id} ({$segment->name})");
 
-        $subscribers = $this->getActiveSegmentSubscribers($segment);
+        $segment->subscribers()->whereNull('unsubscribed_at')->chunkById(1000,  function($subscribers) use ($campaign) {
 
-        $this->line('- Number of subscribers in this segment: ' . \count($subscribers));
+            $this->line('- Number of subscribers in this segment: ' . \count($subscribers));
 
+            $this->handleSegmentSubscribers($campaign, $subscribers);
+
+        });
+    }
+
+    /**
+     * Handle subscribers to a segment
+     *
+     * @param Campaign $campaign
+     * @param $subscribers
+     */
+    protected function handleSegmentSubscribers(Campaign $campaign, $subscribers)
+    {
         foreach ($subscribers as $subscriber)
         {
             if ( ! $this->canSendToSubscriber($campaign->email->id, $subscriber->id))
@@ -174,10 +187,21 @@ class CampaignDispatchCommand extends Command
                 continue;
             }
 
-            $this->info("-- Handling Subscriber ID: {$subscriber->id} ({$subscriber->email})");
-
-            $this->dispatch($campaign, $subscriber, $this->campaignContentService->getMergedContent($subscriber));
+            $this->handleSubscriber($campaign, $subscriber);
         }
+    }
+
+    /**
+     * Handle an individual subscriber
+     *
+     * @param Campaign $campaign
+     * @param Subscriber $subscriber
+     */
+    protected function handleSubscriber(Campaign $campaign, Subscriber $subscriber)
+    {
+        $this->info("-- Handling Subscriber ID: {$subscriber->id} ({$subscriber->email})");
+
+        $this->dispatch($campaign, $subscriber, $this->campaignContentService->getMergedContent($subscriber));
     }
 
     /**
@@ -237,20 +261,6 @@ class CampaignDispatchCommand extends Command
     protected function getQueuedCampaigns(): EloquentCollection
     {
         return $this->campaignRepo->queuedCampaigns();
-    }
-
-    /**
-     * Load active subscribers for a single segment
-     *
-     * @todo this needs to be improved so that we chunk items
-     *
-     * @param Segment $segment
-     *
-     * @return Collection
-     */
-    protected function getActiveSegmentSubscribers(Segment $segment): Collection
-    {
-        return $segment->subscribers()->whereNull('unsubscribed_at')->get();
     }
 
     /**
