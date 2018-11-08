@@ -1,4 +1,6 @@
-@extends('common.template')
+@extends('auth.template')
+
+@section('title', 'Login')
 
 @section('content')
     <div class="container min-h-screen">
@@ -51,7 +53,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row mb-0 text-center login-row">
+                            <div class="form-group row text-center login-row">
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Login') }}
                                 </button>
@@ -60,6 +62,11 @@
                                     {{ __('Forgot Your Password?') }}
                                 </a>
                             </div>
+
+                            <div class="form-group row mb-0 text-center">
+                                <a href="{{ route('register') }}">Don't have an account? Register now</a>
+                            </div>
+
                         </form>
                     </div>
                 </div>
