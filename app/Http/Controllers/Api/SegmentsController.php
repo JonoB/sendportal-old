@@ -8,6 +8,7 @@ use App\Http\Requests\Api\SegmentUpdateRequest;
 use App\Http\Resources\Segment;
 use App\Http\Resources\Segment as SegmentResource;
 use App\Interfaces\SegmentRepositoryInterface;
+use App\Services\Segments\ApiSegmentService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
@@ -19,13 +20,23 @@ class SegmentsController extends Controller
     protected $segments;
 
     /**
+     * @var ApiSegmentService
+     */
+    protected $apiService;
+
+    /**
      * SegmentsController constructor.
      *
      * @param SegmentRepositoryInterface $segments
+     * @param ApiSegmentService $apiService
      */
-    public function __construct(SegmentRepositoryInterface $segments)
+    public function __construct(
+        SegmentRepositoryInterface $segments,
+        ApiSegmentService $apiService
+    )
     {
         $this->segments = $segments;
+        $this->apiService = $apiService;
     }
 
     /**
@@ -49,7 +60,11 @@ class SegmentsController extends Controller
     {
         $input = $request->validated();
 
-        return new SegmentResource($this->segments->store($input));
+        $segment = $this->apiService->store($input);
+
+        $segment->load('subscribers');
+
+        return new SegmentResource($segment);
     }
 
     /**
@@ -61,7 +76,7 @@ class SegmentsController extends Controller
      */
     public function show($id)
     {
-        return new SegmentResource($this->segments->find((int)$id));
+        return new SegmentResource($this->segments->find($id));
     }
 
     /**
@@ -76,7 +91,7 @@ class SegmentsController extends Controller
     {
         $input = $request->validated();
 
-        return new SegmentResource($this->segments->update((int)$id, $input));
+        return new SegmentResource($this->segments->update($id, $input));
     }
 
     /**
@@ -88,7 +103,7 @@ class SegmentsController extends Controller
      */
     public function destroy($id)
     {
-        $this->segments->destroy((int)$id);
+        $this->segments->destroy($id);
 
         return response(null, 204);
     }

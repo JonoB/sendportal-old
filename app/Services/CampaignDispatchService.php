@@ -2,110 +2,64 @@
 
 namespace App\Services;
 
-use App\Interfaces\ConfigRepositoryInterface;
+use App\Factories\MailAdapterFactory;
 use App\Interfaces\CampaignDispatchInterface;
-use Aws\Ses\SesClient;
-use App\Models\ConfigType;
+use Illuminate\Support\Facades\Log;
 
 class CampaignDispatchService implements CampaignDispatchInterface
 {
+    /**
+     * @var MailAdapterFactory
+     */
+    protected $mailAdapter;
 
     /**
-     * @var ConfigRepositoryInterface
+     * @param MailAdapterFactory $mailAdapter
      */
-    protected $configRepo;
-
-    /**
-     * @var SesClient
-     */
-    protected $sesClient;
-
-    /**
-     * CampaignDispatchService constructor.
-     *
-     * @param ConfigRepositoryInterface $configRepo
-     */
-    public function __construct(
-        ConfigRepositoryInterface $configRepo
-    )
+    public function __construct(MailAdapterFactory $mailAdapter)
     {
-        $this->configRepo = $configRepo;
+        $this->mailAdapter = $mailAdapter;
     }
 
     /**
      * Send the campaign
      *
+     * @param string $mailService
      * @param string $fromEmail
      * @param string $toEmail
      * @param string $subject
      * @param string $content
-     * @return mixed
+     *
+     * @return string
      */
-    public function send($fromEmail, $toEmail, $subject, $content)
+    public function send($mailService, $fromEmail, $toEmail, $subject, $content): string
     {
         try
         {
-            return $this->dispatch($fromEmail, $toEmail, $subject, $content);
+            return $this->dispatch($mailService, $fromEmail, $toEmail, $subject, $content);
         }
         catch (\Exception $e)
         {
-            \Log::error(json_encode($e->getMessage()));
+            Log::error(json_encode($e->getMessage()));
 
             return false;
         }
     }
 
     /**
-     * Dispatch the campaign via ses
+     * Dispatch the campaign via the given mail service
      *
+     * @param string $mailService
      * @param string $fromEmail
      * @param string $toEmail
      * @param string $subject
      * @param string $content
-     * @return \Aws\Result
-     */
-    protected function dispatch($fromEmail, $toEmail, $subject, $content)
-    {
-        return $this->createSesClient()->sendEmail([
-            'Source' => $fromEmail,
-
-            'Destination' => [
-                'ToAddresses' => [$toEmail],
-            ],
-
-            'Message' => [
-                'Subject' => [
-                    'Data' => $subject,
-                ],
-                'Body' => array(
-                    'Html' => [
-                        'Data' => $content,
-                    ],
-                ),
-            ],
-        ]);
-    }
-
-    /**
-     * Create a new SesClient
      *
-     * @return SesClient
+     * @return string
      */
-    protected function createSesClient()
+    protected function dispatch($mailService, $fromEmail, $toEmail, $subject, $content): string
     {
-        if ($this->sesClient)
-        {
-            return $this->sesClient;
-        }
-
-        $settings = $this->configRepo->findSettings(ConfigType::AWS_SNS);
-
-        return app()->make('aws')->createClient('ses', [
-            'region' => array_get($settings, 'region'),
-            'credentials' => [
-                'key' => array_get($settings, 'key'),
-                'secret' => array_get($settings, 'secret'),
-            ]
-        ]);
+        return $this->mailAdapter->adapter($mailService)
+            ->send($fromEmail, $toEmail, $subject, $content);
     }
 }
