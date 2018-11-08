@@ -1,12 +1,12 @@
 @extends('common.template')
 
 @section('heading')
-    Configurations
+    Providers
 @endsection
 
 @section('content')
     <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('config.create') }}">Create Configuration</a>
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('config.create') }}">Add Provider</a>
         <div class="clearfix"></div>
     </div>
 

@@ -37,7 +37,7 @@
             </li>
             <li class="{{ request()->is('config*') ? 'active' : '' }}">
                 <a href="{{ route('config.index') }}">
-                    <i class="fa fa-cog"></i> <span>Configurations</span>
+                    <i class="fa fa-envelope"></i> <span>Providers</span>
                 </a>
             </li>
         </ul>
