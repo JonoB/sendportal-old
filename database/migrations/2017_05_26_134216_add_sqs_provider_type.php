@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\Models\ConfigType;
+use App\Models\ProviderType;
 
-class AddSqsConfigType extends Migration
+class AddSqsProviderType extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +14,10 @@ class AddSqsConfigType extends Migration
      */
     public function up()
     {
-        ConfigType::unguard();
+        ProviderType::unguard();
 
-        ConfigType::create([
-            'id' => ConfigType::AWS_SNS,
+        ProviderType::create([
+            'id' => ProviderType::AWS_SNS,
             'name' => 'AWS SQS',
             'fields' => [
                 'AWS Access Key' => 'key',

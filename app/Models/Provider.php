@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Config extends BaseModel
+class Provider extends BaseModel
 {
 
     /**
@@ -15,14 +15,14 @@ class Config extends BaseModel
     ];
 
     /**
-     * ConfigType relationship
+     * ProviderType relationship
      *
      * @param null
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function type()
     {
-        return $this->belongsTo(ConfigType::class, 'type_id');
+        return $this->belongsTo(ProviderType::class, 'type_id');
     }
 
     /**
