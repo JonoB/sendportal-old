@@ -29,7 +29,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($campaigns as $campaign)
+                @forelse($campaigns as $campaign)
                     <tr>
                         <td>
                             @if ( ! isset($campaign->email) || $campaign->status_id == \App\Models\CampaignStatus::STATUS_DRAFT)
@@ -75,7 +75,13 @@
                             </td>
                         @endif
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="100%">
+                            <h5 class="text-center text-muted">There are no Campaigns</h5>
+                        </td>
+                    </tr>
+                @endforelse
                 </tbody>
             </table>
         </div>

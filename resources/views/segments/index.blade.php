@@ -25,7 +25,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($segments as $segment)
+                    @forelse($segments as $segment)
                         <tr>
                             <td>
                                 <a href="{{ route('segments.edit', $segment->id) }}">
@@ -35,7 +35,13 @@
                             <td>{{ $segment->subscribers_count }}</td>
                             <td><a href="{{ route('segments.edit', $segment->id) }}">Edit</a></td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="100%">
+                                <h5 class="text-center text-muted">There are no Segments</h5>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
