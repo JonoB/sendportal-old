@@ -175,13 +175,21 @@ body {
     margin-left: 0 !important;
 }
 
-.callout.callout-danger {
+.callout.callout-danger, .alert.alert-danger {
     background-color: #f5ddda !important;
     color: #c23321 !important;
 }
 
 .callout.callout-danger a {
     color: #c23321 !important;
+}
+
+.form-group.has-error label {
+    color: #c23321;
+}
+
+.form-group.has-error .form-control, .form-group.has-error .input-group-addon {
+    border-color: #c23321;
 }
 
 .main-header .logo {
