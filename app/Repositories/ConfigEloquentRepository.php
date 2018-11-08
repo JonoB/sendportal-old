@@ -44,17 +44,4 @@ class ConfigEloquentRepository extends BaseEloquentRepository implements ConfigR
 
         return [];
     }
-
-    /**
-     * @param $configTypeId
-     * @param array $newSettings
-     * @return mixed
-     */
-    public function updateSettings($configTypeId, array $newSettings)
-    {
-        return Config::updateOrCreate(
-            ['type_id' => $configTypeId],
-            ['settings' => $newSettings]
-        );
-    }
 }

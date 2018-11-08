@@ -59,6 +59,9 @@ Route::middleware(['auth'])->group(function ()
     Route::get('subscribe/{subscriberId}', ['as' => 'subscriptions.subscribe', 'uses' => 'SubscriptionsController@subscribe']);
 
     Route::get('config', ['as' => 'config.index', 'uses' => 'ConfigController@index']);
+    Route::get('config/create', ['as' => 'config.create', 'uses' => 'ConfigController@create']);
+    Route::get('config/type/{id}', ['as' => 'config.ajax', 'uses' => 'ConfigController@configTypeAjax']);
+    Route::post('config', ['as' => 'config.store', 'uses' => 'ConfigController@store']);
     Route::get('config/{id}/edit', ['as' => 'config.edit', 'uses' => 'ConfigController@edit']);
     Route::post('config/{id}', ['as' => 'config.update', 'uses' => 'ConfigController@update']);
 });

@@ -1,10 +1,14 @@
 @extends('common.template')
 
 @section('heading')
-    Configurations
+    Providers
 @endsection
 
 @section('content')
+    <div class="actions-container">
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('config.create') }}">Add Provider</a>
+        <div class="clearfix"></div>
+    </div>
 
     <div class="box box-primary">
         <div class="box-body no-padding">
@@ -12,14 +16,16 @@
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Provider</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($configurations as $configType)
+                    @foreach($configurations as $configuration)
                         <tr>
-                            <td>{{ $configType->name }}</td>
-                            <td><a href="{{ route('config.edit', $configType->id) }}">Edit</a></td>
+                            <td>{{ $configuration->name }}</td>
+                            <td>{{ $configuration->type->name }}</td>
+                            <td><a href="{{ route('config.edit', $configuration->id) }}">Edit</a></td>
                         </tr>
                     @endforeach
                 </tbody>
