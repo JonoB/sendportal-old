@@ -4,12 +4,31 @@
     Subscribers
 @endsection
 
-@section('content')
-    <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('subscribers.create') }}">Create Subscriber</a>
-        <div class="clearfix"></div>
-    </div>
+@section('actions')
+    <a class="btn btn-primary btn-sm btn-flat" href="{{ route('subscribers.create') }}">
+        <i class="fa fa-plus"></i> Add Subscriber
+    </a>
 
+    <div class="btn-group">
+        <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+            <i class="fa fa-bars"></i>
+        </button>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="{{ route('subscribers.import') }}">
+                    <i class="fa fa-upload"></i> Import
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('subscribers.export') }}">
+                    <i class="fa fa-download"></i> Export
+                </a>
+            </li>
+        </ul>
+    </div>
+@endsection
+
+@section('content')
     <div class="box box-primary">
         <div class="box-body no-padding">
             <table class="table table-bordered table-responsive">
@@ -22,7 +41,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($subscribers as $subscriber)
+                    @forelse($subscribers as $subscriber)
                         <tr>
                             <td>
                                 <a href="{{ route('subscribers.show', $subscriber->id) }}">
@@ -37,7 +56,13 @@
                             </td>
                             <td><a href="{{ route('subscribers.edit', $subscriber->id) }}">Edit</a></td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="100%">
+                                <h5 class="text-center text-muted">There are no Subscribers</h5>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
 

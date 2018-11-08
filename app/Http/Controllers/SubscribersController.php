@@ -7,6 +7,7 @@ use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class SubscribersController extends Controller
 {
@@ -37,6 +38,23 @@ class SubscribersController extends Controller
         $subscribers = $this->subscriberRepository->paginate('first_name');
 
         return view('subscribers.index', compact('subscribers'));
+    }
+
+    /**
+     * Export Subscribers
+     *
+     * @return string|\Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function export()
+    {
+        $subscribers = $this->subscriberRepository->export(['id', 'hash', 'email', 'first_name', 'last_name', 'created_at']);
+
+        if ( ! $subscribers->count())
+        {
+            return redirect()->route('subscribers.index')->withErrors('There are no subscribers to export');
+        }
+
+        return (new FastExcel($subscribers))->download(sprintf('subscribers-%s.csv', date('Y-m-d-H-m-s')));
     }
 
     /**
