@@ -54,7 +54,7 @@
                         @if(isset($campaign->email))
                             <td>{{ $campaign->email->template->name }}</td>
                             @if ($providerCount > 1)
-                                <th>{{ $campaign->provider->name }}</th>
+                                <td>{{ $campaign->provider->name }}</td>
                             @endif
                             <td>{{ formatValue($campaign->email->sent_count) }}</td>
                             <td>{{ number_format($campaign->email->open_ratio * 100, 1) . '%' }}</td>
@@ -71,7 +71,7 @@
                                 <span class="label label-danger">No Email</span>
                             </td>
                             @if ($providerCount > 1)
-                                <th>{{  $campaign->provider->name }}</th>
+                                <td>{{  $campaign->provider->name }}</td>
                             @endif
                             <td>N/A</td>
                             <td>N/A</td>
