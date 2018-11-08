@@ -46,7 +46,7 @@ class SubscribersController extends Controller
      */
     public function export()
     {
-        $subscribers = $this->subscriberRepository->export(['id', 'email', 'first_name', 'last_name', 'created_at']);
+        $subscribers = $this->subscriberRepository->export(['id', 'hash', 'email', 'first_name', 'last_name', 'created_at']);
 
         if ( ! $subscribers->count())
         {
