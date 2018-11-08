@@ -101,7 +101,7 @@ class MailAdapterFactory
      *
      * @return MailAdapterInterface
      */
-    public function createSesAdapter()
+    public function createAwssqsAdapter()
     {
         $adapter = new SesMailAdapter();
 

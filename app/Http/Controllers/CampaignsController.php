@@ -6,6 +6,7 @@ use App\Http\Requests\CampaignStoreRequest;
 use App\Http\Requests\CampaignUpdateRequest;
 use App\Interfaces\CampaignRepositoryInterface;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
+use App\Interfaces\ProviderRepositoryInterface;
 use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Models\CampaignStatus;
@@ -37,22 +38,30 @@ class CampaignsController extends Controller
     protected $segments;
 
     /**
+     * @var ProviderRepositoryInterface
+     */
+    private $providers;
+
+    /**
      * @param CampaignRepositoryInterface $campaigns
      * @param CampaignSubscriberRepositoryInterface $campaignSubscribers
      * @param TemplateRepositoryInterface $templates
      * @param SegmentRepositoryInterface $segments
+     * @param ProviderRepositoryInterface $providers
      */
     public function __construct(
         CampaignRepositoryInterface $campaigns,
         CampaignSubscriberRepositoryInterface $campaignSubscribers,
         TemplateRepositoryInterface $templates,
-        SegmentRepositoryInterface $segments
+        SegmentRepositoryInterface $segments,
+        ProviderRepositoryInterface $providers
     )
     {
         $this->campaigns = $campaigns;
         $this->campaignSubscribers = $campaignSubscribers;
         $this->templates = $templates;
         $this->segments = $segments;
+        $this->providers = $providers;
     }
 
     /**
@@ -62,6 +71,7 @@ class CampaignsController extends Controller
      */
     protected $campaignFields = [
         'name',
+        'provider_id',
         'status_id',
         'scheduled_at',
     ];
@@ -74,8 +84,9 @@ class CampaignsController extends Controller
     public function index()
     {
         $campaigns = $this->campaigns->paginate('created_atDesc', ['status', 'email']);
+        $providerCount = $this->providers->getCount();
 
-        return view('campaigns.index', compact('campaigns'));
+        return view('campaigns.index', compact('campaigns', 'providerCount'));
     }
 
     /**
@@ -86,8 +97,9 @@ class CampaignsController extends Controller
     public function create()
     {
         $templatesAvailable = $this->templates->all()->count();
+        $providers = $this->providers->all();
 
-        return view('campaigns.create', compact('templatesAvailable'));
+        return view('campaigns.create', compact('templatesAvailable', 'providers'));
     }
 
     /**
@@ -129,8 +141,9 @@ class CampaignsController extends Controller
     public function edit($id)
     {
         $campaign = $this->campaigns->find($id);
+        $providers = $this->providers->all();
 
-        return view('campaigns.edit', compact('campaign'));
+        return view('campaigns.edit', compact('campaign', 'providers'));
     }
 
     /**
@@ -188,7 +201,7 @@ class CampaignsController extends Controller
         }
 
         $template = $this->templates->find($campaign->email->template_id);
-        $segments = $this->segments->all('name', ['subscriberCount']);
+        $segments = $this->segments->all('name');
 
         return view('campaigns.confirm', compact('campaign', 'template', 'segments'));
     }
