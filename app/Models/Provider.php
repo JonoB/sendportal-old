@@ -2,16 +2,28 @@
 
 namespace App\Models;
 
-class Config extends BaseModel
+class Provider extends BaseModel
 {
 
     /**
      * @var array
      */
     protected $fillable = [
+        'name',
         'type_id',
         'settings',
     ];
+
+    /**
+     * ProviderType relationship
+     *
+     * @param null
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function type()
+    {
+        return $this->belongsTo(ProviderType::class, 'type_id');
+    }
 
     /**
      * @param array $data

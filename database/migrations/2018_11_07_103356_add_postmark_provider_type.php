@@ -1,11 +1,11 @@
 <?php
 
+use App\Models\ProviderType;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\Models\ConfigType;
 
-class AddSqsConfigType extends Migration
+class AddPostmarkProviderType extends Migration
 {
     /**
      * Run the migrations.
@@ -14,15 +14,13 @@ class AddSqsConfigType extends Migration
      */
     public function up()
     {
-        ConfigType::unguard();
+        ProviderType::unguard();
 
-        ConfigType::create([
-            'id' => ConfigType::AWS_SNS,
-            'name' => 'AWS SQS',
+        ProviderType::create([
+            'id' => ProviderType::POSTMARK,
+            'name' => 'Postmark',
             'fields' => [
-                'AWS access key' => 'key',
-                'AWS secret access key' => 'secret',
-                'AWS Region' => 'region',
+                'API Key' => 'key',
             ]
         ]);
     }

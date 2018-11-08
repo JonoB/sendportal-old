@@ -17,7 +17,6 @@ class CreateSegmentSubscriberTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('segment_id');
             $table->unsignedInteger('subscriber_id');
-            $table->timestamp('unsubscribed_at')->nullable()->index();
             $table->timestamps();
 
             $table->foreign('segment_id')->references('id')->on('segments');

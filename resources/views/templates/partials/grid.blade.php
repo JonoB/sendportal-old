@@ -6,6 +6,14 @@
             </div>
             <div class="pull-right">
                 <a href="{{ route('templates.edit', $template->id) }}">Edit</a>
+
+                @if ( ! $template->is_in_use)
+                    <form action="{{ route('templates.destroy', $template->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit">Delete</button>
+                    </form>
+                @endif
             </div>
             <div class="clearfix"></div>
 

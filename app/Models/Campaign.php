@@ -6,6 +6,8 @@ class Campaign extends BaseModel
 {
     protected $fillable = [
         'name',
+        'status_id',
+        'scheduled_at'
     ];
 
     // we can't use boolean fields on this model because

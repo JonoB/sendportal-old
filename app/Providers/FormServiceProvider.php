@@ -37,6 +37,13 @@ class FormServiceProvider extends ServiceProvider
             return Form::fieldWrapper($name, $label, $element);
         });
 
+        Form::macro('fileField', function ($name, $label = null, $attributes = array())
+        {
+            $element = Form::file($name, Form::fieldAttributes($name, $attributes));
+
+            return Form::fieldWrapper($name, $label, $element);
+        });
+
         Form::macro('selectField', function ($name, $label = null, $options, $value = null, $attributes = array())
         {
             $element = Form::select($name, $options, $value, Form::fieldAttributes($name, $attributes));

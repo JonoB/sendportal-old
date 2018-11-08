@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Interfaces\AutomationRepositoryInterface;
+use App\Interfaces\SegmentRepositoryInterface;
 use App\Http\Requests\CampaignRequest;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
@@ -13,19 +15,27 @@ use Illuminate\Http\Request;
 
 class AutomationsController extends Controller
 {
-
+    /**
+     * @var SegmentRepositoryInterface
+     */
+    private $segmentRepository;
 
     /**
-     * CampaignsController constructor.
-     *
-     * @param CampaignRepositoryInterface $campaignRepository
-     * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
-     * @param TemplateRepositoryInterface $templateRepository
+     * @var AutomationRepositoryInterface
      */
-    public function __construct()
-    {
-    }
+    private $automationRepository;
 
+    /**
+     * AutomationsController constructor.
+     *
+     * @param SegmentRepositoryInterface $segmentRepository
+     * @param AutomationRepositoryInterface $automationRepository
+     */
+    public function __construct(SegmentRepositoryInterface $segmentRepository, AutomationRepositoryInterface $automationRepository)
+    {
+        $this->segmentRepository = $segmentRepository;
+        $this->automationRepository = $automationRepository;
+    }
 
     /**
      * Display a listing of the resource.
@@ -34,11 +44,9 @@ class AutomationsController extends Controller
      */
     public function index()
     {
-        dd('todo');
+        $automations = $this->automationRepository->paginate();
 
-        $campaigns = $this->campaignRepo->paginate('created_atDesc', ['status', 'email']);
-
-        return view('campaigns.index', compact('campaigns'));
+        return view('automations.index', compact('automations'));
     }
 
     /**
@@ -48,82 +56,68 @@ class AutomationsController extends Controller
      */
     public function create()
     {
-        dd('todo');
+        $segments = $this->segmentRepository->pluck();
 
-        $templatesAvailable = $this->templateRepo->all()->count();
-
-        return view('campaigns.create', compact('templatesAvailable'));
+        return view('automations.create', compact('segments'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param CampaignRequest $request
+     * @param  \Illuminate\Http\Request $request
      *
-     * @return RedirectResponse
+     * @return int
      */
-    public function store(CampaignRequest $request)
+    public function store(Request $request)
     {
-        dd('todo');
+        $request->validate([
+            'name' => 'required',
+            'segment_id' => 'required'
+        ]);
 
-        $campaign = $this->campaignRepo->store($request->only($this->campaignFields));
-        $campaign->email()->create($request->except($this->campaignFields));
+        $automation = $this->automationRepository->store($request->all());
 
-        return redirect()->route('campaigns.template', $campaign->id);
+        return redirect(route('automations.show', ['id' => $automation->id]));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Edit the specified resource.
      *
-     * @param int $id
+     * @param  int $id
      *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        dd('todo');
+        //
+    }
 
-        $campaign = $this->campaignRepo->with('email')->find($id);
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $automation = $this->automationRepository->find($id, ['emails']);
 
-        if ( ! $campaign->email->status == CampaignStatus::STATUS_DRAFT)
-        {
-            return redirect(route('campaign.index'));
-        }
-
-        return view('campaigns.edit', compact('campaign'));
+        return view('automations.show', compact('automation'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param CampaignRequest $request
-     * @param int $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      *
-     * @return RedirectResponse
+     * @return \Illuminate\Http\Response
      */
-    public function update(CampaignRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        dd('todo');
-
-        $campaign = $this->campaignRepo->find($id);
-
-        if ( ! $campaign->email->status == CampaignStatus::STATUS_DRAFT)
-        {
-            return redirect(route('campaign.index'));
-        }
-
-        $emailUpdateFields = [
-            'subject',
-            'from_email',
-            'from_name',
-        ];
-
-        $this->campaignRepo->update($id, $request->only($this->campaignFields));
-        $campaign->email()->update($request->only($emailUpdateFields));
-
-        return redirect()->route('campaigns.template', $campaign->id);
+        //
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -134,6 +128,6 @@ class AutomationsController extends Controller
      */
     public function destroy($id)
     {
-        dd('todo');
+        //
     }
 }

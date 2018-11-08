@@ -1,5 +1,9 @@
 @extends('common.template')
 
+@section('css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.min.css">
+@stop
+
 @section('heading')
     Edit Segment : {{ $segment->name }}
 @stop
@@ -10,26 +14,32 @@
 
     @include('segments.partials.form')
 
-    @php
-        $existingSubscribers = $segment->subscribers->pluck('id');
-    @endphp
-
-    @foreach($subscribers as $subscriber)
-        @if ($existingSubscribers->contains($subscriber->id))
-            @php
-                $existing = $segment->subscribers->first(function ($existing) use ($subscriber) {
-                    return $existing->id === $subscriber->id;
-                });
-
-                $label = $subscriber->full_name . ($existing->unsubscribed_at ? ' (' . $existing->unsubscribed_at . ')' : '');
-            @endphp
-            {!! Form::checkboxField('subscribers[]',  $label, $subscriber->id) !!}
-        @else
-            {!! Form::checkboxField('subscribers[]', $subscriber->full_name, $subscriber->id) !!}
-        @endif
-    @endforeach
-
     {!! Form::submitButton('Save') !!}
 
     {!! Form::close() !!}
+@stop
+
+@section('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+
+    <script>
+        $('select[name="subscribers[]"]').selectize({
+            items: {!! $segment->subscribers->pluck('id')->toJson() !!},
+            render: {
+                item: function (value, escape) {
+                    var out = '';
+
+                    if (value.disabled) {
+                        out += '<del>' + escape(value.text) + '</del>';
+                    } else {
+                        out += escape(value.text);
+                    }
+
+                    out = '<div class="item" data-value="' + escape(value) + '">' + out + '</div>';
+
+                    return out;
+                }
+            }
+        });
+    </script>
 @stop

@@ -16,10 +16,11 @@
         "mailgun/mailgun-php": "^2.6",
         "php-http/curl-client": "^1.7",
         "ramsey/uuid": "^3.6",
+        "rap2hpoutre/fast-excel": "^0.11.0",
         "sendgrid/sendgrid": "^7.2",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
         "wildbit/postmark-php": "^2.6",
-      "ext-json": "*"
+        "ext-json": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",

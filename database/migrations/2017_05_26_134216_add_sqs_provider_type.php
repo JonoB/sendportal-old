@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\ConfigType;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Models\ProviderType;
 
-class AddMailgunConfigType extends Migration
+class AddSqsProviderType extends Migration
 {
     /**
      * Run the migrations.
@@ -14,14 +14,16 @@ class AddMailgunConfigType extends Migration
      */
     public function up()
     {
-        ConfigType::unguard();
+        ProviderType::unguard();
 
-        ConfigType::create([
-            'id' => ConfigType::MAILGUN,
-            'name' => 'Mailgun',
+        ProviderType::create([
+            'id' => ProviderType::AWS_SNS,
+            'name' => 'AWS SQS',
             'fields' => [
-                'API Key' => 'key',
-                'Domain' => 'domain'
+                'AWS Access Key' => 'key',
+                'AWS Secret Access Key' => 'secret',
+                'AWS Region' => 'region',
+                'Configuration Set Name' => 'configuration_set_name',
             ]
         ]);
     }

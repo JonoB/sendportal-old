@@ -23,8 +23,8 @@ class CampaignReportsController extends Controller
     /**
      * CampaignsController constructor.
      *
-     * @param CampaignRepositoryInterface $campaignRepository
-     * @param TemplateRepositoryInterface $campaignRepository#
+     * @param CampaignRepositoryInterface $campaignRepository #
+     * @param CampaignReportServiceInterface $campaignReportService
      */
     public function __construct(
         CampaignRepositoryInterface $campaignRepository,
@@ -43,7 +43,7 @@ class CampaignReportsController extends Controller
      */
     public function report($id)
     {
-        $campaign = $this->campaignRepo->with('email')->find($id);
+        $campaign = $this->campaignRepo->find($id, ['email']);
 
         if ($campaign->email->status_id == CampaignStatus::STATUS_DRAFT)
         {
@@ -71,7 +71,7 @@ class CampaignReportsController extends Controller
      */
     public function recipients($id)
     {
-        $campaign = $this->campaignRepo->with('email')->find($id);
+        $campaign = $this->campaignRepo->find($id, ['email']);
 
         if ($campaign->email->status_id == CampaignStatus::STATUS_DRAFT)
         {
