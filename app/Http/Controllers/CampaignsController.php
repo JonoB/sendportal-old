@@ -110,11 +110,13 @@ class CampaignsController extends Controller
      *
      * @param string $id
      *
-     * @return void
+     * @return View
      */
     public function show($id)
     {
-        dd('TODO(david): implement the show view');
+        $campaign = $this->campaigns->find((int)$id);
+
+        return view('campaigns.show', compact('campaign'));
     }
 
     /**
@@ -127,16 +129,6 @@ class CampaignsController extends Controller
     public function edit($id)
     {
         $campaign = $this->campaigns->find($id);
-
-        if ( ! isset($campaign->email))
-        {
-            return redirect(route('campaigns.emails.create', $campaign->id));
-        }
-
-        if ($campaign->status_id !== CampaignStatus::STATUS_DRAFT)
-        {
-            return redirect(route('campaign.index'));
-        }
 
         return view('campaigns.edit', compact('campaign'));
     }
@@ -153,21 +145,16 @@ class CampaignsController extends Controller
     {
         $campaign = $this->campaigns->find($id);
 
-        if ( ! $campaign->status_id == CampaignStatus::STATUS_DRAFT)
+        if ($campaign->status_id !== CampaignStatus::STATUS_DRAFT)
         {
-            return redirect(route('campaign.index'));
+            return redirect()
+                ->route('campaign.show', $campaign->id);
         }
 
-        $emailUpdateFields = [
-            'subject',
-            'from_email',
-            'from_name',
-        ];
+        $campaign = $this->campaigns->update($id, $request->only($this->campaignFields));
 
-        $this->campaigns->update($id, $request->only($this->campaignFields));
-        $campaign->email()->update($request->only($emailUpdateFields));
-
-        return redirect()->route('campaigns.index');
+        return redirect()
+            ->route('campaigns.show', $campaign->id);
     }
 
     /**
@@ -201,9 +188,9 @@ class CampaignsController extends Controller
         }
 
         $template = $this->templates->find($campaign->email->template_id);
-        $lists = $this->segments->all('name', ['subscriberCount']);
+        $segments = $this->segments->all('name', ['subscriberCount']);
 
-        return view('campaigns.confirm', compact('campaign', 'template', 'lists'));
+        return view('campaigns.confirm', compact('campaign', 'template', 'segments'));
     }
 
     /**

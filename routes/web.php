@@ -44,14 +44,19 @@ Route::middleware(['auth'])->group(function ()
     Route::put('campaigns/{campaign}/email/content', 'CampaignEmailContentController@update')
         ->name('campaigns.emails.content.update');
 
-    Route::put('campaigns/{id}/send', ['as' => 'campaigns.send', 'uses' => 'CampaignsController@send']);
     Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
 
     Route::get('campaigns/{id}/report', ['as' => 'campaigns.report', 'uses' => 'CampaignReportsController@report']);
     Route::get('campaigns/{id}/recipients', ['as' => 'campaigns.recipients', 'uses' => 'CampaignReportsController@recipients']);
 
+    Route::get('campaigns/{id}/confirm', 'CampaignsController@confirm')
+        ->name('campaigns.confirm');
+    Route::put('campaigns/{id}/send', 'CampaignsController@send')
+        ->name('campaigns.send');
+
     // Templates
-    Route::resource('templates', 'TemplatesController');
+    Route::resource('templates', 'TemplatesController')
+        ->except(['show']);
 
     Route::get('tracker/opens/{campaignId}/{contactId}', ['as' => 'tracker.opens', 'uses' => 'TrackerController@opens']);
     Route::get('tracker/clicks/{campaignId}/{contactId}/{linkId}', ['as' => 'tracker.clicks', 'uses' => 'TrackerController@clicks']);
