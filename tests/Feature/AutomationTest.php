@@ -39,7 +39,7 @@ class AutomationTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_can_view_the_index()
+    function the_index_page_can_be_viewed()
     {
         $this->actingAs($this->user);
         $response = $this->get(route('automations.index'));
@@ -72,7 +72,7 @@ class AutomationTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_can_view_the_create_page()
+    function the_create_page_can_be_viewed()
     {
         $this->withoutExceptionHandling();
         $this->actingAs($this->user);
@@ -108,7 +108,7 @@ class AutomationTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_can_create_an_automation()
+    function an_automation_can_be_created()
     {
         $this->actingAs($this->user);
 
@@ -155,7 +155,7 @@ class AutomationTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_can_view_a_automation()
+    function automations_can_be_viewed()
     {
         $this->withoutExceptionHandling();
         $this->actingAs($this->user);
