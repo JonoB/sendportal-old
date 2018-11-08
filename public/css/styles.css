@@ -48,33 +48,27 @@ body {
 
 /* Authentication Styling **/
 
-.min-h-screen
-{
+.min-h-screen {
     min-height: 100vh;
 }
 
-.d-flex
-{
+.d-flex {
     display: flex;
 }
 
-.d-inline-block
-{
+.d-inline-block {
     display: inline-block;
 }
 
-.items-center
-{
+.items-center {
     align-items: center;
 }
 
-.justify-center
-{
+.justify-center {
     justify-content: center;
 }
 
-.login-body h1
-{
+.login-body h1 {
     margin: 0;
     padding-bottom: 4rem;
     text-align: center;
@@ -82,8 +76,7 @@ body {
     color: #3c8dbc;
 }
 
-.login-container
-{
+.login-container {
     margin: 6rem 0;
     background-color: white;
     padding: 6rem;
@@ -93,9 +86,8 @@ body {
     0 5px 15px 0 rgba(0,0,0,0.08);
 }
 
-.login-row
-{
-    margin-top: 4rem;
+.login-body {
+    width: 100%;
 }
 
 .form-check-label
@@ -105,25 +97,11 @@ body {
     color: #929ca0;
 }
 
-.login-body
-{
-    width: 100%;
-}
-
-.col-form-label
-{
-    padding-left: 0;
-    margin-bottom: 1rem;
-    color: #929ca0;
-}
-
-.mb-0
-{
+.mb-0 {
     margin-bottom: 0 !important;
 }
 
-.form-group
-{
+.form-group {
     margin-bottom: 2rem;
 }
 
@@ -175,13 +153,21 @@ body {
     margin-left: 0 !important;
 }
 
-.callout.callout-danger {
+.callout.callout-danger, .alert.alert-danger {
     background-color: #f5ddda !important;
     color: #c23321 !important;
 }
 
 .callout.callout-danger a {
     color: #c23321 !important;
+}
+
+.form-group.has-error label {
+    color: #c23321;
+}
+
+.form-group.has-error .form-control, .form-group.has-error .input-group-addon {
+    border-color: #c23321;
 }
 
 .main-header .logo {
@@ -211,14 +197,23 @@ body {
     border-top: 2px solid #d2d6de;
 }
 
+.content-header {
+    padding: 0;
+}
+
 .container-wrapper {
     background-color: #ff0000;
 }
 .content-wrapper-inner {
     background-color: #f9f9f9;
-    padding: 12px;
+    padding: 30px;
     margin: 24px;
     border: 1px solid #eae9e9;
     box-shadow: 0 3px 5px rgba(0,0,0,0.1), 0 3px 3px rgba(0,0,0,0.15);
     border-radius: 3px;
+}
+
+.content {
+    padding-left: 0;
+    padding-right: 0;
 }

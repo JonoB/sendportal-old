@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="actions-container">
-        <a class="btn btn-primary btn-flat pull-right" href="{{ route('templates.create') }}">Create Template</a>
+        <a class="btn btn-primary btn-flat pull-right" href="{{ route('templates.create') }}">New Template</a>
         <div class="clearfix"></div>
     </div>
 

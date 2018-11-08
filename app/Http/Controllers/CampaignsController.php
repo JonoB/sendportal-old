@@ -232,7 +232,7 @@ class CampaignsController extends Controller
         $this->campaignRepo->update($id, $request->only($this->campaignFields));
         $campaign->email()->update($request->only($emailUpdateFields));
 
-        return redirect()->route('campaigns.template', $campaign->id);
+        return redirect()->route('campaigns.index');
     }
 
     /**

@@ -13,6 +13,24 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
     protected $modelName = Subscriber::class;
 
     /**
+     * Get all Subscribers eligible for exporting.
+     *
+     * @param  array  $fields
+     * @param  string $orderBy
+     * @return Collection
+     */
+    public function export(array $fields, $orderBy = 'id')
+    {
+        $instance = $this->getQueryBuilder();
+
+        $this->parseOrder($orderBy);
+
+        return $instance
+            ->orderBy($this->getOrderBy(), $this->getOrderDirection())
+            ->get($fields);
+    }
+
+    /**
      * Sync Segments to a Subscriber.
      *
      * @param  Subscriber $subscriber
@@ -41,5 +59,4 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
 
         return $this->instance;
     }
-
 }

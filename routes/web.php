@@ -13,15 +13,6 @@ Route::middleware(['auth'])->group(function ()
     Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
-    Route::resource('emails', 'EmailsController');
-    Route::get('emails/{id}/template', ['as' => 'emails.template', 'uses' => 'EmailsController@template']);
-    Route::put('emails/{id}/template', ['as' => 'emails.template.update', 'uses' => 'EmailsController@updateTemplate']);
-    Route::get('emails/{id}/design', ['as' => 'emails.design', 'uses' => 'EmailsController@design']);
-    Route::put('emails/{id}/design', ['as' => 'emails.design.update', 'uses' => 'EmailsController@updateDesign']);
-    Route::get('emails/{id}/confirm', ['as' => 'emails.confirm', 'uses' => 'EmailsController@confirm']);
-    Route::put('emails/{id}/send', ['as' => 'emails.send', 'uses' => 'EmailsController@send']);
-    Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
-
     Route::resource('automations', 'AutomationsController');
     Route::resource('automations.emails', 'AutomationEmailsController')->except([
         'index',
@@ -32,6 +23,9 @@ Route::middleware(['auth'])->group(function ()
     Route::get('automations/{automation}/emails/{email}/content', ['as' => 'automations.emails.content.edit', 'uses' => 'AutomationEmailContentController@edit']);
 
 
+    Route::get('subscribers/export', ['as' => 'subscribers.export', 'uses' => 'SubscribersController@export']);
+    Route::get('subscribers/import', ['as' => 'subscribers.import', 'uses' => 'SubscribersImportController@show']);
+    Route::post('subscribers/import', ['as' => 'subscribers.import.store', 'uses' => 'SubscribersImportController@store']);
     Route::resource('subscribers', 'SubscribersController');
 
     Route::resource('segments', 'SegmentsController');
@@ -42,6 +36,7 @@ Route::middleware(['auth'])->group(function ()
         'show',
     ]);
     Route::get('campaigns/{campaign}/emails/{email}/content', ['as' => 'campaigns.emails.content.edit', 'uses' => 'CampaignEmailContentController@edit']);
+    Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
 
     Route::put('campaigns/{id}/send', ['as' => 'campaigns.send', 'uses' => 'CampaignsController@send']);
     Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);

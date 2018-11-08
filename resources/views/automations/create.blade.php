@@ -1,7 +1,7 @@
 @extends('common.template')
 
 @section('heading')
-    Create Automations
+    New Automation
 @stop
 
 @section('content')
