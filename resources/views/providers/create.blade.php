@@ -6,7 +6,7 @@
 
 @section('content')
 
-    {!! Form::open(['method' => 'post', 'route' => 'providers.store']) !!}
+    {!! Form::open(['method' => 'post', 'route' => 'providers.store', 'class' => 'form-horizontal']) !!}
 
     {!! Form::textField('name', 'Name') !!}
     {!! Form::selectField('type_id', 'Provider', $providerTypes) !!}

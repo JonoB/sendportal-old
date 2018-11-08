@@ -6,7 +6,6 @@ use App\Models\Email;
 
 interface EmailRepositoryInterface extends BaseEloquentInterface
 {
-    public function queuedCampaigns();
 
     /**
      * Store an email linked against a polymorphic type

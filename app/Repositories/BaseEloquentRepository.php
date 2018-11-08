@@ -527,4 +527,15 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     {
         $this->validator = $validator;
     }
+
+    /**
+     * Get count of records
+     *
+     * @param null
+     * @return integer
+     */
+    public function getCount()
+    {
+        return $this->getNewInstance()->count();
+    }
 }

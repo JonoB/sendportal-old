@@ -44,18 +44,23 @@ Route::middleware(['auth'])->group(function ()
     Route::put('campaigns/{campaign}/email/content', 'CampaignEmailContentController@update')
         ->name('campaigns.emails.content.update');
 
-    Route::put('campaigns/{id}/send', ['as' => 'campaigns.send', 'uses' => 'CampaignsController@send']);
     Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
 
     Route::get('campaigns/{id}/report', ['as' => 'campaigns.report', 'uses' => 'CampaignReportsController@report']);
     Route::get('campaigns/{id}/recipients', ['as' => 'campaigns.recipients', 'uses' => 'CampaignReportsController@recipients']);
 
-    // Templates
-    Route::resource('templates', 'TemplatesController');
+    Route::get('campaigns/{id}/confirm', 'CampaignsController@confirm')
+        ->name('campaigns.confirm');
+    Route::put('campaigns/{id}/send', 'CampaignsController@send')
+        ->name('campaigns.send');
 
-    Route::get('unsubscribe/{subscriberId}', ['as' => 'subscriptions.unsubscribe', 'uses' => 'SubscriptionsController@unsubscribe']);
-    Route::post('subscriptions', ['as' => 'subscriptions.update', 'uses' => 'SubscriptionsController@update']);
-    Route::get('subscribe/{subscriberId}', ['as' => 'subscriptions.subscribe', 'uses' => 'SubscriptionsController@subscribe']);
+    // Templates
+    Route::resource('templates', 'TemplatesController')
+        ->except(['show']);
+
+    Route::get('unsubscribe/{subscriberHash}', 'SubscriptionsController@unsubscribe')->name('subscriptions.unsubscribe');
+    Route::get('subscribe/{subscriberHash}', 'SubscriptionsController@subscribe')->name('subscriptions.subscribe');
+    Route::put('subscriptions/{subscriberId}', 'SubscriptionsController@update')->name('subscriptions.update');
 
     Route::get('providers', ['as' => 'providers.index', 'uses' => 'ProvidersController@index']);
     Route::get('providers/create', ['as' => 'providers.create', 'uses' => 'ProvidersController@create']);
