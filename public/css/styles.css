@@ -211,14 +211,23 @@ body {
     border-top: 2px solid #d2d6de;
 }
 
+.content-header {
+    padding: 0;
+}
+
 .container-wrapper {
     background-color: #ff0000;
 }
 .content-wrapper-inner {
     background-color: #f9f9f9;
-    padding: 12px;
+    padding: 30px;
     margin: 24px;
     border: 1px solid #eae9e9;
     box-shadow: 0 3px 5px rgba(0,0,0,0.1), 0 3px 3px rgba(0,0,0,0.15);
     border-radius: 3px;
+}
+
+.content {
+    padding-left: 0;
+    padding-right: 0;
 }

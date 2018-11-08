@@ -42,13 +42,18 @@ class SubscribersController extends Controller
     /**
      * Export Subscribers
      *
-     * @return Response
+     * @return string|\Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function export()
     {
         $subscribers = $this->subscriberRepository->export(['id', 'email', 'first_name', 'last_name', 'created_at']);
 
-        return (new FastExcel($subscribers))->download(sprintf('subscribers-%s.csv', date('Y_m_d-H_m_s')));
+        if ( ! $subscribers->count())
+        {
+            return redirect()->route('subscribers.index')->withErrors('There are no subscribers to export');
+        }
+
+        return (new FastExcel($subscribers))->download(sprintf('subscribers-%s.csv', date('Y-m-d-H-m-s')));
     }
 
     /**
