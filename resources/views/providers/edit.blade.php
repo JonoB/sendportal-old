@@ -6,7 +6,7 @@
 
 @section('content')
 
-    {!! Form::open(['method' => 'post', 'route' => ['providers.update', $provider->id]]) !!}
+    {!! Form::open(['method' => 'post', 'class' => 'form-horizontal', 'route' => ['providers.update', $provider->id]]) !!}
 
     {!! Form::textField('name', 'Name', $provider->name) !!}
 
