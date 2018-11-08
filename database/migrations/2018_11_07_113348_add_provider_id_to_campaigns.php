@@ -14,8 +14,8 @@ class AddProviderIdToCampaigns extends Migration
     public function up()
     {
         Schema::table('campaigns', function (Blueprint $table) {
-            $table->unsignedInteger('config_id')->after('name')->nullable();
-            $table->foreign('config_id')->references('id')->on('providers');
+            $table->unsignedInteger('provider_id')->after('name')->nullable();
+            $table->foreign('provider_id')->references('id')->on('providers');
         });
     }
 
