@@ -6,7 +6,7 @@ use App\Services\Subscribers\ApiSubscriberService;
 use Illuminate\Http\Request;
 use Rap2hpoutre\FastExcel\FastExcel;
 
-class ImportSubscribersController extends Controller
+class SubscribersImportController extends Controller
 {
     /**
      * @var ApiSubscriberService
