@@ -10,4 +10,7 @@
 
     @include('automations.steps.partials.form')
 
+    {!! Form::submitButton('Submit') !!}
+    {!! Form::close() !!}
+
 @stop
