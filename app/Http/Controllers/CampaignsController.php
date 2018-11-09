@@ -165,6 +165,7 @@ class CampaignsController extends Controller
         }
 
         $campaign = $this->campaigns->update($id, $request->only($this->campaignFields));
+        $campaign->email()->update($request->except($this->campaignFields));
 
         return redirect()
             ->route('campaigns.show', $campaign->id);
