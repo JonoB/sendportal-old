@@ -2,14 +2,18 @@
 
 namespace App\Providers;
 
-use App\Interfaces\EmailWebhookServiceInterface;
 use App\Interfaces\AutomationRepositoryInterface;
 use App\Interfaces\CampaignContentServiceInterface;
 use App\Interfaces\CampaignDispatchInterface;
 use App\Interfaces\CampaignReportServiceInterface;
 use App\Interfaces\CampaignRepositoryInterface;
+use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\CampaignUrlsRepositoryInterface;
+use App\Interfaces\EmailRepositoryInterface;
+use App\Interfaces\EmailWebhookServiceInterface;
 use App\Interfaces\ProviderRepositoryInterface;
+use App\Interfaces\SegmentRepositoryInterface;
+use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Repositories\AutomationEloquentRepository;
