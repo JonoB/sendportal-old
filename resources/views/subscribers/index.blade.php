@@ -59,7 +59,7 @@
                     @empty
                         <tr>
                             <td colspan="100%">
-                                <h5 class="text-center text-muted">There are no Subscribers</h5>
+                                <h5 class="text-center text-muted">You have not added any subscribers.</h5>
                             </td>
                         </tr>
                     @endforelse

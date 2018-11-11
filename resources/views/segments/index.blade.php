@@ -16,24 +16,30 @@
         <div class="box-body no-padding">
             <table class="table table-bordered table-responsive">
                 <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Subscribers</th>
-                        <th>Actions</th>
-                    </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Subscribers</th>
+                    <th>Actions</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach($segments as $segment)
-                        <tr>
-                            <td>
-                                <a href="{{ route('segments.edit', $segment->id) }}">
-                                    {{ $segment->name }}
-                                </a>
-                            </td>
-                            <td>{{ $segment->subscribers_count }}</td>
-                            <td><a href="{{ route('segments.edit', $segment->id) }}">Edit</a></td>
-                        </tr>
-                    @endforeach
+                @forelse($segments as $segment)
+                    <tr>
+                        <td>
+                            <a href="{{ route('segments.edit', $segment->id) }}">
+                                {{ $segment->name }}
+                            </a>
+                        </td>
+                        <td>{{ $segment->subscribers_count }}</td>
+                        <td><a href="{{ route('segments.edit', $segment->id) }}">Edit</a></td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="100%">
+                            <h5 class="text-center text-muted">You have not created any segments.</h5>
+                        </td>
+                    </tr>
+                @endforelse
                 </tbody>
             </table>
         </div>

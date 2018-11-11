@@ -58,9 +58,9 @@ Route::middleware(['auth'])->group(function ()
     Route::resource('templates', 'TemplatesController')
         ->except(['show']);
 
-    Route::get('unsubscribe/{subscriberId}', ['as' => 'subscriptions.unsubscribe', 'uses' => 'SubscriptionsController@unsubscribe']);
-    Route::post('subscriptions', ['as' => 'subscriptions.update', 'uses' => 'SubscriptionsController@update']);
-    Route::get('subscribe/{subscriberId}', ['as' => 'subscriptions.subscribe', 'uses' => 'SubscriptionsController@subscribe']);
+    Route::get('unsubscribe/{subscriberHash}', 'SubscriptionsController@unsubscribe')->name('subscriptions.unsubscribe');
+    Route::get('subscribe/{subscriberHash}', 'SubscriptionsController@subscribe')->name('subscriptions.subscribe');
+    Route::put('subscriptions/{subscriberId}', 'SubscriptionsController@update')->name('subscriptions.update');
 
     Route::get('providers', ['as' => 'providers.index', 'uses' => 'ProvidersController@index']);
     Route::get('providers/create', ['as' => 'providers.create', 'uses' => 'ProvidersController@create']);
