@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Storage;
+
 use App\Services\Subscribers\ImportSubscriberService;
 use App\Http\Requests\SubscribersImportRequest;
 use App\Interfaces\SegmentRepositoryInterface;
@@ -46,22 +48,25 @@ class SubscribersImportController extends Controller
     {
         if ($request->file('file')->isValid())
         {
-            $path = $request->file('file')->storeAs('imports', str_random(16) . '.csv');
+            $filename = str_random(16) . '.csv';
+
+            $path = $request->file('file')->storeAs('imports', $filename);
 
             $subscribers = (new FastExcel)->import(storage_path('app/'. $path), function ($line) use ($request)
             {
                 // TODO: validate each row beforehand
                 try {
-                    $data = array_only($line, ['email', 'first_name', 'last_name']);
+                    $data = array_only($line, ['id', 'email', 'first_name', 'last_name']);
 
-                    $data['segments'] = $request->get('segments');
+                    $data['segments'] = $request->get('segments') ?? [];
 
                     $this->subscriberService->import($data);
                 } catch (\Exception $e) {
-                    throw $e;
                     \Log::warn($e->getMessage());
                 }
             });
+
+            Storage::disk('local')->delete('imports/' . $filename);
 
             return redirect()->route('subscribers.index')
                 ->with('success', sprintf('Imported %d subscribers', $subscribers->count()));

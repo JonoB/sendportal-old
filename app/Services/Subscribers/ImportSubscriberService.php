@@ -46,27 +46,9 @@ class ImportSubscriberService
             $subscriber = $this->subscribers->store(array_except($data, ['id', 'segments']));
         }
 
-        $this->subscribers->update($subscriber->id, array_except($data, 'segments'));
+        $data['segments'] = array_merge($subscriber->segments->pluck('id')->toArray(), array_get($data, 'segments'));
 
-        $this->handleSegments($data, $subscriber);
-
-        return $subscriber;
-    }
-
-    /**
-     * Handle attaching segments to a subscriber
-     *
-     * @param array $data
-     * @param Subscriber $subscriber
-     *
-     * @return Subscriber
-     */
-    protected function handleSegments(array $data, Subscriber $subscriber): Subscriber
-    {
-        if ( ! empty($data['segments']))
-        {
-            $subscriber->segments()->attach(array_merge($subscriber->segments->pluck('id')->toArray(), $data['segments']));
-        }
+        $this->subscribers->update($subscriber->id, $data);
 
         return $subscriber;
     }
