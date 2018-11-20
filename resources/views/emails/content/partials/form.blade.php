@@ -1,11 +1,15 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/codemirror/codemirror.css') }}">
     <link rel="stylesheet" href="{{ asset('css/codemirror/themes/monokai.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/summernote/summernote.css') }}">
 @endsection
 
 <div class="row template-editor-container">
     <div class="col-sm-6">
-        {!! Form::textareaField('content', null, $email->content ?? null) !!}
+        <div class="form-group">
+            <textarea id="id-field-content" class="form-control" name="content" cols="50" rows="10">{{ $email->content ?? '' }}</textarea>
+        </div>
+
         {!! Form::hidden('template_content', $email->template->content) !!}
     </div>
 
@@ -20,20 +24,22 @@
 @section('js')
     <script src="{{ asset('js/codemirror/codemirror.js') }}"></script>
     <script src="{{ asset('js/codemirror/modes/xml.js') }}"></script>
+    <script src="{{ asset('js/summernote.min.js') }}"></script>
 
     <script>
         $(document).ready(function () {
-            const editor = CodeMirror.fromTextArea(document.getElementById('id-field-content'), {
-                lineNumbers: true,
-                mode: 'xml',
-                theme: 'monokai'
+            var el = $('#id-field-content');
+
+            el.summernote({
+                minHeight: 555,
+                callbacks: {
+                    onChange: function(contents) {
+                        copyEditorToIframe(contents);
+                    }
+                }
             });
 
-            editor.on('change', function (editor, change) {
-                copyEditorToIframe(editor.getValue());
-            });
-
-            copyEditorToIframe(editor.getValue());
+            copyEditorToIframe(el.summernote('code'));
         });
 
         function copyEditorToIframe(html) {
@@ -42,7 +48,7 @@
             const templateContent = document.querySelector('input[name="template_content"]').value;
 
             // NOTE(david): the @{{ content }} is so that blade doesn't interpret it as a variable
-            iframedoc.body.innerHTML = templateContent.replace('@{{ content }}', html);
+            iframedoc.body.innerHTML = templateContent.replace('@{{content}}', html);
         }
     </script>
 @endsection
