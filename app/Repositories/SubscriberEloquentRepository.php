@@ -57,11 +57,26 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
     }
 
     /**
+     * Create a new record
+     *
+     * @param array $data The input data
+     * @return Subscriber model instance
+     */
+    public function store(array $data)
+    {
+        $this->instance = $this->executeStore(array_except($data, ['segments']));
+
+        $this->syncSegments($this->instance, array_get($data, 'segments', []));
+
+        return $this->instance;
+    }
+
+    /**
      * Update the Subscriber
      *
      * @param int $id The model id
      * @param array $data The input data
-     * @return object model instance
+     * @return Subscriber model instance
      */
     public function update($id, array $data)
     {
