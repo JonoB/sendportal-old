@@ -73,9 +73,11 @@ class SubscribersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(SegmentRepositoryInterface $segmentRepository)
     {
-        return view('subscribers.create');
+        $segments = $segmentRepository->all();
+
+        return view('subscribers.create', compact('segments'));
     }
 
     /**
