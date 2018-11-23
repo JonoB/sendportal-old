@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Subscribers\ApiSubscriberService;
+use Storage;
+
+use App\Services\Subscribers\ImportSubscriberService;
 use App\Http\Requests\SubscribersImportRequest;
+use App\Interfaces\SegmentRepositoryInterface;
 use Rap2hpoutre\FastExcel\FastExcel;
 
 class SubscribersImportController extends Controller
@@ -14,11 +17,11 @@ class SubscribersImportController extends Controller
     protected $subscriberService;
 
     /**
-     * ApiSubscribberService $subscriberService
+     * ImportSubscriberService $subscriberService
      *
-     * @param ApiSubscriberService $subscriberService
+     * @param ImportSubscriberService $subscriberService
      */
-    public function __construct(ApiSubscriberService $subscriberService)
+    public function __construct(ImportSubscriberService $subscriberService)
     {
         $this->subscriberService = $subscriberService;
     }
@@ -28,9 +31,11 @@ class SubscribersImportController extends Controller
      *
      * @return View
      */
-    public function show()
+    public function show(SegmentRepositoryInterface $segmentRepo)
     {
-        return view('subscribers.import');
+        $segments = $segmentRepo->pluck('name', 'id');
+
+        return view('subscribers.import', compact('segments'));
     }
 
     /**
@@ -43,17 +48,25 @@ class SubscribersImportController extends Controller
     {
         if ($request->file('file')->isValid())
         {
-            $path = $request->file('file')->storeAs('imports', str_random(16) . '.csv');
+            $filename = str_random(16) . '.csv';
 
-            $subscribers = (new FastExcel)->import(storage_path('app/'. $path), function ($line)
+            $path = $request->file('file')->storeAs('imports', $filename);
+
+            $subscribers = (new FastExcel)->import(storage_path('app/'. $path), function ($line) use ($request)
             {
                 // TODO: validate each row beforehand
                 try {
-                    $this->subscriberService->store(array_only($line, ['email', 'first_name', 'last_name']));
+                    $data = array_only($line, ['id', 'email', 'first_name', 'last_name']);
+
+                    $data['segments'] = $request->get('segments') ?? [];
+
+                    $this->subscriberService->import($data);
                 } catch (\Exception $e) {
                     \Log::warn($e->getMessage());
                 }
             });
+
+            Storage::disk('local')->delete('imports/' . $filename);
 
             return redirect()->route('subscribers.index')
                 ->with('success', sprintf('Imported %d subscribers', $subscribers->count()));
