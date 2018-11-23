@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\CampaignReportServiceInterface;
-use App\Interfaces\CampaignUrlsRepositoryInterface;
+use App\Interfaces\CampaignLinksRepositoryInterface;
 
 class CampaignReportService implements CampaignReportServiceInterface
 {
@@ -14,7 +14,7 @@ class CampaignReportService implements CampaignReportServiceInterface
     protected $campaignSubscriberRepository;
 
     /**
-     * @var CampaignUrlsRepositoryInterface
+     * @var CampaignLinksRepositoryInterface
      */
     protected $campaignUrlsRepository;
 
@@ -22,11 +22,11 @@ class CampaignReportService implements CampaignReportServiceInterface
      * CampaignReportService constructor.
      *
      * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
-     * @param CampaignUrlsRepositoryInterface $campaignUrlsRepository
+     * @param CampaignLinksRepositoryInterface $campaignUrlsRepository
      */
     public function __construct(
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
-        CampaignUrlsRepositoryInterface $campaignUrlsRepository
+        CampaignLinksRepositoryInterface $campaignUrlsRepository
     )
     {
         $this->campaignSubscriberRepository = $campaignSubscriberRepository;

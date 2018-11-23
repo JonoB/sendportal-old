@@ -7,7 +7,7 @@
 @section('content')
 
     <div class="row">
-        <div class="col-lg-2 col-sm-4 col-xs-12">
+        <div class="col-sm-4 col-xs-12">
             <div class="info-box">
                 <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
                 <div class="info-box-content">
@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <div class="col-lg-2 col-sm-4 col-xs-12">
+        <div class="col-sm-4 col-xs-12">
             <div class="info-box">
                 <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
                 <div class="info-box-content">
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-4 col-xs-12">
+        <div class="col-sm-4 col-xs-12">
             <div class="info-box">
                 <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
                 <div class="info-box-content">
@@ -61,10 +61,10 @@
                 <div class="box-body">
                     <table class="table">
                         <tbody>
-                            @foreach($campaignUrls as $url)
+                            @foreach($campaignLinks as $url)
                                 <tr>
-                                    <td>{{ $url->original_url }}</td>
-                                    <td>{{ $url->counter }}</td>
+                                    <td>{{ $url->link }}</td>
+                                    <td>{{ $url->click_count }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

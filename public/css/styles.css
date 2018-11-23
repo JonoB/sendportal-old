@@ -213,3 +213,15 @@ body {
     padding-left: 0;
     padding-right: 0;
 }
+
+/** Reporting */
+
+.content-header
+{
+    margin-bottom: 2rem;
+}
+
+.info-box
+{
+    margin-bottom: 4rem;
+}

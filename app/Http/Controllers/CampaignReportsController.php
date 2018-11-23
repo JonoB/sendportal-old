@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Interfaces\CampaignReportServiceInterface;
 use App\Interfaces\CampaignRepositoryInterface;
-use App\Interfaces\TemplateRepositoryInterface;
 use App\Models\CampaignStatus;
+use App\Services\CampaignReportService;
 use Illuminate\Http\RedirectResponse;
 
 class CampaignReportsController extends Controller
@@ -16,7 +16,7 @@ class CampaignReportsController extends Controller
     protected $campaignRepo;
 
     /**
-     * @var CampaignRepositoryInterface
+     * @var CampaignReportService
      */
     protected $campaignReportService;
 
@@ -36,56 +36,28 @@ class CampaignReportsController extends Controller
     }
 
     /**
-     * Show campaign report view
+     * Show a campaign's report.
      *
-     * @param $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\View\Factory|RedirectResponse|\Illuminate\View\View
      */
-    public function report($id)
+    public function show(int $id)
     {
-        $campaign = $this->campaignRepo->find($id, ['email']);
+        $campaign = $this->campaignRepo->find($id);
 
-        if ($campaign->email->status_id == CampaignStatus::STATUS_DRAFT)
+        if ($campaign->status_id == CampaignStatus::STATUS_DRAFT)
         {
             return redirect()->route('campaigns.edit', $id);
         }
 
-        if ($campaign->email->status_id != CampaignStatus::STATUS_SENT)
+        if ($campaign->status_id != CampaignStatus::STATUS_SENT)
         {
             return redirect()->route('campaigns.status', $id);
-
         }
 
         $chartData = $this->campaignReportService->opensPerHour($id);
-        $campaignUrls = $this->campaignReportService->campaignUrls($id);
-
-        return view('campaigns.report', compact('campaign', 'chartData', 'campaignUrls'));
-
+        $campaignLinks = $this->campaignReportService->campaignUrls($id);
+        return view('campaigns.report', compact('campaign', 'chartData', 'campaignLinks'));
     }
-
-    /**
-     * Show campaign recipients view
-     *
-     * @param $id
-     * @return \Illuminate\Contracts\View\Factory|RedirectResponse|\Illuminate\View\View
-     */
-    public function recipients($id)
-    {
-        $campaign = $this->campaignRepo->find($id, ['email']);
-
-        if ($campaign->email->status_id == CampaignStatus::STATUS_DRAFT)
-        {
-            return redirect()->route('campaigns.edit', $id);
-        }
-
-        if ($campaign->email->status_id == CampaignStatus::STATUS_SENT)
-        {
-            $recipients = $this->contactCampaignRepo->paginate('created_at', [], 50, ['campaign_id' => $id]);
-
-            return view('campaigns.recipients', compact('campaign', $recipients));
-        }
-
-        return redirect()->route('campaigns.status', $id);
-    }
-
 }

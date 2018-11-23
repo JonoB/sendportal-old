@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface CampaignUrlsRepositoryInterface extends BaseEloquentInterface
+interface CampaignLinksRepositoryInterface extends BaseEloquentInterface
 {
     /**
      * Track an open record
@@ -19,7 +19,7 @@ interface CampaignUrlsRepositoryInterface extends BaseEloquentInterface
      * @param string $urlId
      * @return int
      */
-    public function getUrlClickCount($urlId);
+    public function getLinkClickCount($urlId);
 
     /**
      * Return the total click count for a campaign

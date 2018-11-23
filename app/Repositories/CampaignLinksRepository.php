@@ -2,19 +2,19 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\CampaignUrlsRepositoryInterface;
-use App\Models\CampaignUrl;
+use App\Interfaces\CampaignLinksRepositoryInterface;
+use App\Models\CampaignLink;
 
-class CampaignUrlsEloquentRepository extends BaseEloquentRepository implements CampaignUrlsRepositoryInterface
+class CampaignLinksRepository extends BaseEloquentRepository implements CampaignLinksRepositoryInterface
 {
-    protected $modelName = CampaignUrl::class;
+    protected $modelName = CampaignLink::class;
 
     public function getBy($field, $value, array $relations = [])
     {
         return $this->getQueryBuilder()
             ->with($relations)
             ->where($field, $value)
-            ->orderBy('counter', 'desc')
+            ->orderBy('click_count', 'desc')
             ->get();
     }
 
@@ -28,7 +28,7 @@ class CampaignUrlsEloquentRepository extends BaseEloquentRepository implements C
     {
         return $this->getNewInstance()
             ->where('id', $urlId)
-            ->increment('counter');
+            ->increment('click_count');
     }
 
     /**
@@ -37,11 +37,11 @@ class CampaignUrlsEloquentRepository extends BaseEloquentRepository implements C
      * @param string $urlId
      * @return int
      */
-    public function getUrlClickCount($urlId)
+    public function getLinkClickCount($urlId)
     {
         return $this->getNewInstance()
             ->where('id', $urlId)
-            ->sum('counter');
+            ->sum('click_count');
     }
 
     /**
@@ -54,6 +54,6 @@ class CampaignUrlsEloquentRepository extends BaseEloquentRepository implements C
     {
         return $this->getNewInstance()
             ->where('campaign_id', $campaignId)
-            ->sum('counter');
+            ->sum('click_count');
     }
 }

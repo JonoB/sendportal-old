@@ -46,8 +46,7 @@ Route::middleware(['auth'])->group(function ()
 
     Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
 
-    Route::get('campaigns/{id}/report', ['as' => 'campaigns.report', 'uses' => 'CampaignReportsController@report']);
-    Route::get('campaigns/{id}/recipients', ['as' => 'campaigns.recipients', 'uses' => 'CampaignReportsController@recipients']);
+    Route::get('campaigns/{id}/report', ['as' => 'campaigns.report', 'uses' => 'CampaignReportsController@show']);
 
     Route::get('campaigns/{id}/confirm', 'CampaignsController@confirm')
         ->name('campaigns.confirm');
