@@ -25,11 +25,12 @@
 
         $(function()
         {
-            createFields(1);
+            var type_id = $('select[name="type_id"]').val();
+
+            createFields(type_id);
 
             $('#id-field-type_id').on('change', function()
             {
-                console.log(this.value)
                 createFields(this.value);
             });
         });
