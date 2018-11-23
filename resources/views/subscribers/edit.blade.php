@@ -39,7 +39,26 @@
     <script>
         $('select[name="segments[]"]').selectize({
             plugins: ['remove_button'],
-            items: {!! $subscriber->segments->pluck('id')->toJson() !!}
+            items: {!! $subscriber->segments->pluck('id')->toJson() !!},
+            create: function(input, callback) {
+                $.ajax({
+                    method: 'POST',
+                    url: "{{ route('ajax.segments.store') }}",
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    data: {
+                        name: input
+                    }
+                }).done(function (response) {
+                    callback({
+                        'value': response.data.id,
+                        'text': response.data.name
+                    });
+                }).fail(function (err) {
+                    console.log(err)
+                });
+            }
         });
     </script>
 @stop

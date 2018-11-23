@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TemplateRequest extends FormRequest
+class SubscriptionToggleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class TemplateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:255',
-            'content' => 'required',
+            'is_unsubscribed' => ['boolean', 'required']
         ];
     }
 }

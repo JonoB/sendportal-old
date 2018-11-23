@@ -104,18 +104,18 @@ class CampaignDispatchCommand extends Command
      */
     public function handle()
     {
-        if ( ! $emails = $this->getQueuedCampaigns())
+        if ( ! $campaigns = $this->getQueuedCampaigns())
         {
             $this->line('No queued campaigns; nothing more to do here');
 
             return;
         }
 
-        $this->info('Number of campaigns in queued status: ' . \count($emails));
+        $this->info('Number of campaigns in queued status: ' . \count($campaigns));
 
-        foreach ($emails as $email)
+        foreach ($campaigns as $campaign)
         {
-            $this->handleCampaign($email->mailable);
+            $this->handleCampaign($campaign);
         }
     }
 
@@ -137,7 +137,7 @@ class CampaignDispatchCommand extends Command
             return;
         }
 
-        $this->markCampaignAsSending($campaign->email->id);
+        $this->markCampaignAsSending($campaign);
 
         $this->campaignContentService->setCampaign($campaign);
 
@@ -146,7 +146,7 @@ class CampaignDispatchCommand extends Command
             $this->handleSegment($campaign, $segment);
         }
 
-        $this->markCampaignAsSent($campaign->email->id);
+        $this->markCampaignAsSent($campaign);
     }
 
     /**
@@ -161,10 +161,23 @@ class CampaignDispatchCommand extends Command
     {
         $this->line("- Handling Campaign Segment ID: {$segment->id} ({$segment->name})");
 
-        $subscribers = $this->getActiveSegmentSubscribers($segment);
+        $segment->subscribers()->whereNull('unsubscribed_at')->chunkById(1000,  function($subscribers) use ($campaign) {
 
-        $this->line('- Number of subscribers in this segment: ' . \count($subscribers));
+            $this->line('- Number of subscribers in this segment: ' . \count($subscribers));
 
+            $this->handleSegmentSubscribers($campaign, $subscribers);
+
+        });
+    }
+
+    /**
+     * Handle subscribers to a segment
+     *
+     * @param Campaign $campaign
+     * @param $subscribers
+     */
+    protected function handleSegmentSubscribers(Campaign $campaign, $subscribers)
+    {
         foreach ($subscribers as $subscriber)
         {
             if ( ! $this->canSendToSubscriber($campaign->email->id, $subscriber->id))
@@ -174,10 +187,21 @@ class CampaignDispatchCommand extends Command
                 continue;
             }
 
-            $this->info("-- Handling Subscriber ID: {$subscriber->id} ({$subscriber->email})");
-
-            $this->dispatch($campaign, $subscriber, $this->campaignContentService->getMergedContent($subscriber));
+            $this->handleSubscriber($campaign, $subscriber);
         }
+    }
+
+    /**
+     * Handle an individual subscriber
+     *
+     * @param Campaign $campaign
+     * @param Subscriber $subscriber
+     */
+    protected function handleSubscriber(Campaign $campaign, Subscriber $subscriber)
+    {
+        $this->info("-- Handling Subscriber ID: {$subscriber->id} ({$subscriber->email})");
+
+        $this->dispatch($campaign, $subscriber, $this->campaignContentService->getMergedContent($subscriber));
     }
 
     /**
@@ -191,8 +215,10 @@ class CampaignDispatchCommand extends Command
      */
     protected function dispatch(Campaign $campaign, Subscriber $subscriber, string $content): void
     {
+        $mailService = strtolower(str_replace(' ', '', $campaign->provider->type->name));
+
         $messageId = $this->campaignDispatchService->send(
-            'ses',
+            $mailService,
             $campaign->email->from_email,
             $subscriber->email,
             $campaign->email->subject,
@@ -234,23 +260,7 @@ class CampaignDispatchCommand extends Command
      */
     protected function getQueuedCampaigns(): EloquentCollection
     {
-        return $this->emailRepository->queuedCampaigns();
-    }
-
-    /**
-     * Load active subscribers for a single segment
-     *
-     * @todo this needs to be improved so that we chunk items
-     *
-     * @param Segment $segment
-     *
-     * @return Collection
-     */
-    protected function getActiveSegmentSubscribers(Segment $segment): Collection
-    {
-        $segment->load('active_subscribers');
-
-        return $segment->active_subscribers;
+        return $this->campaignRepo->queuedCampaigns();
     }
 
     /**
@@ -262,7 +272,7 @@ class CampaignDispatchCommand extends Command
      */
     protected function checkCampaignStatus($campaignId): bool
     {
-        return $this->campaignRepo->find($campaignId)->email->status_id === CampaignStatus::STATUS_QUEUED;
+        return $this->campaignRepo->find($campaignId)->status_id === CampaignStatus::STATUS_QUEUED;
     }
 
     /**
@@ -315,11 +325,10 @@ class CampaignDispatchCommand extends Command
      *
      * @param $emailId
      */
-    protected function markCampaignAsSending($emailId): void
+    protected function markCampaignAsSending(Campaign $campaign): void
     {
-        $this->emailRepository->update($emailId, [
-            'status_id' => CampaignStatus::STATUS_SENDING
-        ]);
+        $campaign->status_id = CampaignStatus::STATUS_SENDING;
+        $campaign->save();
     }
 
     /**
@@ -327,11 +336,12 @@ class CampaignDispatchCommand extends Command
      *
      * @param $emailId
      */
-    protected function markCampaignAsSent($emailId): void
+    protected function markCampaignAsSent(Campaign $campaign): void
     {
-        $this->emailRepository->update($emailId, [
-            'status_id' => CampaignStatus::STATUS_SENT,
-            'sent_count' => \count($this->getSentItems())
-        ]);
+        $campaign->status_id = CampaignStatus::STATUS_SENT;
+        $campaign->save();
+
+        $campaign->email->sent_count = \count($this->getSentItems());
+        $campaign->email->save();
     }
 }

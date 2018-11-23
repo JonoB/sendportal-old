@@ -39,7 +39,7 @@ class CampaignContentService implements CampaignContentServiceInterface
      */
     public function getMergedContent(Subscriber $subscriber): string
     {
-        return $this->mergeTags($this->campaign->email->content, $subscriber);
+        return $this->mergeTags($this->campaign->email->full_content, $subscriber);
     }
 
     /**
@@ -52,8 +52,7 @@ class CampaignContentService implements CampaignContentServiceInterface
      */
     protected function mergeTags(string $content, Subscriber $subscriber): string
     {
-        $content = $this->mergeSubscriberTags($content, $subscriber);
-        return $this->mergeUnsubscribeLink($content, $subscriber);
+        return $this->mergeUnsubscribeLink($this->mergeSubscriberTags($content, $subscriber), $subscriber);
     }
 
     /**
@@ -98,7 +97,7 @@ class CampaignContentService implements CampaignContentServiceInterface
      */
     protected function mergeUnsubscribeLink(string $content, Subscriber $subscriber): string
     {
-        $route = route('subscriptions.unsubscribe', $subscriber->id);
+        $route = route('subscriptions.unsubscribe', $subscriber->hash);
 
         return str_ireplace($this->unsubscribeReplacementTag, $route, $content);
     }

@@ -13,21 +13,35 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
     protected $modelName = Subscriber::class;
 
     /**
-     * Get all Subscribers eligible for exporting.
+     * Apply parameters, which can be extended in child classes for filtering
      *
-     * @param  array  $fields
-     * @param  string $orderBy
-     * @return Collection
+     * @param $query
+     * @param array $filters
+     * @return mixed
      */
-    public function export(array $fields, $orderBy = 'id')
+    protected function applyFilters($instance, array $filters = [])
     {
-        $instance = $this->getQueryBuilder();
+        $instance->select('subscribers.*');
 
-        $this->parseOrder($orderBy);
+        if ($segmentId = array_get($filters, 'segment_id'))
+        {
+             $instance->leftJoin('segment_subscriber', 'subscribers.id', '=', 'segment_subscriber.subscriber_id')
+              ->whereIn('segment_subscriber.segment_id', $segmentId);
+        }
 
-        return $instance
-            ->orderBy($this->getOrderBy(), $this->getOrderDirection())
-            ->get($fields);
+        if ($name = array_get($filters, 'name'))
+        {
+            $name = '%' . $name . '%';
+
+             $instance->where(function($instance) use ($name) {
+                 $instance->where('subscribers.first_name', 'like', $name)
+                     ->orWhere('subscribers.last_name', 'like', $name)
+                     ->orWhere('subscribers.email', 'like', $name);
+             });
+
+        }
+
+        return $instance;
     }
 
     /**

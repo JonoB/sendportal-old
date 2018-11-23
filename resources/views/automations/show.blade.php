@@ -8,7 +8,7 @@
 
 @section('actions')
     <a class="btn btn-primary btn-sm btn-flat"
-        href="{{ route('automations.emails.create', ['automation' => $automation->id]) }}"><i class="fa fa-plus"></i> Add Email
+        href="{{ route('automations.emails.create', ['automation' => $automation->id]) }}"><i class="fa fa-plus"></i>Create Automation Step
     </a>
 @endsection
 
@@ -27,7 +27,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($automation->emails as $email)
+                @forelse($automation->emails as $email)
                     <tr>
                         <td>{{ $email->subject }}</td>
                         <td>{{ $email->from_name }}</td>
@@ -47,7 +47,13 @@
                             @endif
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="100%">
+                            <h5 class="text-center text-muted">You have not created any automation steps.</h5>
+                        </td>
+                    </tr>
+                @endforelse
                 </tbody>
             </table>
         </div>

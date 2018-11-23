@@ -18,11 +18,11 @@
         <div class="box-body no-padding">
             <table class="table table-bordered table-responsive">
                 <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Subscribers</th>
-                        <th>Actions</th>
-                    </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Subscribers</th>
+                    <th>Actions</th>
+                </tr>
                 </thead>
                 <tbody>
                     @forelse($segments as $segment)
@@ -38,7 +38,7 @@
                     @empty
                         <tr>
                             <td colspan="100%">
-                                <h5 class="text-center text-muted">There are no Segments</h5>
+                                <h5 class="text-center text-muted">You have not created any segments.</h5>
                             </td>
                         </tr>
                     @endforelse

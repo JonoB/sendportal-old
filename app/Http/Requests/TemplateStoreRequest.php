@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
 
-class CampaignRequest extends FormRequest
+class TemplateStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,14 +19,13 @@ class CampaignRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @param Request $request
-     *
      * @return array
      */
-    public function rules(Request $request)
+    public function rules()
     {
         return [
-            'name' => 'required|max:255',
+            'name' => ['required', 'max:255'],
+            'content' => 'required',
         ];
     }
 }

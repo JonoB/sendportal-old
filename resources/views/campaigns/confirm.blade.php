@@ -3,7 +3,7 @@
 @section('title', 'Confirm Campaign')
 
 @section('heading')
-    Confirm Campaign
+    Confirm Campaign: {{ $campaign->name }}
 @stop
 
 @section('content')
@@ -12,11 +12,14 @@
     <div class="col-md-6">
         <h4>Recipients</h4>
 
-        {!! Form::model($campaign, array('method' => 'put', 'route' => array('campaigns.send', $campaign->id))) !!}
+        {!! Form::model($campaign, array('method' => 'PUT', 'route' => ['campaigns.send', $campaign->id])) !!}
 
-        @foreach($lists as $list)
+        @foreach($segments as $segment)
             <div class="checkbox">
-                <label><input name="lists[]" type="checkbox" value="{{ $list->id }}">{{ $list->name }} ({{ $list->subscribers()->count() }} subscribers)</label>
+                <label>
+                    <input name="lists[]" type="checkbox" value="{{ $segment->id }}">
+                    {{ $segment->name }} ({{ $segment->subscribers()->count() }} subscribers)
+                </label>
             </div>
         @endforeach
 
@@ -34,10 +37,12 @@
             </label>
         </div>
 
-        <a href="{{ route('campaigns.design', $campaign->id) }}" class="btn btn-default">Back</a>
+{{--        <a href="{{ route('campaigns.design', $campaign->id) }}" class="btn btn-default">Back</a>--}}
+
         {!! Form::submitButton('Send campaign') !!}
         {!! Form::close() !!}
     </div>
+
     <div class="col-md-6">
         <form class="form-horizontal">
             <div class="form-group">
@@ -54,7 +59,7 @@
             </div>
 
             <div style="border: 1px solid #ddd; height: 600px">
-                <iframe id="js-template-iframe" srcdoc="{{ $campaign->email->content }}" class="embed-responsive-item" frameborder="0" style="height: 100%; width: 100%"></iframe>
+                <iframe id="js-template-iframe" srcdoc="{{ $campaign->email->full_content }}" class="embed-responsive-item" frameborder="0" style="height: 100%; width: 100%"></iframe>
             </div>
 
         </form>
