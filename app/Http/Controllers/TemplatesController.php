@@ -54,7 +54,11 @@ class TemplatesController extends Controller
      */
     public function store(TemplateStoreRequest $request)
     {
-        $this->templates->store($request->all());
+        $data = $request->validated();
+
+        $data['content'] = normalize_tags($data['content'], 'content');
+
+        $this->templates->store($data);
 
         return redirect()->route('templates.index');
     }
@@ -83,7 +87,11 @@ class TemplatesController extends Controller
      */
     public function update(TemplateUpdateRequest $request, $id)
     {
-        $this->templates->update($id, $request->all());
+        $data = $request->validated();
+
+        $data['content'] = normalize_tags($data['content'], 'content');
+
+        $this->templates->update($id, $data);
 
         return redirect()->route('templates.index');
     }

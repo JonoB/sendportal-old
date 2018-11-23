@@ -155,3 +155,22 @@ if ( ! function_exists('csvFromArray'))
         return $out;
     }
 }
+
+if ( ! function_exists('normalize_tags'))
+{
+    /**
+     * Normalize a tag
+     * @param  string $tag
+     * @return string
+     */
+    function normalize_tags(string $content, string $tag)
+    {
+        $search = [
+            '{{ ' . $tag . ' }}',
+            '{{' . $tag . ' }}',
+            '{{ ' . $tag . '}}',
+        ];
+
+        return str_ireplace($search, '{{' . $tag . '}}', $content);
+    }
+}

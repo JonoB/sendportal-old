@@ -102,11 +102,6 @@ class CampaignTest extends TestCase
 
         factory(Email::class)->create([
             'mailable_id' => $campaign->id,
-            'mailable_type' => 'App\Models\Campaign',
-            'subject' => 'A Subject',
-            'content' => 'Some content.',
-            'from_name' => 'Josh',
-            'from_email' => 'josh@mettle.io',
         ]);
 
         $modifiedData = [

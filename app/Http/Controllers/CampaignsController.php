@@ -218,7 +218,7 @@ class CampaignsController extends Controller
     {
         $campaign = $this->campaigns->find($id);
 
-        if ($campaign->status_id > 1)
+        if ($campaign->status_id > CampaignStatus::STATUS_DRAFT)
         {
             return redirect()->route('campaigns.status', $id);
         }

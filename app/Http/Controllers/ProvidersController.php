@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Interfaces\ProviderRepositoryInterface;
 use App\Models\Provider;
+use App\Http\Requests\ProviderStoreRequest;
+use App\Http\Requests\ProviderUpdateRequest;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class ProvidersController extends Controller
 {
@@ -56,10 +59,10 @@ class ProvidersController extends Controller
     /**
      * Store a new provider configuration set
      *
-     * @param Request $request
-     * @return null
+     * @param  ProviderStoreRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(ProviderStoreRequest $request)
     {
         $providerType = $this->providerRepo->findType($request->type_id);
 
@@ -94,7 +97,7 @@ class ProvidersController extends Controller
      * @param integer $providerId
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $providerId)
+    public function update(ProviderUpdateRequest $request, $providerId)
     {
         $provider = $this->providerRepo->find($providerId, ['type']);
 
@@ -105,6 +108,25 @@ class ProvidersController extends Controller
         $provider->save();
 
         return redirect()->route('providers.index');
+    }
+
+    /**
+     * @param  int $providerId
+     * @return RedirectResponse
+     */
+    public function delete($providerId)
+    {
+        $provider = $this->providerRepo->find($providerId, ['campaigns']);
+
+        if ($provider->campaigns()->count() === 0)
+        {
+            $this->providerRepo->destroy($providerId);
+
+            return redirect()->route('providers.index');
+        }
+
+        return redirect()->back()
+            ->withErrors('Can\'t delete a provider already assigned to a campaign');
     }
 
     /**

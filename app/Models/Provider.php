@@ -26,6 +26,16 @@ class Provider extends BaseModel
     }
 
     /**
+     * Campaigns relationship
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function campaigns()
+    {
+        return $this->hasMany(Campaign::class, 'provider_id');
+    }
+
+    /**
      * @param array $data
      */
     public function setSettingsAttribute(array $data)

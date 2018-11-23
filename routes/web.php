@@ -68,4 +68,5 @@ Route::middleware(['auth'])->group(function ()
     Route::post('providers', ['as' => 'providers.store', 'uses' => 'ProvidersController@store']);
     Route::get('providers/{id}/edit', ['as' => 'providers.edit', 'uses' => 'ProvidersController@edit']);
     Route::post('providers/{id}', ['as' => 'providers.update', 'uses' => 'ProvidersController@update']);
+    Route::delete('providers/{id}', ['as' => 'providers.delete', 'uses' => 'ProvidersController@delete']);
 });

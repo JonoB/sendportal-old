@@ -11,6 +11,10 @@ $factory->define(Email::class, function (Faker $faker)
         {
             return factory(Campaign::class)->create()->id;
         },
-        'mailable_type' => 'App\Models\Campaign',
+        'mailable_type' => Campaign::class,
+        'subject' => $faker->sentence,
+        'content' => $faker->paragraph,
+        'from_name' => $faker->firstName . ' ' . $faker->lastName,
+        'from_email' => $faker->safeEmail,
     ];
 });
