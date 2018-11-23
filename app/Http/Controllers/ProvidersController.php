@@ -111,6 +111,25 @@ class ProvidersController extends Controller
     }
 
     /**
+     * @param  int $providerId
+     * @return RedirectResponse
+     */
+    public function delete($providerId)
+    {
+        $provider = $this->providerRepo->find($providerId, ['campaigns']);
+
+        if ($provider->campaigns()->count() === 0)
+        {
+            $this->providerRepo->destroy($providerId);
+
+            return redirect()->route('providers.index');
+        }
+
+        return redirect()->back()
+            ->withErrors('Can\'t delete a provider already assigned to a campaign');
+    }
+
+    /**
      * Return the fields for
      * a given ProviderType
      *

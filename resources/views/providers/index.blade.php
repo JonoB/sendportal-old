@@ -26,7 +26,14 @@
                         <tr>
                             <td>{{ $provider->name }}</td>
                             <td>{{ $provider->type->name }}</td>
-                            <td><a href="{{ route('providers.edit', $provider->id) }}">Edit</a></td>
+                            <td>
+                                <a href="{{ route('providers.edit', $provider->id) }}">Edit</a>
+                                <form action="{{ route('providers.delete', $provider->id) }}" method="POST" style="display: inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn-link">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
