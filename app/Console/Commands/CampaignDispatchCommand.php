@@ -167,7 +167,7 @@ class CampaignDispatchCommand extends Command
 
             $this->handleSegmentSubscribers($campaign, $subscribers);
 
-        });
+        }, 'subscribers.id');
     }
 
     /**
