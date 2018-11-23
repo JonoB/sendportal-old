@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', $automation->name)
+
 @section('heading')
     {{ $automation->name }}
 @stop

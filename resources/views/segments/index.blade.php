@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', 'Segments')
+
 @section('heading')
     Segments
 @endsection
@@ -23,23 +25,23 @@
                 </tr>
                 </thead>
                 <tbody>
-                @forelse($segments as $segment)
-                    <tr>
-                        <td>
-                            <a href="{{ route('segments.edit', $segment->id) }}">
-                                {{ $segment->name }}
-                            </a>
-                        </td>
-                        <td>{{ $segment->subscribers_count }}</td>
-                        <td><a href="{{ route('segments.edit', $segment->id) }}">Edit</a></td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="100%">
-                            <h5 class="text-center text-muted">You have not created any segments.</h5>
-                        </td>
-                    </tr>
-                @endforelse
+                    @forelse($segments as $segment)
+                        <tr>
+                            <td>
+                                <a href="{{ route('segments.edit', $segment->id) }}">
+                                    {{ $segment->name }}
+                                </a>
+                            </td>
+                            <td>{{ $segment->subscribers_count }}</td>
+                            <td><a href="{{ route('segments.edit', $segment->id) }}">Edit</a></td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="100%">
+                                <h5 class="text-center text-muted">You have not created any segments.</h5>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

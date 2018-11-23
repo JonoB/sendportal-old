@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', 'Campaigns')
+
 @section('heading')
     Campaigns
 @endsection
@@ -91,7 +93,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="100%">
+                        <td colspan="100%">
                             <h5 class="text-center text-muted">You have not created any campaigns.</h5>
                         </td>
                     </tr>

@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', 'New Segment')
+
 @section('heading')
     New Segment
 @stop

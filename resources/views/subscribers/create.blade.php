@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', 'New Subscriber')
+
 @section('heading')
     New Subscriber
 @stop

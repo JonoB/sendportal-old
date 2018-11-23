@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', 'Campaign Design')
+
 @section('heading')
     Campaign Design
 @stop
@@ -10,8 +12,11 @@
 
     @include('templates.partials.editor')
 
-    <a href="{{ route('campaigns.template', $campaign->id) }}" class="btn btn-default">Back</a>
-    {!! Form::submitButton('Save and continue') !!}
-    {!! Form::close() !!}
+    <br>
 
+    <a href="{{ route('campaigns.template', $campaign->id) }}" class="btn btn-link"><i class="fa fa-arrow-left"></i> Back</a>
+
+    <button class="btn btn-primary" type="submit">Save and continue</button>
+
+    {!! Form::close() !!}
 @stop

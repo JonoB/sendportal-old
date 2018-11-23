@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', "Subscriber : {$subscriber->full_name}")
+
 @section('heading')
     Subscriber : {{ $subscriber->full_name }}
 @stop
@@ -12,13 +14,7 @@
 
             <ul>
                 @foreach ($subscriber->segments as $segment)
-                    <li>
-                        @if($segment->pivot->unsubscribed_at)
-                            <del><a href="{{ route('segments.edit', $segment->id) }}">{{ $segment->name }}</a></del>
-                        @else
-                            <a href="{{ route('segments.edit', $segment->id) }}">{{ $segment->name }}</a>
-                        @endif
-                    </li>
+                    <li><a href="{{ route('segments.edit', $segment->id) }}">{{ $segment->name }}</a></li>
                 @endforeach
             </ul>
         </div>

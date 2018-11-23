@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', 'New Template')
+
 @section('heading')
     New Template
 @stop

@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', 'Campaign Template')
+
 @section('heading')
     Campaign Template
 @stop
@@ -33,8 +35,10 @@
 
     {{ $templates->links() }}
 
-    <a href="{{ route('campaigns.edit', $campaign->id) }}" class="btn btn-default">Back</a>
-    {!! Form::submitButton('Save and continue') !!}
+    <a href="{{ route('campaigns.edit', $campaign->id) }}" class="btn btn-link"><i class="fa fa-arrow-left"></i> Back</a>
+
+    <button class="btn btn-primary" type="submit">Save and continue</button>
+
     {!! Form::close() !!}
 
 @stop

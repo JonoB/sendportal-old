@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', "Edit Template : {$template->name}")
+
 @section('heading')
     Edit Template : {{ $template->name }}
 @stop

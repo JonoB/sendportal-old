@@ -1,5 +1,7 @@
 @extends('common.template')
 
+@section('title', $campaign->name)
+
 @section('heading')
     {{ $campaign->name }}
 @endsection
