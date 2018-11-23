@@ -22,10 +22,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($automations as $automation)
+                    @forelse($automations as $automation)
                         <td><a href="{{ route('automations.show', ['id' => $automation->id]) }}">{{ $automation->name }}</a></td>
                         <td>{{ $automation->segment->name }}</td>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td class="text-center" colspan="100%">
+                                <h5 class="text-center text-muted">You have not created any automations.</h5>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

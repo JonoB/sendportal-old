@@ -6,6 +6,7 @@ class Campaign extends BaseModel
 {
     protected $fillable = [
         'name',
+        'provider_id',
         'status_id',
         'scheduled_at'
     ];
@@ -43,5 +44,16 @@ class Campaign extends BaseModel
     public function status()
     {
         return $this->belongsTo(CampaignStatus::class, 'status_id');
+    }
+
+    /**
+     * Provider relationship method
+     *
+     * @param null
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function provider()
+    {
+        return $this->belongsTo(Provider::class);
     }
 }

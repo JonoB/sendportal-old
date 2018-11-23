@@ -5,7 +5,7 @@
 @endsection
 
 @section('actions')
-    <a class="btn btn-primary btn-sm btn-flat" href="{{ route('config.create') }}">
+    <a class="btn btn-primary btn-sm btn-flat" href="{{ route('providers.create') }}">
         <i class="fa fa-plus"></i> Add Provider
     </a>
 @endsection

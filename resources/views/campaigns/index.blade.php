@@ -20,6 +20,9 @@
                     <th>Name</th>
                     <th>Status</th>
                     <th>Template</th>
+                    @if ($providerCount > 1)
+                        <th>Provider</th>
+                    @endif
                     <th>Sent</th>
                     <th>Opened</th>
                     <th>Clicked</th>
@@ -27,7 +30,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($campaigns as $campaign)
+                @forelse($campaigns as $campaign)
                     <tr>
                         <td>
                             @if ( ! isset($campaign->email) || $campaign->status_id == \App\Models\CampaignStatus::STATUS_DRAFT)
@@ -54,6 +57,9 @@
                                     {{ $campaign->email->template->name }}
                                 </a>
                             </td>
+                            @if ($providerCount > 1)
+                                <td>{{ $campaign->provider->name }}</td>
+                            @endif
                             <td>{{ formatValue($campaign->email->sent_count) }}</td>
                             <td>{{ number_format($campaign->email->open_ratio * 100, 1) . '%' }}</td>
                             <td>{{ number_format($campaign->email->click_ratio * 100, 1) . '%' }}</td>
@@ -70,6 +76,9 @@
                             <td>
                                 <span class="label label-danger">No Email</span>
                             </td>
+                            @if ($providerCount > 1)
+                                <td>{{  $campaign->provider->name }}</td>
+                            @endif
                             <td>N/A</td>
                             <td>N/A</td>
                             <td>N/A</td>
@@ -80,7 +89,13 @@
                             </td>
                         @endif
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td class="text-center" colspan="100%">
+                            <h5 class="text-center text-muted">You have not created any campaigns.</h5>
+                        </td>
+                    </tr>
+                @endforelse
                 </tbody>
             </table>
         </div>
