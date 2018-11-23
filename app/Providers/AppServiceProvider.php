@@ -34,6 +34,7 @@ use App\Services\GenerateOpenTrackingImageService;
 use App\Services\CampaignContentService;
 use App\Services\CampaignDispatchService;
 use App\Services\CampaignReportService;
+
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
