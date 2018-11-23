@@ -79,6 +79,6 @@ class Email extends BaseModel
      */
     public function getFullContentAttribute(): string
     {
-        return str_replace('{{ content }}', $this->content, $this->template->content);
+        return str_replace('{{content}}', $this->content, $this->template->content);
     }
 }

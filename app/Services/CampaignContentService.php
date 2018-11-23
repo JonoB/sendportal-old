@@ -74,11 +74,10 @@ class CampaignContentService implements CampaignContentServiceInterface
         // NOTE(mystery person): regex doesn't seem to work here - I think it may be due to all the tags and inverted commas in html?
         foreach ($tags as $key => $value)
         {
+            $content = normalize_tags($content, $key);
+
             $search = [
-                '{{' . $key . '}}',
-                '{{ ' . $key . ' }}',
-                '{{' . $key . ' }}',
-                '{{ ' . $key . '}}',
+                '{{' . $key . '}}'
             ];
 
             $content = str_ireplace($search, $value, $content);
