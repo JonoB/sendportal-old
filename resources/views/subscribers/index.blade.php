@@ -7,10 +7,6 @@
 @endsection
 
 @section('actions')
-    <a class="btn btn-primary btn-sm btn-flat" href="{{ route('subscribers.create') }}">
-        <i class="fa fa-plus"></i> Add Subscriber
-    </a>
-
     <div class="btn-group">
         <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">
             <i class="fa fa-bars"></i>
@@ -18,16 +14,19 @@
         <ul class="dropdown-menu">
             <li>
                 <a href="{{ route('subscribers.import') }}">
-                    <i class="fa fa-upload"></i> Import
+                    <i class="fa fa-upload"></i> Import Subscribers
                 </a>
             </li>
             <li>
                 <a href="{{ route('subscribers.export') }}">
-                    <i class="fa fa-download"></i> Export
+                    <i class="fa fa-download"></i> Export Subscribers
                 </a>
             </li>
         </ul>
     </div>
+    <a class="btn btn-primary btn-sm btn-flat" href="{{ route('subscribers.create') }}">
+        <i class="fa fa-plus"></i> Add Subscriber
+    </a>
 @endsection
 
 @section('content')
