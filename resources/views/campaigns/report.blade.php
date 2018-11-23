@@ -21,8 +21,8 @@
             <div class="info-box">
                 <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-number">{{ round($campaign->email->open_ratio * 100, 1) }}%</span>
-                    <span class="info-box-text">Unique Open Rate</span>
+                    <span class="info-box-number">{{ $uniqueOpenCount }} ({{ round($campaign->email->open_ratio * 100, 1) }}%)</span>
+                    <span class="info-box-text">Unique Opens</span>
                 </div>
             </div>
         </div>

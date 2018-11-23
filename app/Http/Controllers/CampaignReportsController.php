@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Interfaces\CampaignReportServiceInterface;
 use App\Interfaces\CampaignRepositoryInterface;
 use App\Models\CampaignStatus;
+use App\Repositories\CampaignSubscriberEloquentRepository;
 use App\Services\CampaignReportService;
 use Illuminate\Http\RedirectResponse;
 
@@ -21,18 +22,26 @@ class CampaignReportsController extends Controller
     protected $campaignReportService;
 
     /**
+     * @var CampaignSubscriberEloquentRepository
+     */
+    private $campaignSubscribers;
+
+    /**
      * CampaignsController constructor.
      *
      * @param CampaignRepositoryInterface $campaignRepository #
      * @param CampaignReportServiceInterface $campaignReportService
+     * @param CampaignSubscriberEloquentRepository $campaignSubscribers
      */
     public function __construct(
         CampaignRepositoryInterface $campaignRepository,
-        CampaignReportServiceInterface $campaignReportService
+        CampaignReportServiceInterface $campaignReportService,
+        CampaignSubscriberEloquentRepository $campaignSubscribers
     )
     {
         $this->campaignRepo = $campaignRepository;
         $this->campaignReportService = $campaignReportService;
+        $this->campaignSubscribers = $campaignSubscribers;
     }
 
     /**
@@ -58,6 +67,7 @@ class CampaignReportsController extends Controller
 
         $chartData = $this->campaignReportService->opensPerHour($id);
         $campaignLinks = $this->campaignReportService->campaignUrls($id);
-        return view('campaigns.report', compact('campaign', 'chartData', 'campaignLinks'));
+        $uniqueOpenCount = $this->campaignSubscribers->getUniqueOpenCount($id);
+        return view('campaigns.report', compact('campaign', 'chartData', 'campaignLinks', 'uniqueOpenCount'));
     }
 }

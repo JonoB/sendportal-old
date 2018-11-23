@@ -17,7 +17,7 @@ class CampaignSubscriberEloquentRepository extends BaseEloquentRepository implem
      * @param string $ipAddress
      * @return mixed
      */
-    public function incrementOpenCount($campaignId, $subscriberId, $ipAddress)
+    public function incrementOpenCount(int $campaignId, int $subscriberId, $ipAddress)
     {
         return $this->getNewInstance()
             ->where('campaign_id', $campaignId)
@@ -31,11 +31,11 @@ class CampaignSubscriberEloquentRepository extends BaseEloquentRepository implem
     /**
      * Track clicks
      *
-     * @param string $campaignId
-     * @param string $subscriberId
+     * @param int $campaignId
+     * @param int $subscriberId
      * @return mixed
      */
-    public function incrementClickCount($campaignId, $subscriberId)
+    public function incrementClickCount(int $campaignId, int $subscriberId)
     {
         return $this->getNewInstance()
             ->where('campaign_id', $campaignId)
@@ -49,15 +49,22 @@ class CampaignSubscriberEloquentRepository extends BaseEloquentRepository implem
      * @param int $campaignId
      * @return int
      */
-    public function getUniqueOpenCount($campaignId)
+    public function getUniqueOpenCount(int $campaignId)
     {
         return $this->getNewInstance()
             ->where('campaign_id', $campaignId)
-            ->where('open_count', '>', 0)
+            ->whereNotNull('opened_at')
             ->count();
     }
 
-    public function countUniqueOpensPerHour($campaignId)
+    /**
+     * Count the number of unique opens per hour.
+     *
+     * @param int $campaignId
+     *
+     * @return array
+     */
+    public function countUniqueOpensPerHour(int $campaignId)
     {
         return $this->getNewInstance()
             ->select(\DB::raw('COUNT(open_count) as open_count, DATE_FORMAT(opened_at, "%d-%b %k:00") as opened_at'))

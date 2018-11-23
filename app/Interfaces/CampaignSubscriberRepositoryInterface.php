@@ -7,22 +7,22 @@ interface CampaignSubscriberRepositoryInterface extends BaseEloquentInterface
     /**
      * Track opens
      *
-     * @param string $campaignId
-     * @param string $subscriberId
+     * @param int $campaignId
+     * @param int $subscriberId
      * @param string $ipAddress
      * @return mixed
      */
-    public function incrementOpenCount($campaignId, $subscriberId, $ipAddress);
+    public function incrementOpenCount(int $campaignId, int $subscriberId, $ipAddress);
 
     /**
      * Track clicks
      *
-     * @param string $campaignId
-     * @param string $subscriberId
+     * @param int $campaignId
+     * @param int $subscriberId
      * @param string $ipAddress
      * @return mixed
      */
-    public function incrementClickCount($campaignId, $subscriberId);
+    public function incrementClickCount(int $campaignId, int $subscriberId);
 
     /**
      * Return the unique open count per hour
@@ -30,5 +30,5 @@ interface CampaignSubscriberRepositoryInterface extends BaseEloquentInterface
      * @param int $campaignId
      * @return array
      */
-    public function countUniqueOpensPerHour($campaignId);
+    public function countUniqueOpensPerHour(int $campaignId);
 }
