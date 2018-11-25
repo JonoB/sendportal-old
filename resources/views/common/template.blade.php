@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Home') | {{ config('app.name', 'Sendportal') }}</title>
+    <title>@yield('title', 'Home') | {{ config('app.name') }}</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -31,55 +31,52 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition skin-blue">
-<div class="wrapper">
+<body>
 
 @auth
 
     @include('common.header')
 
-    @include('common.leftnav')
+    <div class="container">
 
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <div class="content-wrapper-inner">
-
-            <div class="row">
-                <div class="col-sm-6">
-                    <section class="content-header">
-                        <h1>
-                            @yield('heading')
-                        </h1>
-                    </section>
-                </div>
-                <div class="col-sm-6">
-                    <div class="actions-container pull-right">
-                        @yield('actions')
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-sm-2">
+                @include('common.leftnav')
             </div>
 
-            <section class="content">
-                @include('common.messages')
+            <div class="col-sm-10">
+                <div class="content-wrapper-inner">
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <section class="content-header">
+                                <h1>
+                                    @yield('heading')
+                                </h1>
+                            </section>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="actions-container pull-right">
+                                @yield('actions')
+                            </div>
+                        </div>
+                    </div>
+
+                    <section class="content">
+
+                        @include('common.messages')
+
+                        @yield('content')
+
+                    </section>
+                </div>
+
                 @yield('content')
-            </section>
+                
+            </div>
         </div>
-        <!-- /.content-wrapper -->
-
-    @elseguest
-
-        @yield('content')
-
-    @endauth
     </div>
-</div>
-<!-- ./wrapper -->
 
-
-@auth
-    <footer class="main-footer">
-        @yield('footer')
-    </footer>
 @endauth
 
 <!-- jQuery 2.2.3 -->

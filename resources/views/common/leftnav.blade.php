@@ -1,4 +1,3 @@
-<aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu">
             <li class="{{ request()->is('dashboard') ? 'active' : '' }}">
@@ -38,4 +37,3 @@
             </li>
         </ul>
     </section>
-</aside>
