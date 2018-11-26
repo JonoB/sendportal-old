@@ -107,6 +107,16 @@ body {
 
 /* Theme overrides */
 
+.nav>li>a {
+    color: #d3f0f5;
+    background-color: #3c8dbc;
+}
+
+.nav>li>a:hover, .nav>li>a:active, .nav>li>a:focus {
+    color: #d3f0f5;
+    background-color: #3b83b1;
+}
+
 .main-sidebar {
     background-color: #ecf0f5 !important;
     padding-top: 12px;
@@ -178,6 +188,7 @@ body {
 .main-header .logo {
     color: #d3f0f5;
     text-align: left;
+    padding: 0;
 }
 
 .box {

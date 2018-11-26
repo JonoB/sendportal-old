@@ -13,8 +13,8 @@
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="{{ Auth::user()->avatar_url }}" class="user-image" alt="{{ Auth::user()->name }}">
                             <span class="hidden-xs">{{ Auth::user()->name }}</span>
+                            <img src="{{ Auth::user()->avatar_url }}" class="user-image" alt="{{ Auth::user()->name }}">
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->

@@ -1,7 +1,7 @@
 @extends('common.template')
 
 @section('heading')
-    Edit Email Content For Campaign {{ $email->mailable->name }}
+    Content For Campaign {{ $email->mailable->name }}
 @stop
 
 @section('content')

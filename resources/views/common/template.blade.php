@@ -33,8 +33,11 @@
 </head>
 <body>
 
-@auth
+@guest
+    @yield('content')
+@endguest
 
+@auth
     @include('common.header')
 
     <div class="container">
@@ -63,16 +66,10 @@
                     </div>
 
                     <section class="content">
-
                         @include('common.messages')
-
                         @yield('content')
-
                     </section>
                 </div>
-
-                @yield('content')
-                
             </div>
         </div>
     </div>
