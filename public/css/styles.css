@@ -107,6 +107,12 @@ body {
 
 /* Theme overrides */
 
+@media (min-width: 1200px) {
+    .container {
+        width: 1280px;
+    }
+}
+
 .nav>li>a {
     color: #d3f0f5;
     background-color: #3c8dbc;
