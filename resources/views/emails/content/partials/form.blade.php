@@ -4,21 +4,16 @@
     <link rel="stylesheet" href="{{ asset('css/summernote/summernote.css') }}">
 @endsection
 
-<div class="row template-editor-container">
-    <div class="col-sm-6">
-        <div class="form-group">
-            <textarea id="id-field-content" class="form-control" name="content" cols="50" rows="10">{{ $email->content ?? '' }}</textarea>
-        </div>
+<div class="template-editor-container">
+
+        <textarea id="id-field-content" class="form-control" name="content" cols="50" rows="10">{{ $email->content ?? '' }}</textarea>
 
         {!! Form::hidden('template_content', $email->template->content) !!}
-    </div>
 
-    <div class="col-sm-6">
         <div style="border: 1px solid #ddd; height: 600px">
             <iframe id="js-template-iframe" class="embed-responsive-item" frameborder="0"
                     style="height: 100%; width: 100%"></iframe>
         </div>
-    </div>
 </div>
 
 @section('js')
@@ -31,7 +26,7 @@
             var el = $('#id-field-content');
 
             el.summernote({
-                minHeight: 555,
+                minHeight: 100,
                 callbacks: {
                     onChange: function(contents) {
                         copyEditorToIframe(contents);
