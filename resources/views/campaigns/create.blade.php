@@ -2,9 +2,7 @@
 
 @section('title', 'Create Campaign')
 
-@section('heading')
-    Create Campaign
-@stop
+@section('heading', 'Create Campaign')
 
 @section('content')
 
@@ -24,7 +22,7 @@
             </div>
         @endif
     @else
-    	{!! Form::model($campaign, ['route' => ['campaigns.store'], 'class' => 'form-horizontal']) !!}
+    	{!! Form::open(['route' => ['campaigns.store'], 'class' => 'form-horizontal']) !!}
 
     	@include('campaigns.partials.form')
 	@endif

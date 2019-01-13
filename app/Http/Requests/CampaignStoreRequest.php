@@ -28,6 +28,19 @@ class CampaignStoreRequest extends FormRequest
                 'required',
                 'max:255'
             ],
+            'subject' => [
+                'required',
+                'max:255'
+            ],
+            'from_name' => [
+                'required',
+                'max:255',
+            ],
+            'from_email' => [
+                'required',
+                'max:255',
+                'email',
+            ],
             'provider_id' => [
                 'required',
                 'integer',

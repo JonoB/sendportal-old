@@ -113,8 +113,7 @@ class CampaignsController extends Controller
     {
         $campaign = $this->campaigns->store($request->validated());
 
-        return redirect()
-            ->route('campaigns.emails.create', $campaign->id);
+        return redirect()->route('campaigns.content.edit', $campaign->id);
     }
 
     /**
@@ -147,14 +146,27 @@ class CampaignsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Show the form for editing campaign content
+     *
+     * @param int $id
+     * @return \Illuminate\Contracts\View\Factory|View
+     */
+    public function editContent($id)
+    {
+        $campaign = $this->campaigns->find(($id));
+
+        return view('campaigns.content', compact('campaign'));
+    }
+
+    /**
+     * Update the campaign content
      *
      * @param CampaignUpdateRequest $request
      * @param string $id
      *
      * @return RedirectResponse
      */
-    public function update(CampaignUpdateRequest $request, $id)
+    public function updateContent(CampaignUpdateRequest $request, $id)
     {
         $campaign = $this->campaigns->find($id);
 

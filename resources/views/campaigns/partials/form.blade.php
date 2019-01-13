@@ -1,4 +1,5 @@
 {!! Form::textField('name', 'Campaign Name') !!}
+{!! Form::textField('subject', 'Email Subject') !!}
 {!! Form::textField('from_name', 'From Name') !!}
 {!! Form::textField('from_email', 'From Email') !!}
 
