@@ -1,4 +1,6 @@
-{!! Form::textField('name', 'Campaign Name', isset($campaign->name) ? $campaign->name : null) !!}
+{!! Form::textField('name', 'Campaign Name') !!}
+{!! Form::textField('from_name', 'From Name') !!}
+{!! Form::textField('from_email', 'From Email') !!}
 
 @if ($providers->count() === 1)
     {!! Form::hidden('provider_id', $providers->first()->id) !!}

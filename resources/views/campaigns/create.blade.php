@@ -24,7 +24,7 @@
             </div>
         @endif
     @else
-    	{!! Form::open(['route' => ['campaigns.store'], 'class' => 'form-horizontal']) !!}
+    	{!! Form::model($campaign, ['route' => ['campaigns.store'], 'class' => 'form-horizontal']) !!}
 
     	@include('campaigns.partials.form')
 	@endif
