@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CampaignStoreRequest;
-use App\Http\Requests\CampaignUpdateRequest;
+use App\Http\Requests\CampaignContentRequest;
 use App\Interfaces\CampaignRepositoryInterface;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\ProviderRepositoryInterface;
@@ -65,26 +65,14 @@ class CampaignsController extends Controller
     }
 
     /**
-     * Fields that belong to a campaign instead of an email.
-     *
-     * @var array
-     */
-    protected $campaignFields = [
-        'name',
-        'provider_id',
-        'status_id',
-        'scheduled_at',
-    ];
-
-    /**
      * Index of campaigns
      *
      * @return View
      */
     public function index()
     {
-        $campaigns = $this->campaigns->paginate('created_atDesc', ['status', 'email']);
-        $providerCount = $this->providers->getCount();
+        $campaigns = $this->campaigns->paginate('created_atDesc', ['status']);
+        $providerCount = $this->providers->count();
 
         return view('campaigns.index', compact('campaigns', 'providerCount'));
     }
@@ -146,6 +134,20 @@ class CampaignsController extends Controller
     }
 
     /**
+     * Update the campaign.
+     *
+     * @param CampaignStoreRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function update(CampaignStoreRequest $request)
+    {
+        $campaign = $this->campaigns->store($request->validated());
+
+        return redirect()->route('campaigns.content.edit', $campaign->id);
+    }
+
+    /**
      * Show the form for editing campaign content
      *
      * @param int $id
@@ -161,25 +163,24 @@ class CampaignsController extends Controller
     /**
      * Update the campaign content
      *
-     * @param CampaignUpdateRequest $request
+     * @param CampaignContentRequest $request
      * @param string $id
      *
      * @return RedirectResponse
      */
-    public function updateContent(CampaignUpdateRequest $request, $id)
+    public function updateContent(CampaignContentRequest $request, $id)
     {
         $campaign = $this->campaigns->find($id);
 
         if ($campaign->status_id !== CampaignStatus::STATUS_DRAFT)
         {
             return redirect()
-                ->route('campaign.show', $campaign->id);
+                ->route('campaigns.report', $campaign->id);
         }
 
-        $campaign = $this->campaigns->update($id, $request->only($this->campaignFields));
+        $campaign = $this->campaigns->update($id, $request->only('content'));
 
-        return redirect()
-            ->route('campaigns.show', $campaign->id);
+        return redirect()->route('campaigns.confirm', $campaign->id);
     }
 
     /**

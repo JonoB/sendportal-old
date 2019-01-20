@@ -70,10 +70,25 @@ if ( ! function_exists('formatValue'))
 
         if ($value > 999999)
         {
-            return round($value / 1000000) . 'k';
+            return round($value / 1000000) . 'm';
         }
 
-        return $result = $value;
+        return $value;
+    }
+}
+
+if ( ! function_exists('formatRatio'))
+{
+    /**
+     * Format a ratio to percentage with decimals
+     *
+     * @param float $value
+     * @param int $decimals
+     * @return string
+     */
+    function formatRatio($value, $decimals = 1)
+    {
+        return number_format($value * 100, $decimals) . '%';
     }
 }
 

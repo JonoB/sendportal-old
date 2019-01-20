@@ -11,12 +11,15 @@
 @section('content')
     <div class="row template-editor-container">
         <div class="col-sm-6">
+            {!! Form::model($campaign, array('method' => 'put', 'route' => array('campaigns.content.update', $campaign->id))) !!}
+
             <div class="form-group">
                 <textarea id="id-field-content" class="form-control" name="content" cols="50" rows="10">{{ $campaign->content ?? '' }}</textarea>
             </div>
 
-            {!! Form::hidden('template_content', $campaign->content) !!}
+            <button class="btn btn-primary" type="submit">Save and continue</button>
 
+            {!! Form::close() !!}
         </div>
 
         <div class="col-sm-6">
@@ -25,6 +28,7 @@
                         style="height: 100%; width: 100%"></iframe>
             </div>
         </div>
+
     </div>
 @endsection
 

@@ -144,5 +144,5 @@ interface BaseEloquentInterface extends BaseInterface
      * @param null
      * @return integer
      */
-    public function getCount();
+    public function count();
 }

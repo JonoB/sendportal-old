@@ -21,10 +21,6 @@
                 <tr>
                     <th>Name</th>
                     <th>Status</th>
-                    <th>Template</th>
-                    @if ($providerCount > 1)
-                        <th>Provider</th>
-                    @endif
                     <th>Sent</th>
                     <th>Opened</th>
                     <th>Clicked</th>
@@ -36,7 +32,7 @@
                     <tr>
                         <td>
                             @if ( ! isset($campaign->email) || $campaign->status_id == \App\Models\CampaignStatus::STATUS_DRAFT)
-                                <a href="{{ route('campaigns.show', $campaign->id) }}">{{ $campaign->name }}</a>
+                                <a href="{{ route('campaigns.content.edit', $campaign->id) }}">{{ $campaign->name }}</a>
                             @else
                                 <a href="{{ route('campaigns.report', $campaign->id) }}">{{ $campaign->name }}</a>
                             @endif
@@ -52,44 +48,19 @@
                                 <span class="label label-success">{{ $campaign->status->name }}</span>
                             @endif
                         </td>
+                        <td>{{ formatValue($campaign->sent_count) }}</td>
+                        <td>{{ formatRatio($campaign->open_ratio) }}</td>
+                        <td>{{ formatRatio($campaign->click_ratio) }}</td>
+                        <td>
+                            @if ($campaign->status_id === \App\Models\CampaignStatus::STATUS_DRAFT)
+                                <a href="">
+                                    Edit Content
+                                </a>
+                            @else
+                                N/A
+                            @endif
+                        </td>
 
-                        @if(isset($campaign->email))
-                            <td>
-                                <a href="{{ route('templates.edit', $campaign->email->template->id) }}">
-                                    {{ $campaign->email->template->name }}
-                                </a>
-                            </td>
-                            @if ($providerCount > 1)
-                                <td>{{ $campaign->provider->name }}</td>
-                            @endif
-                            <td>{{ formatValue($campaign->email->sent_count) }}</td>
-                            <td>{{ number_format($campaign->email->open_ratio * 100, 1) . '%' }}</td>
-                            <td>{{ number_format($campaign->email->click_ratio * 100, 1) . '%' }}</td>
-                            <td>
-                                @if ($campaign->status_id === \App\Models\CampaignStatus::STATUS_DRAFT)
-                                    <a href="{{ route('campaigns.emails.content.edit', $campaign->id) }}">
-                                        Edit Content
-                                    </a>
-                                @else
-                                    N/A
-                                @endif
-                            </td>
-                        @else
-                            <td>
-                                <span class="label label-danger">No Email</span>
-                            </td>
-                            @if ($providerCount > 1)
-                                <td>{{  $campaign->provider->name }}</td>
-                            @endif
-                            <td>N/A</td>
-                            <td>N/A</td>
-                            <td>N/A</td>
-                            <td>
-                                <a href="{{ route('campaigns.emails.create', ['id' => $campaign->id]) }}">
-                                    Create Email
-                                </a>
-                            </td>
-                        @endif
                     </tr>
                 @empty
                     <tr>

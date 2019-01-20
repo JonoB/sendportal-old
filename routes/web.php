@@ -37,14 +37,11 @@ Route::middleware(['auth'])->group(function ()
     Route::resource('campaigns', 'CampaignsController');
     Route::get('campaigns/{id}/content', 'CampaignsController@editContent')->name('campaigns.content.edit');
     Route::put('campaigns/{id}/content', 'CampaignsController@updateContent')->name('campaigns.content.update');
-
-    Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
-
-    Route::get('campaigns/{id}/report', ['as' => 'campaigns.report', 'uses' => 'CampaignReportsController@report']);
-    Route::get('campaigns/{id}/recipients', ['as' => 'campaigns.recipients', 'uses' => 'CampaignReportsController@recipients']);
-
     Route::get('campaigns/{id}/confirm', 'CampaignsController@confirm')->name('campaigns.confirm');
     Route::put('campaigns/{id}/send', 'CampaignsController@send')->name('campaigns.send');
+    Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
+    Route::get('campaigns/{id}/report', ['as' => 'campaigns.report', 'uses' => 'CampaignReportsController@report']);
+
 
     // Templates
     Route::resource('templates', 'TemplatesController')

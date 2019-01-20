@@ -8,7 +8,7 @@
 
 @section('content')
 
-    {!! Form::open(['method' => 'put', 'class' => 'form-horizontal', 'route' => ['campaigns.update', $campaign->id]]) !!}
+    {!! Form::model($campaign, ['method' => 'put', 'class' => 'form-horizontal', 'route' => ['campaigns.update', $campaign->id]]) !!}
 
 
     @include('campaigns.partials.form')

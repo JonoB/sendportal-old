@@ -534,7 +534,7 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      * @param null
      * @return integer
      */
-    public function getCount()
+    public function count()
     {
         return $this->getNewInstance()->count();
     }

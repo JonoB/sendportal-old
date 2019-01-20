@@ -27,7 +27,17 @@ class Campaign extends BaseModel
      */
     public function status()
     {
-        return $this->belongsTo(CampaignStatus::class, 'status_id');
+        return $this->belongsTo(CampaignStatus::class);
+    }
+
+    /**
+     * Campaign template
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function template()
+    {
+        return $this->belongsTo(Template::class);
     }
 
     /**
