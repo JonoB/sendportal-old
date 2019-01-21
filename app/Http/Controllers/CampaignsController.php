@@ -136,13 +136,14 @@ class CampaignsController extends Controller
     /**
      * Update the campaign.
      *
+     * @param int $campaignId
      * @param CampaignStoreRequest $request
      *
      * @return RedirectResponse
      */
-    public function update(CampaignStoreRequest $request)
+    public function update(int $campaignId, CampaignStoreRequest $request)
     {
-        $campaign = $this->campaigns->store($request->validated());
+        $campaign = $this->campaigns->update($campaignId, $request->validated());
 
         return redirect()->route('campaigns.content.edit', $campaign->id);
     }
