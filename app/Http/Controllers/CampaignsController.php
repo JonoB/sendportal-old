@@ -207,14 +207,13 @@ class CampaignsController extends Controller
      */
     public function confirm($id)
     {
-        $campaign = $this->campaigns->find($id, ['email']);
+        $campaign = $this->campaigns->find($id);
 
         if ($campaign->status_id > 1)
         {
             return redirect()->route('campaigns.status', $id);
         }
 
-        $template = $this->templates->find($campaign->email->template_id);
         $segments = $this->segments->all('name');
 
         return view('campaigns.confirm', compact('campaign', 'template', 'segments'));
