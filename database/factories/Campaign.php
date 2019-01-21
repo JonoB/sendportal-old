@@ -13,3 +13,9 @@ $factory->define(Campaign::class, function (Faker $faker) {
         'provider_id' => factory(Provider::class),
     ];
 });
+
+$factory->state(Campaign::class, 'withContent', function (Faker $faker) {
+    return [
+      'content' => $faker->paragraph,
+    ];
+});

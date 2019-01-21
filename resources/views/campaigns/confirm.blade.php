@@ -48,18 +48,18 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">From</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">{{ $campaign->email->from_name . ' <' . $campaign->email->from_email . '>' }}</p>
+                    <p class="form-control-static">{{ $campaign->from_name . ' <' . $campaign->from_email . '>' }}</p>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">Subject</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">{{ $campaign->email->subject }}</p>
+                    <p class="form-control-static">{{ $campaign->subject }}</p>
                 </div>
             </div>
 
             <div style="border: 1px solid #ddd; height: 600px">
-                <iframe id="js-template-iframe" srcdoc="{{ $campaign->email->full_content }}" class="embed-responsive-item" frameborder="0" style="height: 100%; width: 100%"></iframe>
+                <iframe id="js-template-iframe" srcdoc="{{ $campaign->content }}" class="embed-responsive-item" frameborder="0" style="height: 100%; width: 100%"></iframe>
             </div>
 
         </form>

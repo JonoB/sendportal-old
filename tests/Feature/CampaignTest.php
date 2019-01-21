@@ -146,4 +146,18 @@ class CampaignTest extends TestCase
 
         $this->assertRedirectToLogin($response);
     }
+
+    /** @test */
+    function the_campaign_confirmation_page_can_be_viewed()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->state('withContent')->create();
+
+        $response = $this->get(route('campaigns.confirm', $campaign->id));
+
+        $response->assertStatus(200);
+    }
 }
