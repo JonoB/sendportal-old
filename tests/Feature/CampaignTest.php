@@ -150,8 +150,6 @@ class CampaignTest extends TestCase
     /** @test */
     function the_campaign_confirmation_page_can_be_viewed()
     {
-        $this->withoutExceptionHandling();
-
         $this->actingAs($this->user);
 
         $campaign = factory(Campaign::class)->state('withContent')->create();

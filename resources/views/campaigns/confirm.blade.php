@@ -59,7 +59,7 @@
             </div>
 
             <div style="border: 1px solid #ddd; height: 600px">
-                <iframe id="js-template-iframe" srcdoc="{{ $campaign->content }}" class="embed-responsive-item" frameborder="0" style="height: 100%; width: 100%"></iframe>
+                <iframe id="js-template-iframe" srcdoc="{{ $campaign->full_content }}" class="embed-responsive-item" frameborder="0" style="height: 100%; width: 100%"></iframe>
             </div>
 
         </form>

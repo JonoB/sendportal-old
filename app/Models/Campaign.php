@@ -50,4 +50,17 @@ class Campaign extends BaseModel
     {
         return $this->belongsTo(Provider::class);
     }
+
+    /**
+     * Get the full content for this email, including the template content
+     *
+     * @return string
+     */
+    public function getFullContentAttribute(): string
+    {
+
+        return $this->template_id ?
+            str_replace('{{content}}', $this->content, $this->template->content) :
+            $this->content;
+    }
 }
