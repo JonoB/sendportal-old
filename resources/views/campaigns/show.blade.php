@@ -6,6 +6,8 @@
 
 @section('content')
 
+    @include('campaigns.partials.progress')
+
     @if ($campaign->email->content ?? false)
         <a href="{{ route('campaigns.confirm', $campaign->id) }}">
             Confirm and Send Campaign
