@@ -53,9 +53,15 @@
                         <td>{{ formatRatio($campaign->click_ratio) }}</td>
                         <td>
                             @if ($campaign->status_id === \App\Models\CampaignStatus::STATUS_DRAFT)
-                                <a href="">
-                                    Edit Content
-                                </a>
+                                @if($campaign->template_id === null)
+                                    <a href="{{ route('campaigns.template.create', $campaign->id) }}">
+                                        Select Template
+                                    </a>
+                                @else
+                                    <a href="{{ route('campaigns.content.edit', $campaign->id) }}">
+                                        Edit Content
+                                    </a>
+                                @endif
                             @else
                                 N/A
                             @endif

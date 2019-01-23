@@ -13,8 +13,11 @@
         <div class="col-sm-6">
             {!! Form::model($campaign, array('method' => 'put', 'route' => array('campaigns.content.update', $campaign->id))) !!}
 
+            <input type="hidden" name="template_content" value="{{ $campaign->template->content }}">
+
             <div class="form-group">
-                <textarea id="id-field-content" class="form-control" name="content" cols="50" rows="10">{{ $campaign->content ?? '' }}</textarea>
+                <textarea id="id-field-content" class="form-control" name="content" cols="50"
+                          rows="10">{{ $campaign->content ?? '' }}</textarea>
             </div>
 
             <button class="btn btn-primary" type="submit">Save and continue</button>
@@ -33,32 +36,32 @@
 @endsection
 
 @section('js')
+    <script src="{{ asset('js/codemirror/codemirror.js') }}"></script>
+    <script src="{{ asset('js/codemirror/modes/xml.js') }}"></script>
     <script src="{{ asset('js/summernote.min.js') }}"></script>
 
     <script>
-        $(document).ready(function () {
-            var el = $('#id-field-content');
+      $(document).ready(function () {
+        var el = $('#id-field-content');
 
-            el.summernote({
-                minHeight: 555,
-                callbacks: {
-                    onChange: function(contents) {
-                        copyEditorToIframe(contents);
-                    }
-                }
-            });
-
-            copyEditorToIframe(el.summernote('code'));
+        el.summernote({
+          minHeight: 555,
+          callbacks: {
+            onChange: function (contents) {
+              copyEditorToIframe(contents);
+            }
+          }
         });
 
-        function copyEditorToIframe(html) {
-            console.log(html);
+        copyEditorToIframe(el.summernote('code'));
+      });
 
-            const iframe = document.getElementById('js-template-iframe');
-            const iframedoc = iframe.contentDocument || iframe.contentWindow.document;
-
-            // NOTE(david): the @{{ content }} is so that blade doesn't interpret it as a variable
-            iframedoc.body.innerHTML = html;
-        }
+      function copyEditorToIframe(html) {
+        const iframe = document.getElementById('js-template-iframe');
+        const iframedoc = iframe.contentDocument || iframe.contentWindow.document;
+        const templateContent = document.querySelector('input[name="template_content"]').value;
+        // NOTE(david): the @{{ content }} is so that blade doesn't interpret it as a variable
+        iframedoc.body.innerHTML = templateContent.replace('@{{content}}', html);
+      }
     </script>
 @endsection

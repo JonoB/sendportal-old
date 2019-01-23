@@ -35,6 +35,8 @@ Route::middleware(['auth'])->group(function ()
 
     // Campaigns
     Route::resource('campaigns', 'CampaignsController');
+    Route::get('campaigns/{id}/template', 'CampaignsController@selectTemplate')->name('campaigns.template.create');
+    Route::put('campaigns/{id}/template', 'CampaignsController@updateTemplate')->name('campaigns.template.update');
     Route::get('campaigns/{id}/content', 'CampaignsController@editContent')->name('campaigns.content.edit');
     Route::put('campaigns/{id}/content', 'CampaignsController@updateContent')->name('campaigns.content.update');
     Route::get('campaigns/{id}/confirm', 'CampaignsController@confirm')->name('campaigns.confirm');

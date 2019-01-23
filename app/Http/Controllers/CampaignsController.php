@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CampaignStoreRequest;
 use App\Http\Requests\CampaignContentRequest;
+use App\Http\Requests\CampaignTemplateUpdateRequest;
 use App\Interfaces\CampaignRepositoryInterface;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\ProviderRepositoryInterface;
@@ -101,7 +102,7 @@ class CampaignsController extends Controller
     {
         $campaign = $this->campaigns->store($request->validated());
 
-        return redirect()->route('campaigns.content.edit', $campaign->id);
+        return redirect()->route('campaigns.template.create', $campaign->id);
     }
 
     /**
@@ -152,11 +153,17 @@ class CampaignsController extends Controller
      * Show the form for editing campaign content
      *
      * @param int $id
+     *
      * @return \Illuminate\Contracts\View\Factory|View
      */
-    public function editContent($id)
+    public function editContent(int $id)
     {
-        $campaign = $this->campaigns->find(($id));
+        $campaign = $this->campaigns->find($id, ['template']);
+
+        if ( ! $campaign->template_id)
+        {
+            return redirect()->route('campaigns.template.create', $id);
+        }
 
         return view('campaigns.content', compact('campaign'));
     }
@@ -309,5 +316,35 @@ class CampaignsController extends Controller
         }
 
         return redirect()->route('campaigns.status', $id);
+    }
+
+    /**
+     * Show the template selection view.
+     *
+     * @param $campaignId
+     *
+     * @return \Illuminate\Contracts\View\Factory|View
+     */
+    public function selectTemplate($campaignId)
+    {
+        $campaign = $this->campaigns->find($campaignId);
+        $templates = $this->templates->paginate();
+
+        return view('campaigns.template', compact('campaign', 'templates'));
+    }
+
+    /**
+     * Update a campaign's template.
+     *
+     * @param CampaignTemplateUpdateRequest $request
+     * @param int $campaignId
+     *
+     * @return mixed
+     */
+    public function updateTemplate(CampaignTemplateUpdateRequest $request, int $campaignId)
+    {
+        $campaign = $this->campaigns->update($campaignId, $request->validated());
+
+        return redirect()->route('campaigns.content.edit', $campaign->id);
     }
 }

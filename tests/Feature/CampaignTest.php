@@ -113,13 +113,65 @@ class CampaignTest extends TestCase
     }
 
     /** @test */
-    function a_user_is_redirected_to_the_campaign_content_creation_wizard_when_a_campaign_is_created()
+    function a_user_is_redirected_to_the_template_selection_page_when_a_campaign_is_created()
     {
         $this->actingAs($this->user);
         $campaign = factory(Campaign::class)->make();
 
         $response = $this->post(route('campaigns.store'), $campaign->toArray());
         $campaign = $this->campaignRepository->findBy('name', $campaign->name);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('campaigns.template.create', $campaign->id));
+    }
+
+    /** @test */
+    function the_campaign_template_selection_page_lists_all_templates()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->create();
+        factory(Template::class)->create([
+            'name' => 'Template 1',
+        ]);
+
+        factory(Template::class)->create([
+            'name' => 'Template 2',
+        ]);
+
+        $response = $this->get(route('campaigns.template.create', $campaign->id));
+
+        $response->assertStatus(200);
+        $response->assertSee('Template 1');
+        $response->assertSee('Template 2');
+    }
+
+    /** @test */
+    function a_campaigns_template_can_be_updated()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->create();
+        $template = factory(Template::class)->create();
+
+        $this->put(route('campaigns.template.update', $campaign->id), [
+            'template_id' => $template->id
+        ]);
+
+        $this->assertEquals($template->id, $campaign->fresh()->template_id);
+    }
+
+    /** @test */
+    function a_user_is_redirected_to_the_campaign_content_creation_wizard_when_a_campaign_template_is_updated()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->create();
+        $template = factory(Template::class)->create();
+
+        $response = $this->put(route('campaigns.template.update', $campaign->id), [
+            'template_id' => $template->id
+        ]);
 
         $response->assertStatus(302);
         $response->assertRedirect(route('campaigns.content.edit', $campaign->id));
@@ -130,11 +182,44 @@ class CampaignTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $campaign = factory(Campaign::class)->create();
+        $campaign = factory(Campaign::class)->state('withTemplate')->create();
 
         $response = $this->get(route('campaigns.content.edit', $campaign->id));
 
         $response->assertStatus(200);
+    }
+
+
+    /** @test */
+    function the_campaign_content_creation_wizard_redirects_to_the_template_selection_view_if_no_template_is_selected()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->create();
+
+        $response = $this->get(route('campaigns.content.edit', $campaign->id));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('campaigns.template.create', $campaign->id));
+    }
+
+    /** @test */
+    function the_campaign_content_creation_wizard_uses_the_selected_template()
+    {
+        $this->actingAs($this->user);
+
+        $template = factory(Template::class)->create([
+            'name' => 'Test Template',
+            'content' => 'Hello',
+        ]);
+        $campaign = factory(Campaign::class)->create([
+            'template_id' => $template->id,
+        ]);
+
+        $response = $this->get(route('campaigns.content.edit', $campaign->id));
+
+        $response->assertStatus(200);
+        $response->assertSee('Hello');
     }
 
     /** @test */
@@ -157,5 +242,31 @@ class CampaignTest extends TestCase
         $response = $this->get(route('campaigns.confirm', $campaign->id));
 
         $response->assertStatus(200);
+    }
+
+    /** @test */
+    function the_campaign_index_has_a_link_to_the_template_selection_page_if_a_draft_campaign_has_no_template_selected()
+    {
+        $this->actingAs($this->user);
+
+        factory(Campaign::class)->create();
+
+        $response = $this->get(route('campaigns.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Select Template');
+    }
+
+    /** @test */
+    function the_campaign_index_has_a_link_to_the_content_edit_page_if_a_draft_campaign_has_a_template_selected()
+    {
+        $this->actingAs($this->user);
+
+        factory(Campaign::class)->state('withTemplate')->create();
+
+        $response = $this->get(route('campaigns.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Edit Content');
     }
 }
