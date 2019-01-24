@@ -9,7 +9,7 @@
 @section('content')
 
     <div class="row">
-        <div class="col-lg-2 col-sm-4 col-xs-12">
+        <div class="col-md-4 col-sm-4 col-xs-12">
             <div class="info-box">
                 <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
                 <div class="info-box-content">
@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <div class="col-lg-2 col-sm-4 col-xs-12">
+        <div class="col-md-4 col-xs-12">
             <div class="info-box">
                 <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
                 <div class="info-box-content">
@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-4 col-xs-12">
+        <div class="col-md-4 col-xs-12">
             <div class="info-box">
                 <span class="info-box-icon bg-blue"><i class="fa fa-envelope-o"></i></span>
                 <div class="info-box-content">
@@ -37,10 +37,6 @@
                 </div>
             </div>
         </div>
-
-    </div>
-
-    <div class="row">
 
         <div class="col-lg-6">
             <div class="box box-primary">
@@ -74,45 +70,42 @@
                 </div>
             </div>
         </div>
+        @endsection
 
-    </div>
+        @section('js')
+            <script src="{{ asset('js/Chart.bundle.js') }}"></script>
 
-@endsection
-
-@section('js')
-    <script src="{{ asset('js/Chart.bundle.js') }}"></script>
-
-    <script>
-      $(function () {
-        var ctx = document.getElementById("opensChart");
-        var myChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: {!! $chartData['labels'] !!},
-            datasets: [{
-              data: {!! $chartData['data'] !!},
-              label: "Opens",
-              backgroundColor: 'rgba(0,115,183,1)'
-            }]
-          },
-          options: {
-            legend: {
-              display: false
-            },
-            scales: {
-              xAxes: [{
-                gridLines: {
-                  display: false
-                }
-              }],
-              yAxes: [{
-                ticks: {
-                  beginAtZero: true
-                }
-              }]
-            }
-          }
-        });
-      });
-    </script>
+            <script>
+              $(function () {
+                var ctx = document.getElementById("opensChart");
+                var myChart = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: {!! $chartData['labels'] !!},
+                    datasets: [{
+                      data: {!! $chartData['data'] !!},
+                      label: "Opens",
+                      backgroundColor: 'rgba(0,115,183,1)'
+                    }]
+                  },
+                  options: {
+                    legend: {
+                      display: false
+                    },
+                    scales: {
+                      xAxes: [{
+                        gridLines: {
+                          display: false
+                        }
+                      }],
+                      yAxes: [{
+                        ticks: {
+                          beginAtZero: true
+                        }
+                      }]
+                    }
+                  }
+                });
+              });
+            </script>
 @endsection
