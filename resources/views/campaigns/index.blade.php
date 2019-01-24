@@ -39,6 +39,8 @@
                                 @endif
                             @elseif($campaign->sent)
                                 <a href="{{ route('campaigns.report', $campaign->id) }}">{{ $campaign->name }}</a>
+                            @else
+                                <a href="{{ route('campaigns.status', $campaign->id) }}">{{ $campaign->name }}</a>
                             @endif
                         </td>
                         <td>
