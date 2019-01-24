@@ -44,11 +44,52 @@ class Campaign extends BaseModel
      * Provider relationship method
      *
      * @param null
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function provider()
     {
         return $this->belongsTo(Provider::class);
+    }
+
+    /**
+     * The campaign's subscribers.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function subscribers()
+    {
+        return $this->hasMany(CampaignSubscriber::class);
+    }
+
+    /**
+     * Get the email's open ratio as an attribute.
+     *
+     * @return float|int
+     */
+    public function getOpenRatioAttribute()
+    {
+        if ($openCount = $this->subscribers->sum('open_count'))
+        {
+            return $openCount / $this->attributes['sent_count'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * Get the email's click ratio as an attribute.
+     *
+     * @return float|int
+     */
+    public function getClickRatioAttribute()
+    {
+        if ($clickCount = $this->subscribers->sum('click_count'))
+        {
+            return $clickCount / $this->attributes['sent_count'];
+        }
+
+        return 0;
     }
 
     /**

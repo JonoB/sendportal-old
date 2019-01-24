@@ -39,3 +39,10 @@ $factory->state(Campaign::class, 'sent', function ()
         'status_id' => CampaignStatus::STATUS_SENT,
     ];
 });
+
+$factory->state(Campaign::class, 'draft', function ()
+{
+    return [
+        'status_id' => CampaignStatus::STATUS_DRAFT,
+    ];
+});

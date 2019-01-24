@@ -82,16 +82,15 @@ body {
     padding: 6rem;
     border-radius: .5rem;
     border-top: 3px solid #3c8dbc;
-    box-shadow: 0 15px 30px 0 rgba(0,0,0,0.11),
-    0 5px 15px 0 rgba(0,0,0,0.08);
+    box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.11),
+    0 5px 15px 0 rgba(0, 0, 0, 0.08);
 }
 
 .login-body {
     width: 100%;
 }
 
-.form-check-label
-{
+.form-check-label {
     margin-left: .75rem;
     font-weight: 400;
     color: #929ca0;
@@ -200,16 +199,21 @@ body {
 .container-wrapper {
     background-color: #ff0000;
 }
+
 .content-wrapper-inner {
     background-color: #f9f9f9;
     padding: 30px;
     margin: 24px;
     border: 1px solid #eae9e9;
-    box-shadow: 0 3px 5px rgba(0,0,0,0.1), 0 3px 3px rgba(0,0,0,0.15);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1), 0 3px 3px rgba(0, 0, 0, 0.15);
     border-radius: 3px;
 }
 
 .content {
     padding-left: 0;
     padding-right: 0;
+}
+
+.campaign-link td {
+    border-top: 0 !important;
 }

@@ -281,4 +281,28 @@ class CampaignTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('campaigns.report', $campaign->id));
     }
+
+    /** @test */
+    function the_campaign_report_page_can_be_viewed_if_the_campaign_has_been_sent()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->states(['sent', 'withTemplate'])->create();
+
+        $response = $this->get(route('campaigns.report', $campaign->id));
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    function the_campaign_report_page_cannot_be_viewed_if_the_campaign_has_not_been_sent()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->states(['draft', 'withTemplate'])->create();
+
+        $response = $this->get(route('campaigns.report', $campaign->id));
+
+        $response->assertStatus(302);
+    }
 }

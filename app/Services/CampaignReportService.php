@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Interfaces\CampaignLinksRepositoryInterface;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\CampaignReportServiceInterface;
-use App\Interfaces\CampaignUrlsRepositoryInterface;
 
 class CampaignReportService implements CampaignReportServiceInterface
 {
@@ -14,23 +14,23 @@ class CampaignReportService implements CampaignReportServiceInterface
     protected $campaignSubscriberRepository;
 
     /**
-     * @var CampaignUrlsRepositoryInterface
+     * @var CampaignLinksRepositoryInterface
      */
-    protected $campaignUrlsRepository;
+    private $campaignLinksRepository;
 
     /**
      * CampaignReportService constructor.
      *
      * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
-     * @param CampaignUrlsRepositoryInterface $campaignUrlsRepository
+     * @param CampaignLinksRepositoryInterface $campaignLinksRepository
      */
     public function __construct(
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
-        CampaignUrlsRepositoryInterface $campaignUrlsRepository
+        CampaignLinksRepositoryInterface $campaignLinksRepository
     )
     {
         $this->campaignSubscriberRepository = $campaignSubscriberRepository;
-        $this->campaignUrlsRepository = $campaignUrlsRepository;
+        $this->campaignLinksRepository = $campaignLinksRepository;
     }
 
     public function opensPerHour($campaignId)
@@ -51,9 +51,9 @@ class CampaignReportService implements CampaignReportServiceInterface
         ];
     }
 
-    public function campaignUrls($campaignId)
+    public function campaignLinks($campaignId)
     {
-        return $this->campaignUrlsRepository->getBy('campaign_id', $campaignId);
+        return $this->campaignLinksRepository->getBy('campaign_id', $campaignId);
     }
 
 

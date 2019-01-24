@@ -6,6 +6,5 @@ interface CampaignReportServiceInterface
 {
     public function opensPerHour($campaignId);
 
-    public function campaignUrls($campaignId);
-
+    public function campaignLinks($campaignId);
 }
