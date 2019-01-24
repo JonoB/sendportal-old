@@ -58,9 +58,28 @@ class Campaign extends BaseModel
      */
     public function getFullContentAttribute(): string
     {
-
         return $this->template_id ?
             str_replace('{{content}}', $this->content, $this->template->content) :
             $this->content;
+    }
+
+    /**
+     * Determine whether the campaign is a draft.
+     *
+     * @return bool
+     */
+    public function getDraftAttribute(): bool
+    {
+        return $this->status_id === CampaignStatus::STATUS_DRAFT;
+    }
+
+    /**
+     * Determine whether the campaign has been sent.
+     *
+     * @return bool
+     */
+    public function getSentAttribute(): bool
+    {
+        return $this->status_id === CampaignStatus::STATUS_SENT;
     }
 }

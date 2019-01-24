@@ -165,6 +165,11 @@ class CampaignsController extends Controller
             return redirect()->route('campaigns.template.create', $id);
         }
 
+        if ($campaign->sent)
+        {
+            return redirect()->route('campaigns.report', $id);
+        }
+
         return view('campaigns.content', compact('campaign'));
     }
 

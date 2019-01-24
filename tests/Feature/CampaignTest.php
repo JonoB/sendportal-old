@@ -189,7 +189,6 @@ class CampaignTest extends TestCase
         $response->assertStatus(200);
     }
 
-
     /** @test */
     function the_campaign_content_creation_wizard_redirects_to_the_template_selection_view_if_no_template_is_selected()
     {
@@ -268,5 +267,18 @@ class CampaignTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Edit Content');
+    }
+
+    /** @test */
+    function if_a_campaign_has_been_sent_the_content_edit_page_redirects_to_the_reports_page()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->states(['sent', 'withTemplate'])->create();
+
+        $response = $this->get(route('campaigns.content.edit', $campaign->id));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('campaigns.report', $campaign->id));
     }
 }

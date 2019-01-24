@@ -1,11 +1,13 @@
 <?php
 
 use App\Models\Campaign;
+use App\Models\CampaignStatus;
 use App\Models\Provider;
 use App\Models\Template;
 use Faker\Generator as Faker;
 
-$factory->define(Campaign::class, function (Faker $faker) {
+$factory->define(Campaign::class, function (Faker $faker)
+{
     return [
         'name' => $faker->word,
         'subject' => $faker->title,
@@ -15,16 +17,25 @@ $factory->define(Campaign::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(Campaign::class, 'withContent', function (Faker $faker) {
+$factory->state(Campaign::class, 'withContent', function (Faker $faker)
+{
     return [
-      'content' => $faker->paragraph,
+        'content' => $faker->paragraph,
     ];
 });
 
-$factory->state(Campaign::class, 'withTemplate', function() {
-   $template = factory(Template::class)->create();
+$factory->state(Campaign::class, 'withTemplate', function ()
+{
+    $template = factory(Template::class)->create();
 
-   return [
-       'template_id' => $template->id,
-   ];
+    return [
+        'template_id' => $template->id,
+    ];
+});
+
+$factory->state(Campaign::class, 'sent', function ()
+{
+    return [
+        'status_id' => CampaignStatus::STATUS_SENT,
+    ];
 });

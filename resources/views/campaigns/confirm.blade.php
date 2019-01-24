@@ -38,7 +38,7 @@
         </div>
 
 {{--        <a href="{{ route('campaigns.design', $campaign->id) }}" class="btn btn-default">Back</a>--}}
-
+        <a href="{{ route('campaigns.content.edit', $campaign->id) }}" class="btn btn-link"><i class="fa fa-arrow-left"></i> Back</a>
         {!! Form::submitButton('Send campaign') !!}
         {!! Form::close() !!}
     </div>

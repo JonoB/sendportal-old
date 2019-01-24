@@ -31,9 +31,13 @@
                 @forelse($campaigns as $campaign)
                     <tr>
                         <td>
-                            @if ( ! isset($campaign->email) || $campaign->status_id == \App\Models\CampaignStatus::STATUS_DRAFT)
-                                <a href="{{ route('campaigns.content.edit', $campaign->id) }}">{{ $campaign->name }}</a>
-                            @else
+                            @if ($campaign->draft)
+                                @if( ! $campaign->template)
+                                    <a href="{{ route('campaigns.template.create', $campaign->id) }}">{{ $campaign->name }}</a>
+                                @else
+                                    <a href="{{ route('campaigns.content.edit', $campaign->id) }}">{{ $campaign->name }}</a>
+                                @endif
+                            @elseif($campaign->sent)
                                 <a href="{{ route('campaigns.report', $campaign->id) }}">{{ $campaign->name }}</a>
                             @endif
                         </td>
