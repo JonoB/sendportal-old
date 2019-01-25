@@ -36,7 +36,6 @@ class CampaignReportService implements CampaignReportServiceInterface
     public function opensPerHour($campaignId)
     {
         $opensPerHour = $this->campaignSubscriberRepository->countUniqueOpensPerHour($campaignId);
-
         $chartLabels = [];
         $chartData = [];
         foreach ($opensPerHour as $item)

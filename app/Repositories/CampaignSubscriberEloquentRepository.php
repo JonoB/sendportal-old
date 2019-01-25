@@ -60,8 +60,9 @@ class CampaignSubscriberEloquentRepository extends BaseEloquentRepository implem
     public function countUniqueOpensPerHour($campaignId)
     {
         return $this->getNewInstance()
-            ->select(\DB::raw('COUNT(open_count) as open_count, DATE_FORMAT(opened_at, "%d-%b %k:00") as opened_at'))
+            ->select(\DB::raw('SUM(open_count) as open_count, DATE_FORMAT(opened_at, "%d-%b %k:00") as opened_at'))
             ->where('campaign_id', $campaignId)
+            ->where('open_count', '>', 0)
             ->groupBy(\DB::raw('HOUR(opened_at), DAY(opened_at)'))
             ->orderBy('opened_at')
             ->get();
