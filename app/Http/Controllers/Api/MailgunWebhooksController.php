@@ -65,6 +65,17 @@ class MailgunWebhooksController extends Controller
     }
 
     /**
+     * Handle an email complained event.
+     *
+     * @param string $messageId
+     * @param array $content
+     */
+    public function handleComplained(string $messageId, array $content)
+    {
+        $this->emailWebhookService->handleComplaint($messageId);
+    }
+
+    /**
      * Handle an email failed event.
      *
      * @param string $messageId
