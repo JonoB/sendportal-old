@@ -65,12 +65,25 @@ class MailgunWebhooksController extends Controller
     }
 
     /**
-     * Handle an email open event.
+     * Handle an email delivery event.
      *
-     * @param $messageId
+     * @param string $messageId
      * @param array $content
      */
-    public function handleOpened($messageId, array $content)
+    public function handleDelivered(string $messageId, array $content)
+    {
+        $timestamp = Carbon::createFromTimestamp(array_get($content, 'signature.timestamp'));
+
+        $this->emailWebhookService->handleDelivery($messageId, $timestamp);
+    }
+
+    /**
+     * Handle an email open event.
+     *
+     * @param string $messageId
+     * @param array $content
+     */
+    public function handleOpened(string $messageId, array $content)
     {
         $ipAddress = array_get($content, 'event-data.ip');
         $timestamp = Carbon::createFromTimestamp(array_get($content, 'signature.timestamp'));
