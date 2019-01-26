@@ -50,7 +50,7 @@ class MailgunWebhooksController extends Controller
      */
     protected function processEmailEvent(array $content, string $event)
     {
-        $messageId = array_get($content, 'event-data.message.headers.message-id');
+        $messageId = $this->formatMessageId(array_get($content, 'event-data.message.headers.message-id'));
 
         $method = 'handle' . studly_case(str_slug($event, ''));
 
@@ -70,11 +70,25 @@ class MailgunWebhooksController extends Controller
      * @param $messageId
      * @param array $content
      */
-    public function handleOpen($messageId, array $content)
+    public function handleOpened($messageId, array $content)
     {
         $ipAddress = array_get($content, 'event-data.ip');
-        $timestamp = Carbon::parse(array_get($content, 'signature.timestamp'));
+        $timestamp = Carbon::createFromTimestamp(array_get($content, 'signature.timestamp'));
 
         $this->emailWebhookService->handleOpen($messageId, $timestamp, $ipAddress);
+    }
+
+    /**
+     * Prepend/append crocodiles to message ID.
+     *
+     * @param string $messageId
+     *
+     * @return string
+     */
+    protected function formatMessageId(string $messageId)
+    {
+        return $messageId[0] == '<' ?
+            $messageId :
+            $messageId = '<' . $messageId . '>';
     }
 }

@@ -45,6 +45,11 @@ class EmailWebhookService implements EmailWebhookServiceInterface
      */
     public function handleOpen($messageId, Carbon $timestamp, $ipAddress)
     {
+        if($messageId[0] != '<')
+        {
+            $messageId = '<' . $messageId . '>';
+        }
+
         $campaignSubscriber = \DB::table('campaign_subscriber')->where('message_id', $messageId)->first();
         \DB::table('campaign_subscriber')->where('message_id', $messageId)->increment('open_count');
 
