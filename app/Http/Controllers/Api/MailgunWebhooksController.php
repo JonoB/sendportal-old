@@ -65,6 +65,22 @@ class MailgunWebhooksController extends Controller
     }
 
     /**
+     * Handle an email failed event.
+     *
+     * @param string $messageId
+     * @param array $content
+     */
+    public function handleFailed(string $messageId, array $content)
+    {
+        $severity = array_get($content, 'event-data.severity');
+
+        if($severity === 'permanent')
+        {
+            $this->emailWebhookService->handlePermanentBounce($messageId);
+        }
+    }
+
+    /**
      * Handle an email delivery event.
      *
      * @param string $messageId
@@ -75,6 +91,18 @@ class MailgunWebhooksController extends Controller
         $timestamp = Carbon::createFromTimestamp(array_get($content, 'signature.timestamp'));
 
         $this->emailWebhookService->handleDelivery($messageId, $timestamp);
+    }
+
+    /**
+     * Handle an email click event.
+     *
+     * @param string $messageId
+     * @param array $content
+     */
+    public function handleClicked(string $messageId, array $content)
+    {
+        // NOTE(josh): Mailgun does not seem to allow us to track which specific link was clicked...
+        // this may be problematic.
     }
 
     /**
