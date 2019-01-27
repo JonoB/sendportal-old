@@ -19,7 +19,8 @@ class SubscribersController extends Controller
     /**
      * SubscribersController constructor.
      *
-     * @param segmentRepositoryInterface $subscriberSegmentRepository
+     * SubscribersController constructor.
+     * @param SubscriberRepositoryInterface $subscriberRepository
      */
     public function __construct(
         SubscriberRepositoryInterface $subscriberRepository

@@ -228,7 +228,7 @@ class CampaignsController extends Controller
 
         $segments = $this->segments->all('name');
 
-        return view('campaigns.confirm', compact('campaign', 'template', 'segments'));
+        return view('campaigns.confirm', compact('campaign', 'segments'));
     }
 
     /**
