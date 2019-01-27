@@ -85,7 +85,7 @@ class MailgunWebhooksController extends Controller
     {
         $severity = array_get($content, 'event-data.severity');
 
-        if($severity === 'permanent')
+        if ($severity === 'permanent')
         {
             $this->emailWebhookService->handlePermanentBounce($messageId);
         }
@@ -112,8 +112,8 @@ class MailgunWebhooksController extends Controller
      */
     public function handleClicked(string $messageId, array $content)
     {
-        // NOTE(josh): Mailgun does not seem to allow us to track which specific link was clicked...
-        // this may be problematic.
+        $url = array_get($content, 'event-data.url');
+        $this->emailWebhookService->handleClick($messageId, $url);
     }
 
     /**
