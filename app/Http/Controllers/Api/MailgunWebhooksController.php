@@ -70,7 +70,7 @@ class MailgunWebhooksController extends Controller
      * @param string $messageId
      * @param array $content
      */
-    public function handleComplained(string $messageId, array $content)
+    protected function handleComplained(string $messageId, array $content)
     {
         $this->emailWebhookService->handleComplaint($messageId);
     }
@@ -81,7 +81,7 @@ class MailgunWebhooksController extends Controller
      * @param string $messageId
      * @param array $content
      */
-    public function handleFailed(string $messageId, array $content)
+    protected function handleFailed(string $messageId, array $content)
     {
         $severity = array_get($content, 'event-data.severity');
 
@@ -97,7 +97,7 @@ class MailgunWebhooksController extends Controller
      * @param string $messageId
      * @param array $content
      */
-    public function handleDelivered(string $messageId, array $content)
+    protected function handleDelivered(string $messageId, array $content)
     {
         $timestamp = Carbon::createFromTimestamp(array_get($content, 'signature.timestamp'));
 
@@ -110,7 +110,7 @@ class MailgunWebhooksController extends Controller
      * @param string $messageId
      * @param array $content
      */
-    public function handleClicked(string $messageId, array $content)
+    protected function handleClicked(string $messageId, array $content)
     {
         $url = array_get($content, 'event-data.url');
         $this->emailWebhookService->handleClick($messageId, $url);
@@ -122,7 +122,7 @@ class MailgunWebhooksController extends Controller
      * @param string $messageId
      * @param array $content
      */
-    public function handleOpened(string $messageId, array $content)
+    protected function handleOpened(string $messageId, array $content)
     {
         $ipAddress = array_get($content, 'event-data.ip');
         $timestamp = Carbon::createFromTimestamp(array_get($content, 'signature.timestamp'));
