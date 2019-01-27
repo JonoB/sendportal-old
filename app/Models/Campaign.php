@@ -69,7 +69,7 @@ class Campaign extends BaseModel
      */
     public function getOpenRatioAttribute()
     {
-        if ($openCount = $this->subscribers->sum('open_count'))
+        if ($openCount = $this->subscribers->where('open_count', '>', 0)->count())
         {
             return $openCount / $this->attributes['sent_count'];
         }
@@ -84,7 +84,7 @@ class Campaign extends BaseModel
      */
     public function getClickRatioAttribute()
     {
-        if ($clickCount = $this->subscribers->sum('click_count'))
+        if ($clickCount = $this->subscribers->where('click_count', '>', 0)->count())
         {
             return $clickCount / $this->attributes['sent_count'];
         }
