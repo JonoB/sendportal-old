@@ -27,7 +27,7 @@ class SubscriberStoreRequest extends FormRequest
             'email' => ['required', 'email', 'max:255', 'unique:subscribers'],
             'first_name' => ['required', 'max:255'],
             'last_name' => ['max:255'],
-            'segments' => ['array']
+            'segments' => ['array'],
         ];
     }
 }
