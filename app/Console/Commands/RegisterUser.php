@@ -163,6 +163,13 @@ class RegisterUser extends Command
             return false;
         }
 
+        if (strlen($name) > 255)
+        {
+            $this->setName('The name must be less than 255 characters long.');
+
+            return false;
+        }
+
         return true;
     }
 
@@ -215,6 +222,12 @@ class RegisterUser extends Command
         elseif ( ! filter_var($email, FILTER_VALIDATE_EMAIL))
         {
             $this->setEmailError('You did not enter a valid email address.');
+
+            return false;
+        }
+        elseif (strlen($email) > 255)
+        {
+            $this->setName('The email must be less than 255 characters long.');
 
             return false;
         }
