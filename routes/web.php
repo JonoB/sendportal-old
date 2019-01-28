@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // Auth
-Auth::routes();
+Auth::routes([
+    'register' => false,
+]);
 
 // App
 Route::middleware(['auth'])->group(function ()
