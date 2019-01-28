@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SubscriberRequest;
+use App\Http\Requests\SubscriberStoreRequest;
+use App\Http\Requests\SubscriberUpdateRequest;
+use App\Http\Resources\Subscriber;
 use App\Interfaces\SubscriberListRepositoryInterface;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
@@ -26,9 +28,12 @@ class SegmentSubscribersController extends Controller
      */
     protected $tagRepository;
 
-
     /**
      * SubscribersController constructor.
+     *
+     * @param SubscriberRepositoryInterface $subscriberRepository
+     * @param SubscriberListRepositoryInterface $subscriberLists
+     * @param TagRepositoryInterface $tagRepository
      */
     public function __construct(
         SubscriberRepositoryInterface $subscriberRepository,
@@ -76,10 +81,11 @@ class SegmentSubscribersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  SubscriberRequest $request
+     * @param  SubscriberStoreRequest $request
+     *
      * @return RedirectResponse
      */
-    public function store(SubscriberRequest $request, $listId)
+    public function store(SubscriberStoreRequest $request, $listId)
     {
         $subscriber = $this->subscriberRepository->store($request->all() + ['subscriber_list_id' => $listId]);
         $this->subscriberRepository->syncTags($subscriber, $request->get('tags', []));
@@ -90,8 +96,9 @@ class SegmentSubscribersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string  $id
-     * @return Response
+     * @param  string $id
+     *
+     * @return void
      */
     public function show($id)
     {
@@ -122,12 +129,13 @@ class SegmentSubscribersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param SubscriberRequest $request
+     * @param SubscriberUpdateRequest $request
      * @param string $listId
      * @param string $id
+     *
      * @return RedirectResponse
      */
-    public function update(SubscriberRequest $request, $listId, $id)
+    public function update(SubscriberUpdateRequest $request, $listId, $id)
     {
         $subscriber = $this->subscriberRepository->update($id, $request->all());
         $this->subscriberRepository->syncTags($subscriber, $request->get('tags', []));
@@ -138,8 +146,9 @@ class SegmentSubscribersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return Response
+     * @param  int $id
+     *
+     * @return void
      */
     public function destroy($id)
     {

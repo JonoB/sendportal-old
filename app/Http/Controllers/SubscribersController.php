@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SubscriberRequest;
+use App\Http\Requests\SubscriberStoreRequest;
+use App\Http\Requests\SubscriberUpdateRequest;
 use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
@@ -45,6 +46,10 @@ class SubscribersController extends Controller
      * Export Subscribers
      *
      * @return string|\Symfony\Component\HttpFoundation\StreamedResponse
+     * @throws \Box\Spout\Common\Exception\IOException
+     * @throws \Box\Spout\Common\Exception\InvalidArgumentException
+     * @throws \Box\Spout\Common\Exception\UnsupportedTypeException
+     * @throws \Box\Spout\Writer\Exception\WriterNotOpenedException
      */
     public function export()
     {
@@ -72,6 +77,8 @@ class SubscribersController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param SegmentRepositoryInterface $segmentRepository
+     *
      * @return \Illuminate\Http\Response
      */
     public function create(SegmentRepositoryInterface $segmentRepository)
@@ -84,12 +91,13 @@ class SubscribersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  SubscriberRequest $request
+     * @param SubscriberStoreRequest $request
+     *
      * @return RedirectResponse
      */
-    public function store(SubscriberRequest $request)
+    public function store(SubscriberStoreRequest $request)
     {
-        $this->subscriberRepository->store($request->all());
+        $this->subscriberRepository->store($request->validated());
 
         return redirect()->route('subscribers.index');
     }
@@ -110,7 +118,10 @@ class SubscribersController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
+     * @param TagRepositoryInterface $tagRepository
+     * @param SegmentRepositoryInterface $segmentRepository
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id, TagRepositoryInterface $tagRepository, SegmentRepositoryInterface $segmentRepository)
@@ -129,11 +140,12 @@ class SubscribersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param SubscriberRequest $request
+     * @param SubscriberUpdateRequest $request
      * @param int $id
+     *
      * @return RedirectResponse
      */
-    public function update(SubscriberRequest $request, $id)
+    public function update(SubscriberUpdateRequest $request, $id)
     {
         $this->subscriberRepository->update($id, $request->all());
 
@@ -143,8 +155,9 @@ class SubscribersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int $id
+     *
+     * @return void
      */
     public function destroy($id)
     {
