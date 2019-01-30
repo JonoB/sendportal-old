@@ -13,13 +13,6 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     protected $modelName;
 
     /**
-     * Validator instance
-     *
-     * @var $validator
-     */
-    protected $validator;
-
-    /**
      * Current Object instance
      *
      * @var object
@@ -93,7 +86,7 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     /**
      * Apply parameters, which can be extended in child classes for filtering
      *
-     * @param $query
+     * @param object $instance
      * @param array $filters
      * @return mixed
      */
@@ -112,9 +105,10 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      */
     public function getBy($field, $value, array $relations = [])
     {
-        $instance = $this->getQueryBuilder();
-
-        return $instance->with($relations)->where($field, $value)->get();
+        return $this->getQueryBuilder()
+            ->with($relations)
+            ->where($field, $value)
+            ->get();
     }
 
     /**
@@ -126,9 +120,7 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      */
     public function pluck($fieldName = 'name', $fieldId = 'id')
     {
-        $instance = $this->getQueryBuilder();
-
-        return $instance
+        return $this->getQueryBuilder()
             ->orderBy($fieldName)
             ->pluck($fieldName, $fieldId)
             ->all();
@@ -168,9 +160,7 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      */
     public function find($id, array $relations = [])
     {
-        $this->instance = $this->getQueryBuilder()->with($relations)->findOrFail($id);
-
-        return $this->instance;
+        return $this->getQueryBuilder()->with($relations)->findOrFail($id);
     }
 
     /**
@@ -183,9 +173,7 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      */
     public function findBy($field, $value, array $relations = [])
     {
-        $this->instance = $this->getQueryBuilder()->with($relations)->where($field, $value)->first();
-
-        return $this->instance;
+        return $this->getQueryBuilder()->with($relations)->where($field, $value)->first();
     }
 
     /**
@@ -218,9 +206,21 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      */
     public function getWhereIn(array $ids, array $relations = [])
     {
-        $this->instance = $this->getQueryBuilder()->with($relations)->whereIn('id', $ids)->get();
+        return $this->getQueryBuilder()
+            ->with($relations)
+            ->whereIn('id', $ids)
+            ->get();
+    }
 
-        return $this->instance;
+    /**
+     * Get count of records
+     *
+     * @param null
+     * @return integer
+     */
+    public function count()
+    {
+        return $this->getNewInstance()->count();
     }
 
     /**
@@ -231,20 +231,9 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      */
     public function store(array $data)
     {
-        return $this->executeStore($data);
-    }
+        $instance = $this->getNewInstance();
 
-    /**
-     * Execute the store method
-     *
-     * @param array $data The input data
-     * @return object model instance
-     */
-    protected function executeStore(array $data)
-    {
-        $this->instance = $this->getNewInstance();
-
-        return $this->executeSave($data);
+        return $this->executeSave($instance, $data);
     }
 
     /**
@@ -256,21 +245,9 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      */
     public function update($id, array $data)
     {
-        return $this->executeUpdate($id, $data);
-    }
+        $instance = $this->find($id);
 
-    /**
-     * Execute the update method
-     *
-     * @param int $id The model id
-     * @param array $data The input data
-     * @return object model instance
-     */
-    protected function executeUpdate($id, array $data)
-    {
-        $this->instance = $this->find($id);
-
-        return $this->executeSave($data);
+        return $this->executeSave($instance, $data);
     }
 
     /**
@@ -279,23 +256,15 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      * NB - check BaseTenantRepo if any changes
      * are made here
      *
+     * @param object $instance
      * @param array $data
      * @return mixed
      */
-    protected function executeSave(array $data)
+    protected function executeSave($instance, array $data)
     {
-        $data = $this->setBooleanFields($data);
+        $data = $this->setBooleanFields($instance, $data);
 
-        // validate the data
-        if ( ! $this->validateData($data))
-        {
-            return false;
-        }
-
-        $this->instance->fill($data);
-        $this->instance->save();
-
-        return $this->instance;
+        return $instance->fill($data)->save();
     }
 
     /**
@@ -314,12 +283,13 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     /**
      * Set the model's boolean fields from the input data
      *
+     * @param object $instance
      * @param array $data
      * @return array
      */
-    protected function setBooleanFields(array $data)
+    protected function setBooleanFields($instance, array $data)
     {
-        foreach ($this->getModelBooleanFields() as $booleanField)
+        foreach ($this->getModelBooleanFields($instance) as $booleanField)
         {
             $data[$booleanField] = array_get($data, $booleanField, 0);
         }
@@ -330,11 +300,12 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     /**
      * Retrieve the boolean fields from the model
      *
+     * @param object $instance
      * @return array
      */
-    protected function getModelBooleanFields()
+    protected function getModelBooleanFields($instance)
     {
-        return $this->instance->getBooleanFields();
+        return $instance->getBooleanFields();
     }
 
     /**
@@ -355,8 +326,6 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
 
     /**
      * Return a new query builder instance
-     *
-     * Implementation differs in BaseTenantRepo
      *
      * @return object
      */
@@ -486,56 +455,5 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     public function getOrderDirection()
     {
         return $this->orderDirection;
-    }
-
-    /**
-     * Validate post data
-     *
-     * @param array $data
-     * @return bool
-     */
-    protected function validateData(array $data)
-    {
-        if ( ! $this->validator)
-        {
-            return true;
-        }
-
-        if ( ! $this->instance)
-        {
-            throw new \DomainException('Unable to validate as instance has not yet been instantiated.');
-        }
-
-        $validator = new $this->validator($data);
-        if ($validator->passes($this->instance->id))
-        {
-            return true;
-        }
-
-        $this->validationErrors = $validator->getErrors();
-
-        return false;
-    }
-
-    /**
-     * Set repository validator
-     *
-     * @param string $validator
-     * @return void
-     */
-    public function setValidator($validator)
-    {
-        $this->validator = $validator;
-    }
-
-    /**
-     * Get count of records
-     *
-     * @param null
-     * @return integer
-     */
-    public function count()
-    {
-        return $this->getNewInstance()->count();
     }
 }

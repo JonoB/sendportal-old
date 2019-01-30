@@ -37,7 +37,7 @@ class CampaignSubscriberEloquentRepository extends BaseEloquentRepository implem
      */
     public function incrementClickCount($campaignId, $subscriberId)
     {
-        return $this->getNewInstance()
+        return $this->getQueryBuilder()
             ->where('campaign_id', $campaignId)
             ->where('subscriber_id', $subscriberId)
             ->increment('click_count');
@@ -51,7 +51,7 @@ class CampaignSubscriberEloquentRepository extends BaseEloquentRepository implem
      */
     public function getUniqueOpenCount($campaignId)
     {
-        return $this->getNewInstance()
+        return $this->getQueryBuilder()
             ->where('campaign_id', $campaignId)
             ->where('open_count', '>', 0)
             ->count();
@@ -59,7 +59,7 @@ class CampaignSubscriberEloquentRepository extends BaseEloquentRepository implem
 
     public function countUniqueOpensPerHour($campaignId)
     {
-        return $this->getNewInstance()
+        return $this->getQueryBuilder()
             ->select(\DB::raw('SUM(open_count) as open_count, DATE_FORMAT(opened_at, "%d-%b %k:00") as opened_at'))
             ->where('campaign_id', $campaignId)
             ->where('open_count', '>', 0)

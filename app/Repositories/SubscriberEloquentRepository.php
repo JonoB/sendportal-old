@@ -64,11 +64,13 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
      */
     public function store(array $data)
     {
-        $this->instance = $this->executeStore(array_except($data, ['segments']));
+        $instance = $this->getNewInstance();
 
-        $this->syncSegments($this->instance, array_get($data, 'segments', []));
+        $this->executeSave($instance, $data);
 
-        return $this->instance;
+        $this->syncSegments($instance, array_get($data, 'segments', []));
+
+        return $instance;
     }
 
     /**
@@ -80,12 +82,12 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
      */
     public function update($id, array $data)
     {
-        $this->instance = $this->find($id);
+        $instance = $this->find($id);
 
-        $this->executeUpdate($id, array_except($data, ['segments']));
+        $this->executeSave($instance, $data);
 
-        $this->syncSegments($this->instance, array_get($data, 'segments', []));
+        $this->syncSegments($instance, array_get($data, 'segments', []));
 
-        return $this->instance;
+        return $instance;
     }
 }

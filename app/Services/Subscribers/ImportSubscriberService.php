@@ -36,14 +36,14 @@ class ImportSubscriberService
             $subscriber = $this->subscribers->findBy('id', $data['id'], ['segments']);
         }
 
-        if (! $subscriber)
+        if ( ! $subscriber)
         {
             $subscriber = $this->subscribers->findBy('email', array_get($data, 'email'), ['segments']);
         }
 
-        if (! $subscriber)
+        if ( ! $subscriber)
         {
-            $subscriber = $this->subscribers->store(array_except($data, ['id', 'segments']));
+            $subscriber = $this->storeSubscriber($data);
         }
 
         $data['segments'] = array_merge($subscriber->segments->pluck('id')->toArray(), array_get($data, 'segments'));
@@ -52,4 +52,13 @@ class ImportSubscriberService
 
         return $subscriber;
     }
+
+    protected function storeSubscriber($data)
+    {
+        $subscriber = new Subscriber();
+        $subscriber->fill(array_except($data, ['id', 'segments']));
+
+        return $subscriber->save();
+    }
+
 }
