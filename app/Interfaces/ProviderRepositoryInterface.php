@@ -3,7 +3,7 @@
 namespace App\Interfaces;
 
 
-interface ProviderRepositoryInterface
+interface ProviderRepositoryInterface extends BaseEloquentInterface
 {
     /**
      * @return mixed

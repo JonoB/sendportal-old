@@ -2,9 +2,7 @@
 
 @section('title', 'Create Campaign')
 
-@section('heading')
-    Create Campaign
-@stop
+@section('heading', 'Create Campaign')
 
 @section('content')
 

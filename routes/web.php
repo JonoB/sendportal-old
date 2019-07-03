@@ -35,24 +35,15 @@ Route::middleware(['auth'])->group(function ()
 
     // Campaigns
     Route::resource('campaigns', 'CampaignsController');
-    Route::resource('campaigns.emails', 'CampaignEmailsController')->except([
-        'index',
-        'show',
-    ]);
-    Route::get('campaigns/{campaign}/email/content', 'CampaignEmailContentController@edit')
-        ->name('campaigns.emails.content.edit');
-    Route::put('campaigns/{campaign}/email/content', 'CampaignEmailContentController@update')
-        ->name('campaigns.emails.content.update');
-
+    Route::get('campaigns/{id}/template', 'CampaignsController@selectTemplate')->name('campaigns.template.create');
+    Route::put('campaigns/{id}/template', 'CampaignsController@updateTemplate')->name('campaigns.template.update');
+    Route::get('campaigns/{id}/content', 'CampaignsController@editContent')->name('campaigns.content.edit');
+    Route::put('campaigns/{id}/content', 'CampaignsController@updateContent')->name('campaigns.content.update');
+    Route::get('campaigns/{id}/confirm', 'CampaignsController@confirm')->name('campaigns.confirm');
+    Route::put('campaigns/{id}/send', 'CampaignsController@send')->name('campaigns.send');
     Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
-
     Route::get('campaigns/{id}/report', ['as' => 'campaigns.report', 'uses' => 'CampaignReportsController@report']);
-    Route::get('campaigns/{id}/recipients', ['as' => 'campaigns.recipients', 'uses' => 'CampaignReportsController@recipients']);
 
-    Route::get('campaigns/{id}/confirm', 'CampaignsController@confirm')
-        ->name('campaigns.confirm');
-    Route::put('campaigns/{id}/send', 'CampaignsController@send')
-        ->name('campaigns.send');
 
     // Templates
     Route::resource('templates', 'TemplatesController')

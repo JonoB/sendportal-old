@@ -5,10 +5,10 @@ namespace App\Providers;
 use App\Interfaces\AutomationRepositoryInterface;
 use App\Interfaces\CampaignContentServiceInterface;
 use App\Interfaces\CampaignDispatchInterface;
+use App\Interfaces\CampaignLinksRepositoryInterface;
 use App\Interfaces\CampaignReportServiceInterface;
 use App\Interfaces\CampaignRepositoryInterface;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
-use App\Interfaces\CampaignUrlsRepositoryInterface;
 use App\Interfaces\EmailRepositoryInterface;
 use App\Interfaces\EmailWebhookServiceInterface;
 use App\Interfaces\ProviderRepositoryInterface;
@@ -17,9 +17,9 @@ use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Repositories\AutomationEloquentRepository;
+use App\Repositories\CampaignLinksEloquentRepository;
 use App\Repositories\CampaignSubscriberEloquentRepository;
 use App\Repositories\CampaignEloquentRepository;
-use App\Repositories\CampaignUrlsEloquentRepository;
 use App\Repositories\EmailEloquentRepository;
 use App\Repositories\ProviderEloquentRepository;
 use App\Repositories\SegmentEloquentRepository;
@@ -42,7 +42,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
     }
 
     /**
@@ -57,10 +56,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CampaignSubscriberRepositoryInterface::class, CampaignSubscriberEloquentRepository::class);
         $this->app->bind(CampaignReportServiceInterface::class, CampaignReportService::class);
         $this->app->bind(CampaignContentServiceInterface::class, CampaignContentService::class);
-        $this->app->bind(ContentUrlServiceInterface::class, ContentUrlService::class);
-        $this->app->bind(GenerateOpenTrackingImageInterface::class, GenerateOpenTrackingImageService::class);
+        $this->app->bind(CampaignLinksRepositoryInterface::class, CampaignLinksEloquentRepository::class);
         $this->app->bind(CampaignDispatchInterface::class, CampaignDispatchService::class);
-        $this->app->bind(CampaignUrlsRepositoryInterface::class, CampaignUrlsEloquentRepository::class);
         $this->app->bind(CampaignRepositoryInterface::class, CampaignEloquentRepository::class);
         $this->app->bind(TagRepositoryInterface::class, TagEloquentRepository::class);
         $this->app->bind(TemplateRepositoryInterface::class, TemplateEloquentRepository::class);

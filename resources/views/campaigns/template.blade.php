@@ -10,7 +10,7 @@
 
     {!! Form::model($campaign, ['id' => 'form-template-selector', 'method' => 'put', 'route' => ['campaigns.template.update', $campaign->id]]) !!}
 
-    <input type="hidden" id="field-template_id" name="template_id" value="{{ $campaign->email->template_id }}">
+    <input type="hidden" id="field-template_id" name="template_id" value="{{ $campaign->template_id }}">
 
     <div class="row">
         @foreach($templates as $template)
@@ -19,7 +19,7 @@
                     <h4>{{ $template->name }}</h4>
                 </div>
                 <div class="pull-right">
-                    @if ($campaign->email->template_id == $template->id)
+                    @if ($campaign->template_id == $template->id)
                         <span class="label label-success">Selected</span>
                     @else
                         <a href="#" class="btn btn-default btn-xs js-select-template" data-template_id="{{ $template->id }}">Select</a>

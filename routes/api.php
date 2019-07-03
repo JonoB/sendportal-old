@@ -39,3 +39,4 @@ Route::middleware('auth:api')->name('api.')->group(function()
 });
 
 Route::post('webhooks/aws', 'AwsWebhooksController@handle');
+Route::post('webhooks/mailgun', 'MailgunWebhooksController@handle');
