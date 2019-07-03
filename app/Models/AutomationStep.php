@@ -12,18 +12,46 @@ class AutomationStep extends BaseModel
 
     protected $guarded = [];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::saving(function($model) {
+
+            switch ($model->delay_type)
+            {
+                case 'minutes':
+                    $model->delay_seconds = $model->delay * 60;
+                    break;
+
+                case 'hours':
+                    $model->delay_seconds = $model->delay * 60 * 60;
+                    break;
+
+                case 'days':
+                    $model->delay_seconds = $model->delay * 60 * 60 * 24;
+                    break;
+            }
+        });
+    }
+
     public static function listFrequencies()
     {
         return self::$frequencies;
     }
 
-    public function getDelayStringAttribute($frequency)
+    public function getDelayStringAttribute()
     {
-        return $this->delay . ' ' . array_get(self::listFrequencies(), $frequency);
+        return $this->delay . ' ' . array_get(self::listFrequencies(), $this->delay_type);
     }
 
     public function automation()
     {
         return $this->belongsTo(Automation::class);
+    }
+
+    public function template()
+    {
+        return $this->belongsTo(Template::class);
     }
 }

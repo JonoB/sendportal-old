@@ -17,7 +17,7 @@ Route::middleware(['auth'])->group(function ()
 
     // Automations
     Route::resource('automations', 'AutomationsController');
-    Route::resource('automations.emails', 'AutomationEmailsController')->except([
+    Route::resource('automations.steps', 'AutomationStepsController')->except([
         'index',
         'show',
     ]);

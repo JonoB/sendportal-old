@@ -20,6 +20,7 @@ class AutomationSteps extends Migration
             $table->string('delay_type');
             $table->smallInteger('delay');
             $table->unsignedInteger('delay_seconds');
+            $table->string('subject')->nullable();
             $table->text('content')->nullable();
             $table->timestamps();
 

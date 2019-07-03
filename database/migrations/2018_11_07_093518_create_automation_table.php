@@ -16,6 +16,8 @@ class CreateAutomationTable extends Migration
         Schema::create('automations', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('from_name');
+            $table->string('from_email');
             $table->timestamps();
         });
     }

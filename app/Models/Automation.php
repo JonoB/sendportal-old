@@ -13,6 +13,6 @@ class Automation extends BaseModel
 
     public function automation_steps()
     {
-        return $this->hasMany(AutomationStep::class);
+        return $this->hasMany(AutomationStep::class)->orderBy('delay_seconds');
     }
 }

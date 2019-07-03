@@ -26,7 +26,7 @@ class AutomationStepStoreRequest extends FormRequest
         return [
             'template_id' => ['required'],
             'delay' => ['required', 'int'],
-            'delay_frequency_id' => ['required'],
+            'delay_type' => ['required'],
         ];
     }
 }

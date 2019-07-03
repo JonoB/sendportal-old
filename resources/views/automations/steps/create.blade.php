@@ -19,7 +19,7 @@
 
             {!! Form::selectField('template_id', 'Template', $templates) !!}
             {!! Form::textField('delay', 'Delay') !!}
-            {!! Form::selectField('delay_frequency_id', 'Delay Period', \App\Models\AutomationStep::listFrequencies()) !!}
+            {!! Form::selectField('delay_type', 'Delay Period', \App\Models\AutomationStep::listFrequencies()) !!}
 
             {!! Form::submitButton('Create') !!}
             {!! Form::close() !!}

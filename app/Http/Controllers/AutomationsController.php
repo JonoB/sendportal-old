@@ -72,6 +72,8 @@ class AutomationsController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'from_name' => 'required',
+            'from_email' => 'required|email',
         ]);
 
         $automation = $this->automationRepository->store($request->all());
@@ -100,7 +102,7 @@ class AutomationsController extends Controller
      */
     public function show($id)
     {
-        $automation = $this->automationRepository->find($id, ['automation_steps']);
+        $automation = $this->automationRepository->find($id, ['automation_steps.template']);
 
         return view('automations.show', compact('automation'));
     }
