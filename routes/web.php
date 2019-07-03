@@ -17,11 +17,11 @@ Route::middleware(['auth'])->group(function ()
 
     // Automations
     Route::resource('automations', 'AutomationsController');
-    Route::resource('automations.emails', 'AutomationEmailsController')->except([
+    Route::resource('automations.steps', 'AutomationStepsController')->except([
         'index',
         'show',
     ]);
-    Route::get('automations/{automation}/emails/{email}/content', ['as' => 'automations.emails.content.edit', 'uses' => 'AutomationEmailContentController@edit']);
+    Route::get('automations/{automation}/steps/{email}/content', ['as' => 'automations.steps.content.edit', 'uses' => 'AutomationEmailContentController@edit']);
     Route::get('automations/{$id}/confirm', ['as' => 'automations.confirm', 'uses' => 'AutomationsController@confirm']);
 
     // Subscribers
@@ -35,14 +35,14 @@ Route::middleware(['auth'])->group(function ()
 
     // Campaigns
     Route::resource('campaigns', 'CampaignsController');
-    Route::resource('campaigns.emails', 'CampaignEmailsController')->except([
+    Route::resource('campaigns.steps', 'CampaignEmailsController')->except([
         'index',
         'show',
     ]);
     Route::get('campaigns/{campaign}/email/content', 'CampaignEmailContentController@edit')
-        ->name('campaigns.emails.content.edit');
+        ->name('campaigns.steps.content.edit');
     Route::put('campaigns/{campaign}/email/content', 'CampaignEmailContentController@update')
-        ->name('campaigns.emails.content.update');
+        ->name('campaigns.steps.content.update');
 
     Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
 

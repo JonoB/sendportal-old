@@ -9,7 +9,7 @@ use App\Models\Campaign;
 class GenerateOpenTrackingImageService implements GenerateOpenTrackingImageInterface
 {
     /**
-     * Generate the tracking image for emails
+     * Generate the tracking image for steps
      *
      * @param string $campaignId
      * @param string $subscriberId

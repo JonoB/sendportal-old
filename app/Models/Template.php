@@ -22,7 +22,7 @@ class Template extends BaseModel
     }
 
     /**
-     * Whether the template is currently being used by any emails
+     * Whether the template is currently being used by any steps
      *
      * @return bool
      */

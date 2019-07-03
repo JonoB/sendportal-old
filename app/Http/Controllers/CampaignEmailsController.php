@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AutomationEmailStoreRequest;
+use App\Http\Requests\AutomationStepStoreRequest;
 use App\Interfaces\CampaignRepositoryInterface;
 use App\Interfaces\EmailRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
@@ -26,7 +26,7 @@ class CampaignEmailsController extends Controller
     private $campaigns;
 
     /**
-     * AutomationEmailsController constructor.
+     * AutomationStepsController constructor.
      *
      * @param CampaignRepositoryInterface $campaigns
      * @param TemplateRepositoryInterface $templates
@@ -44,14 +44,14 @@ class CampaignEmailsController extends Controller
         $campaign = $this->campaigns->find($campaignId);
         $templates = $this->templates->pluck();
 
-        return view('campaigns.emails.create', compact('campaign', 'templates'));
+        return view('campaigns.steps.create', compact('campaign', 'templates'));
     }
 
-    public function store(AutomationEmailStoreRequest $request, $automationId)
+    public function store(AutomationStepStoreRequest $request, $automationId)
     {
         $email = $this->emails->storeMailable(Campaign::class, $automationId, $request->validated());
 
-        return redirect()->route('campaigns.emails.content.edit', [$automationId, $email->id]);
+        return redirect()->route('campaigns.steps.content.edit', [$automationId, $email->id]);
     }
 
     public function edit($automationId, $emailId)
@@ -59,7 +59,7 @@ class CampaignEmailsController extends Controller
         $email = $this->emails->findAutomationEmail($automationId, $emailId);
         $automation = $email->mailable;
 
-        return view('campaigns.emails.edit', compact('email', 'automation'));
+        return view('campaigns.steps.edit', compact('email', 'automation'));
     }
 
     public function update(AutomationEmailUpdateRequest $request, $automationId)

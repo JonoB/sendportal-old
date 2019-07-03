@@ -114,7 +114,7 @@ class CampaignTest extends TestCase
         $this->put(route('campaigns.update', ['id' => $campaign->id]), $modifiedData);
 
         $this->assertDatabaseHas('campaigns', ['name' => $modifiedData['name']]);
-        $this->assertDatabaseHas('emails', array_except($modifiedData, ['name']));
+        $this->assertDatabaseHas('steps', array_except($modifiedData, ['name']));
     }
 
     /** @test */
@@ -153,7 +153,7 @@ class CampaignTest extends TestCase
         $campaign = $this->campaignRepository->findBy('name', $campaign->name);
 
         $response->assertStatus(302);
-        $response->assertRedirect("/campaigns/{$campaign->id}/emails/create");
+        $response->assertRedirect("/campaigns/{$campaign->id}/steps/create");
     }
 
     /** @test */
@@ -182,7 +182,7 @@ class CampaignTest extends TestCase
 
         $campaign = factory(Campaign::class)->create();
 
-        $response = $this->get(route('campaigns.emails.create', ['id' => $campaign->id]));
+        $response = $this->get(route('campaigns.steps.create', ['id' => $campaign->id]));
 
         $response->assertStatus(200);
     }
@@ -192,7 +192,7 @@ class CampaignTest extends TestCase
     {
         $campaign = factory(Campaign::class)->create();
 
-        $response = $this->get(route('campaigns.emails.create', ['id' => $campaign->id]));
+        $response = $this->get(route('campaigns.steps.create', ['id' => $campaign->id]));
 
         $this->assertRedirectToLogin($response);
     }
@@ -213,9 +213,9 @@ class CampaignTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
+        $this->post(route('campaigns.steps.store', [$campaign->id]), $emailData);
 
-        $this->assertDatabaseHas('emails', $emailData);
+        $this->assertDatabaseHas('steps', $emailData);
     }
 
     /** @test */
@@ -232,10 +232,10 @@ class CampaignTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
+        $response = $this->post(route('campaigns.steps.store', [$campaign->id]), $emailData);
 
         $response->assertSessionHasErrors('subject');
-        $this->assertDatabaseMissing('emails', $emailData);
+        $this->assertDatabaseMissing('steps', $emailData);
     }
 
     /** @test */
@@ -252,10 +252,10 @@ class CampaignTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
+        $response = $this->post(route('campaigns.steps.store', [$campaign->id]), $emailData);
 
         $response->assertSessionHasErrors('template_id');
-        $this->assertDatabaseMissing('emails', $emailData);
+        $this->assertDatabaseMissing('steps', $emailData);
     }
 
     /** @test */
@@ -272,10 +272,10 @@ class CampaignTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
+        $response = $this->post(route('campaigns.steps.store', [$campaign->id]), $emailData);
 
         $response->assertSessionHasErrors('from_email');
-        $this->assertDatabaseMissing('emails', $emailData);
+        $this->assertDatabaseMissing('steps', $emailData);
     }
 
     /** @test */
@@ -292,10 +292,10 @@ class CampaignTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
+        $response = $this->post(route('campaigns.steps.store', [$campaign->id]), $emailData);
 
         $response->assertSessionHasErrors('from_email');
-        $this->assertDatabaseMissing('emails', $emailData);
+        $this->assertDatabaseMissing('steps', $emailData);
     }
 
     /** @test */
@@ -312,9 +312,9 @@ class CampaignTest extends TestCase
             'from_name' => null,
         ];
 
-        $response = $this->post(route('campaigns.emails.store', [$campaign->id]), $emailData);
+        $response = $this->post(route('campaigns.steps.store', [$campaign->id]), $emailData);
 
         $response->assertSessionHasErrors('from_name');
-        $this->assertDatabaseMissing('emails', $emailData);
+        $this->assertDatabaseMissing('steps', $emailData);
     }
 }

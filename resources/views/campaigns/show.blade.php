@@ -13,12 +13,12 @@
     @elseif ($campaign->email)
         <ul>
             <li><a href="{{ route('campaigns.edit', $campaign->id) }}">Edit Campaign</a></li>
-            <li><a href="{{ route('campaigns.emails.content.edit', $campaign->id) }}">Edit Content</a></li>
+            <li><a href="{{ route('steps', $campaign->id) }}">Edit Content</a></li>
         </ul>
     @else
         <ul>
             <li><a href="{{ route('campaigns.edit', $campaign->id) }}">Edit Campaign</a></li>
-            <li><a href="{{ route('campaigns.emails.create', ['id' => $campaign->id]) }}">Create Email</a></li>
+            <li><a href="{{ route('steps', ['id' => $campaign->id]) }}">Create Email</a></li>
         </ul>
     @endif
 

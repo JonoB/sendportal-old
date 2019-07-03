@@ -23,7 +23,7 @@ class EmailWebhookService implements EmailWebhookServiceInterface
 
         if ( ! $campaignSubscriber->click_count)
         {
-            \DB::table('emails')
+            \DB::table('steps')
                 ->where('mailable_id', $campaignSubscriber->campaign_id)
                 ->where('mailable_type', Campaign::class)
                 ->increment('click_count');
@@ -50,7 +50,7 @@ class EmailWebhookService implements EmailWebhookServiceInterface
 
         if ( ! $campaignSubscriber->open_count)
         {
-            \DB::table('emails')
+            \DB::table('steps')
                 ->where('mailable_id', $campaignSubscriber->campaign_id)
                 ->where('mailable_type', Campaign::class)
                 ->increment('open_count');

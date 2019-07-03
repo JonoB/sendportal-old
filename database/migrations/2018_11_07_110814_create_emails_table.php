@@ -13,7 +13,7 @@ class CreateEmailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('emails', function (Blueprint $table) {
+        Schema::create('steps', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('mailable_id')->index();
             $table->string('mailable_type');
@@ -36,6 +36,6 @@ class CreateEmailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('emails');
+        Schema::dropIfExists('steps');
     }
 }

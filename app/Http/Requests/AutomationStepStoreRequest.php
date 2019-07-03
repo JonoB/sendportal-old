@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AutomationEmailStoreRequest extends FormRequest
+class AutomationStepStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,9 @@ class AutomationEmailStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'subject' => ['required'],
             'template_id' => ['required'],
-            'from_name' => ['required'],
-            'from_email' => ['required', 'email'],
+            'delay' => ['required', 'int'],
+            'delay_frequency_id' => ['required'],
         ];
     }
 }

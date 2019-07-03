@@ -8,7 +8,7 @@
 
 @section('content')
 
-    {!! Form::open(['route' => ['campaigns.emails.store', $campaign->id], 'class' => 'form-horizontal']) !!}
+    {!! Form::open(['route' => ['steps', $campaign->id], 'class' => 'form-horizontal']) !!}
 
     @include('emails.partials.form')
 

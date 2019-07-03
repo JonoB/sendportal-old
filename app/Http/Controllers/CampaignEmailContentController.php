@@ -34,7 +34,7 @@ class CampaignEmailContentController extends Controller
     {
         $email = $this->emails->findCampaignEmail((int)$campaignId, ['mailable', 'template']);
 
-        return view('campaigns.emails.content.edit', compact('email'));
+        return view('campaigns.steps.content.edit', compact('email'));
     }
 
     /**

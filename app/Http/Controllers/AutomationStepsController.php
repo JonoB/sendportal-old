@@ -2,41 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AutomationEmailStoreRequest;
+use App\Http\Requests\AutomationStepStoreRequest;
 use App\Interfaces\AutomationRepositoryInterface;
 use App\Interfaces\EmailRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Models\Automation;
+use App\Repositories\AutomationStepEloquentRepository;
 
-class AutomationEmailsController extends Controller
+class AutomationStepsController extends Controller
 {
     /**
      * @var AutomationRepositoryInterface
      */
-    private $automations;
+    protected $automations;
+
+    /**
+     * @var AutomationStepEloquentRepository
+     */
+    protected $automationSteps;
 
     /**
      * @var TemplateRepositoryInterface
      */
-    private $templates;
+    protected $templates;
 
     /**
      * @var EmailRepositoryInterface
      */
-    private $emails;
+    protected $emails;
 
     /**
-     * AutomationEmailsController constructor.
+     * AutomationStepsController constructor.
      *
-     * @param AutomationRepositoryInterface $automations
+     * @param AutomationStepEloquentRepository $automationSteps
      * @param TemplateRepositoryInterface $templates
-     * @param EmailRepositoryInterface $emails
      */
-    public function __construct(AutomationRepositoryInterface $automations, TemplateRepositoryInterface $templates, EmailRepositoryInterface $emails)
+    public function __construct(AutomationRepositoryInterface $automations, AutomationStepEloquentRepository $automationSteps, TemplateRepositoryInterface $templates)
     {
         $this->automations = $automations;
+        $this->automationSteps = $automationSteps;
         $this->templates = $templates;
-        $this->emails = $emails;
     }
 
     public function create($automationId)
@@ -44,14 +49,17 @@ class AutomationEmailsController extends Controller
         $automation = $this->automations->find($automationId);
         $templates = $this->templates->pluck();
 
-        return view('automations.emails.create', compact('automation', 'templates'));
+        return view('automations.steps.create', compact('automation', 'templates'));
     }
 
-    public function store(AutomationEmailStoreRequest $request, $automationId)
+    public function store(AutomationStepStoreRequest $request, $automationId)
     {
-        $email = $this->emails->storeMailable(Automation::class, $automationId, $request->validated());
+        $data = $request->validated();
+        $data['automation_id'] = $automationId;
 
-        return redirect()->route('automations.emails.content.edit', [$automationId, $email->id]);
+        $this->automationSteps->store($data);
+
+        return redirect()->route('automations.show', [$automationId]);
     }
 
     public function edit($automationId, $emailId)
@@ -59,7 +67,7 @@ class AutomationEmailsController extends Controller
         $email = $this->emails->findAutomationEmail($automationId, $emailId);
         $automation = $email->mailable;
 
-        return view('automations.emails.edit', compact('email', 'automation'));
+        return view('automations.steps.edit', compact('email', 'automation'));
     }
 
     public function update(AutomationEmailUpdateRequest $request, $automationId)

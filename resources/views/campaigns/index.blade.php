@@ -72,7 +72,7 @@
                             <td>{{ number_format($campaign->email->click_ratio * 100, 1) . '%' }}</td>
                             <td>
                                 @if ($campaign->status_id === \App\Models\CampaignStatus::STATUS_DRAFT)
-                                    <a href="{{ route('campaigns.emails.content.edit', $campaign->id) }}">
+                                    <a href="{{ route('steps', $campaign->id) }}">
                                         Edit Content
                                     </a>
                                 @else

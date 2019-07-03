@@ -114,7 +114,7 @@ class CampaignsController extends Controller
         $campaign = $this->campaigns->store($request->validated());
 
         return redirect()
-            ->route('campaigns.emails.create', $campaign->id);
+            ->route('campaigns.steps.create', $campaign->id);
     }
 
     /**

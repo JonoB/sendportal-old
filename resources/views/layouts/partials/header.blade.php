@@ -5,7 +5,6 @@
         @guest
             <div class="container">
 
-                <img src="" class="shq-logo" alt="SendPortal">
 
                 <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
                     <li class="nav-item mr-3">
@@ -21,7 +20,6 @@
         @auth
             @if ( ! user()->hasVerifiedEmail())
                 <div class="container">
-                    <img src="" class="shq-logo" alt="SendPortal">
                 </div>
             @endif
 

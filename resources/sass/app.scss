@@ -189,12 +189,12 @@ a.fc-dark-blue {
     &.nav-item {
       color: $white;
       border-radius: 0;
-      margin-bottom: 0.4rem;
+      border-left: 5px solid transparent;
 
       a.nav-link {
         color: $light-blue;
         font-weight: normal;
-        padding-left: 2.5rem;
+        padding: 1rem 0 1rem 2.5rem;
       }
 
       &:hover {
@@ -202,7 +202,8 @@ a.fc-dark-blue {
       }
 
       &.active {
-        border-right: 5px solid #00c0ef;
+        border-left-color: #00c0ef;
+        background: lighten($dark-blue, 5%);
 
         a.nav-link {
           color: $white;
