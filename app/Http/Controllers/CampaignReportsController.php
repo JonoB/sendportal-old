@@ -43,24 +43,22 @@ class CampaignReportsController extends Controller
      */
     public function report($id)
     {
-        $campaign = $this->campaignRepo->find($id, ['email']);
+        $campaign = $this->campaignRepo->find($id);
 
-        if ($campaign->email->status_id == CampaignStatus::STATUS_DRAFT)
+        if ($campaign->draft)
         {
             return redirect()->route('campaigns.edit', $id);
         }
 
-        if ($campaign->email->status_id != CampaignStatus::STATUS_SENT)
+        if ( ! $campaign->sent)
         {
             return redirect()->route('campaigns.status', $id);
-
         }
 
         $chartData = $this->campaignReportService->opensPerHour($id);
-        $campaignUrls = $this->campaignReportService->campaignUrls($id);
+        $campaignLinks = $this->campaignReportService->campaignLinks($id);
 
-        return view('campaigns.report', compact('campaign', 'chartData', 'campaignUrls'));
-
+        return view('campaigns.report', compact('campaign', 'chartData', 'campaignLinks'));
     }
 
     /**

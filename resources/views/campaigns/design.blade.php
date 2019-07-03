@@ -8,7 +8,7 @@
 
 @section('content')
 
-    {!! Form::model($campaign->email, array('method' => 'put', 'route' => array('campaigns.design.update', $campaign->id))) !!}
+    {!! Form::model($campaign, array('method' => 'put', 'route' => array('campaigns.content.update', $campaign->id))) !!}
 
     @include('templates.partials.editor')
 

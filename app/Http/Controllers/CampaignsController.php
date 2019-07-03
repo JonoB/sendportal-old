@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CampaignStoreRequest;
-use App\Http\Requests\CampaignUpdateRequest;
+use App\Http\Requests\CampaignContentRequest;
+use App\Http\Requests\CampaignTemplateUpdateRequest;
 use App\Interfaces\CampaignRepositoryInterface;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\ProviderRepositoryInterface;
@@ -65,26 +66,14 @@ class CampaignsController extends Controller
     }
 
     /**
-     * Fields that belong to a campaign instead of an email.
-     *
-     * @var array
-     */
-    protected $campaignFields = [
-        'name',
-        'provider_id',
-        'status_id',
-        'scheduled_at',
-    ];
-
-    /**
      * Index of campaigns
      *
      * @return View
      */
     public function index()
     {
-        $campaigns = $this->campaigns->paginate('created_atDesc', ['status', 'email']);
-        $providerCount = $this->providers->getCount();
+        $campaigns = $this->campaigns->paginate('created_atDesc', ['status']);
+        $providerCount = $this->providers->count();
 
         return view('campaigns.index', compact('campaigns', 'providerCount'));
     }
@@ -113,8 +102,7 @@ class CampaignsController extends Controller
     {
         $campaign = $this->campaigns->store($request->validated());
 
-        return redirect()
-            ->route('campaigns.steps.create', $campaign->id);
+        return redirect()->route('campaigns.template.create', $campaign->id);
     }
 
     /**
@@ -147,27 +135,65 @@ class CampaignsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the campaign.
      *
-     * @param CampaignUpdateRequest $request
+     * @param int $campaignId
+     * @param CampaignStoreRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function update(int $campaignId, CampaignStoreRequest $request)
+    {
+        $campaign = $this->campaigns->update($campaignId, $request->validated());
+
+        return redirect()->route('campaigns.content.edit', $campaign->id);
+    }
+
+    /**
+     * Show the form for editing campaign content
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|View
+     */
+    public function editContent(int $id)
+    {
+        $campaign = $this->campaigns->find($id, ['template']);
+
+        if ( ! $campaign->template_id)
+        {
+            return redirect()->route('campaigns.template.create', $id);
+        }
+
+        if ($campaign->sent)
+        {
+            return redirect()->route('campaigns.report', $id);
+        }
+
+        return view('campaigns.content', compact('campaign'));
+    }
+
+    /**
+     * Update the campaign content
+     *
+     * @param CampaignContentRequest $request
      * @param string $id
      *
      * @return RedirectResponse
      */
-    public function update(CampaignUpdateRequest $request, $id)
+    public function updateContent(CampaignContentRequest $request, $id)
     {
         $campaign = $this->campaigns->find($id);
 
         if ($campaign->status_id !== CampaignStatus::STATUS_DRAFT)
         {
             return redirect()
-                ->route('campaign.show', $campaign->id);
+                ->route('campaigns.report', $campaign->id);
         }
 
-        $campaign = $this->campaigns->update($id, $request->only($this->campaignFields));
+        $campaign = $this->campaigns->update($id, $request->only('content'));
 
-        return redirect()
-            ->route('campaigns.show', $campaign->id);
+        return redirect()->route('campaigns.confirm', $campaign->id);
     }
 
     /**
@@ -193,17 +219,16 @@ class CampaignsController extends Controller
      */
     public function confirm($id)
     {
-        $campaign = $this->campaigns->find($id, ['email']);
+        $campaign = $this->campaigns->find($id);
 
         if ($campaign->status_id > 1)
         {
             return redirect()->route('campaigns.status', $id);
         }
 
-        $template = $this->templates->find($campaign->email->template_id);
         $segments = $this->segments->all('name');
 
-        return view('campaigns.confirm', compact('campaign', 'template', 'segments'));
+        return view('campaigns.confirm', compact('campaign', 'segments'));
     }
 
     /**
@@ -296,5 +321,35 @@ class CampaignsController extends Controller
         }
 
         return redirect()->route('campaigns.status', $id);
+    }
+
+    /**
+     * Show the template selection view.
+     *
+     * @param $campaignId
+     *
+     * @return \Illuminate\Contracts\View\Factory|View
+     */
+    public function selectTemplate($campaignId)
+    {
+        $campaign = $this->campaigns->find($campaignId);
+        $templates = $this->templates->paginate();
+
+        return view('campaigns.template', compact('campaign', 'templates'));
+    }
+
+    /**
+     * Update a campaign's template.
+     *
+     * @param CampaignTemplateUpdateRequest $request
+     * @param int $campaignId
+     *
+     * @return mixed
+     */
+    public function updateTemplate(CampaignTemplateUpdateRequest $request, int $campaignId)
+    {
+        $campaign = $this->campaigns->update($campaignId, $request->validated());
+
+        return redirect()->route('campaigns.content.edit', $campaign->id);
     }
 }

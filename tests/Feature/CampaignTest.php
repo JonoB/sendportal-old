@@ -53,18 +53,6 @@ class CampaignTest extends TestCase
     }
 
     /** @test */
-    function the_campaign_index_tells_you_if_a_campaign_does_not_have_an_email()
-    {
-        $this->actingAs($this->user);
-
-        factory(Campaign::class)->create();
-
-        $response = $this->get(route('campaigns.index'));
-
-        $response->assertSee('No Email');
-    }
-
-    /** @test */
     function campaigns_can_be_created()
     {
         $this->actingAs($this->user);
@@ -79,14 +67,7 @@ class CampaignTest extends TestCase
     /** @test */
     function an_unauthenticated_user_cannot_create_a_campaign()
     {
-        $emailData = [
-            'subject' => 'A Subject',
-            'content' => 'Some content',
-            'from_name' => 'Josh',
-            'from_email' => 'josh@mettle.io',
-        ];
-
-        $campaign = factory(Campaign::class)->make($emailData);
+        $campaign = factory(Campaign::class)->make();
 
         $response = $this->post(route('campaigns.store'), $campaign->toArray());
 
@@ -100,21 +81,17 @@ class CampaignTest extends TestCase
 
         $campaign = factory(Campaign::class)->create();
 
-        factory(Email::class)->create([
-            'mailable_id' => $campaign->id,
-        ]);
-
         $modifiedData = [
             'name' => 'New Name',
-            'subject' => 'New Subject',
-            'from_name' => 'New From Name',
-            'from_email' => 'from@newemail.io',
+            'subject' => $campaign->subject,
+            'from_name' => $campaign->from_name,
+            'from_email' => $campaign->from_email,
+            'provider_id' => $campaign->provider_id,
         ];
 
-        $this->put(route('campaigns.update', ['id' => $campaign->id]), $modifiedData);
+        $this->put(route('campaigns.update', $campaign->id), $modifiedData);
 
         $this->assertDatabaseHas('campaigns', ['name' => $modifiedData['name']]);
-        $this->assertDatabaseHas('steps', array_except($modifiedData, ['name']));
     }
 
     /** @test */
@@ -122,29 +99,21 @@ class CampaignTest extends TestCase
     {
         $campaign = factory(Campaign::class)->create();
 
-        factory(Email::class)->create([
-            'mailable_id' => $campaign->id,
-            'mailable_type' => 'App\Models\Campaign',
-            'subject' => 'A Subject',
-            'content' => 'Some content.',
-            'from_name' => 'Josh',
-            'from_email' => 'josh@mettle.io',
-        ]);
-
         $modifiedData = [
             'name' => 'New Name',
-            'subject' => 'New Subject',
-            'from_name' => 'New From Name',
-            'from_email' => 'from@newemail.io',
+            'subject' => $campaign->subject,
+            'from_name' => $campaign->from_name,
+            'from_email' => $campaign->from_email,
+            'provider_id' => $campaign->provider_id,
         ];
 
-        $response = $this->put(route('campaigns.update', ['id' => $campaign->id]), $modifiedData);
+        $response = $this->put(route('campaigns.update', $campaign->id), $modifiedData);
 
         $this->assertRedirectToLogin($response);
     }
 
     /** @test */
-    function a_user_is_redirected_to_the_email_creation_wizard_when_a_campaign_is_created()
+    function a_user_is_redirected_to_the_template_selection_page_when_a_campaign_is_created()
     {
         $this->actingAs($this->user);
         $campaign = factory(Campaign::class)->make();
@@ -153,38 +122,103 @@ class CampaignTest extends TestCase
         $campaign = $this->campaignRepository->findBy('name', $campaign->name);
 
         $response->assertStatus(302);
-        $response->assertRedirect("/campaigns/{$campaign->id}/steps/create");
+        $response->assertRedirect(route('campaigns.template.create', $campaign->id));
     }
 
     /** @test */
-    function a_campaign_can_have_one_emails()
+    function the_campaign_template_selection_page_lists_all_templates()
     {
+        $this->actingAs($this->user);
+
         $campaign = factory(Campaign::class)->create();
+        factory(Template::class)->create([
+            'name' => 'Template 1',
+        ]);
 
-        $email = [
-            'subject' => 'Test Email 1',
-            'from_email' => 'test1@email.com',
-            'from_name' => 'Test 1',
-        ];
+        factory(Template::class)->create([
+            'name' => 'Template 2',
+        ]);
 
-        $campaign->email()->create($email);
+        $response = $this->get(route('campaigns.template.create', $campaign->id));
 
-        foreach ($email as $key => $value)
-        {
-            $this->assertEquals($campaign->email->toArray()[$key], $value);
-        }
+        $response->assertStatus(200);
+        $response->assertSee('Template 1');
+        $response->assertSee('Template 2');
     }
 
     /** @test */
-    function the_campaign_email_create_view_can_viewed()
+    function a_campaigns_template_can_be_updated()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->create();
+        $template = factory(Template::class)->create();
+
+        $this->put(route('campaigns.template.update', $campaign->id), [
+            'template_id' => $template->id
+        ]);
+
+        $this->assertEquals($template->id, $campaign->fresh()->template_id);
+    }
+
+    /** @test */
+    function a_user_is_redirected_to_the_campaign_content_creation_wizard_when_a_campaign_template_is_updated()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->create();
+        $template = factory(Template::class)->create();
+
+        $response = $this->put(route('campaigns.template.update', $campaign->id), [
+            'template_id' => $template->id
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('campaigns.content.edit', $campaign->id));
+    }
+
+    /** @test */
+    function the_campaign_content_creation_wizard_can_be_viewed()
+    {
+        $this->actingAs($this->user);
+
+        $campaign = factory(Campaign::class)->state('withTemplate')->create();
+
+        $response = $this->get(route('campaigns.content.edit', $campaign->id));
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    function the_campaign_content_creation_wizard_redirects_to_the_template_selection_view_if_no_template_is_selected()
     {
         $this->actingAs($this->user);
 
         $campaign = factory(Campaign::class)->create();
 
-        $response = $this->get(route('campaigns.steps.create', ['id' => $campaign->id]));
+        $response = $this->get(route('campaigns.content.edit', $campaign->id));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('campaigns.template.create', $campaign->id));
+    }
+
+    /** @test */
+    function the_campaign_content_creation_wizard_uses_the_selected_template()
+    {
+        $this->actingAs($this->user);
+
+        $template = factory(Template::class)->create([
+            'name' => 'Test Template',
+            'content' => 'Hello',
+        ]);
+        $campaign = factory(Campaign::class)->create([
+            'template_id' => $template->id,
+        ]);
+
+        $response = $this->get(route('campaigns.content.edit', $campaign->id));
 
         $response->assertStatus(200);
+        $response->assertSee('Hello');
     }
 
     /** @test */
@@ -192,129 +226,83 @@ class CampaignTest extends TestCase
     {
         $campaign = factory(Campaign::class)->create();
 
-        $response = $this->get(route('campaigns.steps.create', ['id' => $campaign->id]));
+        $response = $this->get(route('campaigns.content.edit', $campaign->id));
 
         $this->assertRedirectToLogin($response);
     }
 
     /** @test */
-    function a_user_can_create_an_email_for_a_campaign()
+    function the_campaign_confirmation_page_can_be_viewed()
     {
-        $this->withoutExceptionHandling();
-
         $this->actingAs($this->user);
 
-        $campaign = factory(Campaign::class)->create();
+        $campaign = factory(Campaign::class)->state('withContent')->create();
 
-        $emailData = [
-            'subject' => 'Test Email',
-            'template_id' => 1,
-            'from_email' => 'test@email.com',
-            'from_name' => 'Seymour Greentests',
-        ];
+        $response = $this->get(route('campaigns.confirm', $campaign->id));
 
-        $this->post(route('campaigns.steps.store', [$campaign->id]), $emailData);
-
-        $this->assertDatabaseHas('steps', $emailData);
+        $response->assertStatus(200);
     }
 
     /** @test */
-    function a_campaign_email_requires_a_subject()
+    function the_campaign_index_has_a_link_to_the_template_selection_page_if_a_draft_campaign_has_no_template_selected()
     {
         $this->actingAs($this->user);
 
-        $campaign = factory(Campaign::class)->create();
+        factory(Campaign::class)->create();
 
-        $emailData = [
-            'subject' => null,
-            'template_id' => 1,
-            'from_email' => 'test@email.com',
-            'from_name' => 'Seymour Greentests',
-        ];
+        $response = $this->get(route('campaigns.index'));
 
-        $response = $this->post(route('campaigns.steps.store', [$campaign->id]), $emailData);
-
-        $response->assertSessionHasErrors('subject');
-        $this->assertDatabaseMissing('steps', $emailData);
+        $response->assertStatus(200);
+        $response->assertSee('Select Template');
     }
 
     /** @test */
-    function a_campaign_email_requires_a_template_id()
+    function the_campaign_index_has_a_link_to_the_content_edit_page_if_a_draft_campaign_has_a_template_selected()
     {
         $this->actingAs($this->user);
 
-        $campaign = factory(Campaign::class)->create();
+        factory(Campaign::class)->state('withTemplate')->create();
 
-        $emailData = [
-            'subject' => 'Test Subject',
-            'template_id' => null,
-            'from_email' => 'test@email.com',
-            'from_name' => 'Seymour Greentests',
-        ];
+        $response = $this->get(route('campaigns.index'));
 
-        $response = $this->post(route('campaigns.steps.store', [$campaign->id]), $emailData);
-
-        $response->assertSessionHasErrors('template_id');
-        $this->assertDatabaseMissing('steps', $emailData);
+        $response->assertStatus(200);
+        $response->assertSee('Edit Content');
     }
 
     /** @test */
-    function a_campaign_email_requires_a_from_email()
+    function if_a_campaign_has_been_sent_the_content_edit_page_redirects_to_the_reports_page()
     {
         $this->actingAs($this->user);
 
-        $campaign = factory(Campaign::class)->create();
+        $campaign = factory(Campaign::class)->states(['sent', 'withTemplate'])->create();
 
-        $emailData = [
-            'subject' => 'Test Subject',
-            'template_id' => 1,
-            'from_email' => null,
-            'from_name' => 'Seymour Greentests',
-        ];
+        $response = $this->get(route('campaigns.content.edit', $campaign->id));
 
-        $response = $this->post(route('campaigns.steps.store', [$campaign->id]), $emailData);
-
-        $response->assertSessionHasErrors('from_email');
-        $this->assertDatabaseMissing('steps', $emailData);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('campaigns.report', $campaign->id));
     }
 
     /** @test */
-    function a_campaign_email_from_email_must_be_an_email()
+    function the_campaign_report_page_can_be_viewed_if_the_campaign_has_been_sent()
     {
         $this->actingAs($this->user);
 
-        $campaign = factory(Campaign::class)->create();
+        $campaign = factory(Campaign::class)->states(['sent', 'withTemplate'])->create();
 
-        $emailData = [
-            'subject' => 'Test Subject',
-            'template_id' => 1,
-            'from_email' => 'what did you call me',
-            'from_name' => 'Seymour Greentests',
-        ];
+        $response = $this->get(route('campaigns.report', $campaign->id));
 
-        $response = $this->post(route('campaigns.steps.store', [$campaign->id]), $emailData);
-
-        $response->assertSessionHasErrors('from_email');
-        $this->assertDatabaseMissing('steps', $emailData);
+        $response->assertStatus(200);
     }
 
     /** @test */
-    function a_campaign_email_requires_a_from_name()
+    function the_campaign_report_page_cannot_be_viewed_if_the_campaign_has_not_been_sent()
     {
         $this->actingAs($this->user);
 
-        $campaign = factory(Campaign::class)->create();
+        $campaign = factory(Campaign::class)->states(['draft', 'withTemplate'])->create();
 
-        $emailData = [
-            'subject' => 'Test Subject',
-            'template_id' => 1,
-            'from_email' => 'test@email.com',
-            'from_name' => null,
-        ];
+        $response = $this->get(route('campaigns.report', $campaign->id));
 
-        $response = $this->post(route('campaigns.steps.store', [$campaign->id]), $emailData);
-
-        $response->assertSessionHasErrors('from_name');
-        $this->assertDatabaseMissing('steps', $emailData);
+        $response->assertStatus(302);
     }
 }

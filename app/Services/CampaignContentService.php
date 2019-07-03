@@ -39,7 +39,7 @@ class CampaignContentService implements CampaignContentServiceInterface
      */
     public function getMergedContent(Subscriber $subscriber): string
     {
-        return $this->mergeTags($this->campaign->email->full_content, $subscriber);
+        return $this->mergeTags($this->campaign->full_content, $subscriber);
     }
 
     /**

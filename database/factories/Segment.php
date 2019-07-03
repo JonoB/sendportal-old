@@ -5,7 +5,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Segment::class, function (Faker $faker) {
     return [
-        'name' => ucwords($faker->word)
+        'name' => ucwords($faker->unique()->word)
     ];
 });
 

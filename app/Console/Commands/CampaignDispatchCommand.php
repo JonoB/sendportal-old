@@ -167,7 +167,7 @@ class CampaignDispatchCommand extends Command
 
             $this->handleSegmentSubscribers($campaign, $subscribers);
 
-        });
+        }, 'subscribers.id');
     }
 
     /**
@@ -180,7 +180,7 @@ class CampaignDispatchCommand extends Command
     {
         foreach ($subscribers as $subscriber)
         {
-            if ( ! $this->canSendToSubscriber($campaign->email->id, $subscriber->id))
+            if ( ! $this->canSendToSubscriber($campaign->id, $subscriber->id))
             {
                 $this->info("-- Skipping Subscriber ID: {$subscriber->id} ({$subscriber->email})");
 
@@ -219,9 +219,9 @@ class CampaignDispatchCommand extends Command
 
         $messageId = $this->campaignDispatchService->send(
             $mailService,
-            $campaign->email->from_email,
+            $campaign->from_email,
             $subscriber->email,
-            $campaign->email->subject,
+            $campaign->subject,
             $content
         );
 
@@ -323,7 +323,7 @@ class CampaignDispatchCommand extends Command
     /**
      * Update campaign status to sending
      *
-     * @param $emailId
+     * @param Campaign $campaign
      */
     protected function markCampaignAsSending(Campaign $campaign): void
     {
@@ -334,14 +334,12 @@ class CampaignDispatchCommand extends Command
     /**
      * Update campaign status to sent
      *
-     * @param $emailId
+     * @param Campaign $campaign
      */
     protected function markCampaignAsSent(Campaign $campaign): void
     {
         $campaign->status_id = CampaignStatus::STATUS_SENT;
+        $campaign->sent_count = \count($this->getSentItems());
         $campaign->save();
-
-        $campaign->email->sent_count = \count($this->getSentItems());
-        $campaign->email->save();
     }
 }
