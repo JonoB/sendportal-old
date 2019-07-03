@@ -1,4 +1,4 @@
-@extends('common.template')
+@extends('layouts.app')
 
 @section('title', 'Configurations')
 
@@ -13,9 +13,9 @@
 @endsection
 
 @section('content')
-    <div class="box box-primary">
-        <div class="box-body no-padding">
-            <table class="table table-bordered table-responsive">
+    <div class="card">
+        <div class="card-table">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -29,11 +29,11 @@
                             <td>{{ $provider->name }}</td>
                             <td>{{ $provider->type->name }}</td>
                             <td>
-                                <a href="{{ route('providers.edit', $provider->id) }}">Edit</a>
+                                <a class="btn btn-sm btn-light" href="{{ route('providers.edit', $provider->id) }}">Edit</a>
                                 <form action="{{ route('providers.delete', $provider->id) }}" method="POST" style="display: inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn-link">Delete</button>
+                                    <button class="btn btn-sm btn-light">Delete</button>
                                 </form>
                             </td>
                         </tr>

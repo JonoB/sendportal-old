@@ -1,5 +1,10 @@
 <?php
 
+function user()
+{
+    return \Illuminate\Support\Facades\Auth::user();
+}
+
 if ( ! function_exists('assetUrl'))
 {
 

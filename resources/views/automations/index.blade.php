@@ -1,4 +1,4 @@
-@extends('common.template')
+@extends('layouts.app')
 
 @section('title', 'Automations')
 
@@ -14,28 +14,11 @@
 
 @section('content')
 
-    <div class="box box-primary">
-        <div class="box-body no-padding">
-            <table class="table table-bordered table-responsive">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Segments</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($automations as $automation)
-                        <td><a href="{{ route('automations.show', ['id' => $automation->id]) }}">{{ $automation->name }}</a></td>
-                        <td>{{ $automation->segment->name }}</td>
-                    @empty
-                        <tr>
-                            <td colspan="100%">
-                                <h5 class="text-center text-muted">You have not created any automations.</h5>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-header-inner">
+                <h3>Coming soon!</h3>
+            </div>
         </div>
     </div>
 @endsection

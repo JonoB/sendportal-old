@@ -1,4 +1,4 @@
-@extends('common.template')
+@extends('layouts.app')
 
 @section('heading')
     Edit Email Content For Campaign {{ $email->mailable->name }}
