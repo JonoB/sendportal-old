@@ -15,10 +15,27 @@
 @section('content')
 
     <div class="card">
-        <div class="card-header">
-            <div class="card-header-inner">
-                <h3>Coming soon!</h3>
-            </div>
+        <div class="card-table">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>From Name</th>
+                    <th>From Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                    @foreach($automations as $automation)
+                        <tr>
+                            <td>
+                                <a href="{{ route('automations.show', $automation->id) }}">{{ $automation->name }}</a>
+                            </td>
+                            <td>{{ $automation->from_name }}</td>
+                            <td>{{ $automation->from_email }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 @endsection

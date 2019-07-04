@@ -18,7 +18,7 @@
             </li>
             <li class="nav-item {{ request()->is('campaigns*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('campaigns.index') }}">
-                    <i class="far fa-envelope mr-2"></i><span>Campaigns</span>
+                    <i class="fas fa-paper-plane mr-2"></i><span>Campaigns</span>
                 </a>
             </li>
             <li class="nav-item {{ request()->is('automations*') ? 'active' : '' }}">

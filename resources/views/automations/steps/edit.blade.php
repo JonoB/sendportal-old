@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Create Automation Step')
+@section('title', 'Edit Automation Step')
 
 @section('heading')
-    Create Automation Step
+    Edit Automation Step
 @stop
 
 @section('content')
@@ -11,15 +11,15 @@
     <div class="card">
         <div class="card-header card-header-accent">
             <div class="card-header-inner">
-                Create an automation step for {{ $automation->name }}
+                Edit Automation Step
             </div>
         </div>
         <div class="card-body">
-            {!! Form::open(['route' => ['automations.steps.store', $automation->id], 'class' => 'form-horizontal']) !!}
+            {!! Form::model($automationStep, ['method' => 'put', 'class' => 'form-horizontal', 'url' => route('automations.steps.update', [$automationStep->automation_id, $automationStep->id])]) !!}
 
             @include('automations.steps.partials.form')
 
-            {!! Form::submitButton('Create') !!}
+            {!! Form::submitButton('Update') !!}
             {!! Form::close() !!}
         </div>
     </div>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AutomationStepStoreRequest;
+use App\Http\Requests\AutomationStepRequest;
 use App\Interfaces\AutomationRepositoryInterface;
 use App\Interfaces\EmailRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
@@ -52,27 +52,27 @@ class AutomationStepsController extends Controller
         return view('automations.steps.create', compact('automation', 'templates'));
     }
 
-    public function store(AutomationStepStoreRequest $request, $automationId)
+    public function store(AutomationStepRequest $request, $automationId)
     {
         $data = $request->validated();
         $data['automation_id'] = $automationId;
 
         $this->automationSteps->store($data);
 
-        return redirect()->route('automations.show', [$automationId]);
+        return redirect()->route('automations.show', $automationId);
     }
 
-    public function edit($automationId, $emailId)
+    public function edit($automationId, $stepId)
     {
-        $email = $this->emails->findAutomationEmail($automationId, $emailId);
-        $automation = $email->mailable;
+        $automationStep = $this->automationSteps->find($stepId);
+        $templates = $this->templates->pluck();
 
-        return view('automations.steps.edit', compact('email', 'automation'));
+        return view('automations.steps.edit', compact('automationStep', 'templates'));
     }
 
-    public function update(AutomationEmailUpdateRequest $request, $automationId)
+    public function update(AutomationStepRequest $request, $automationId, $stepId)
     {
-        $this->emailService->update('automation', $automationId, $request->validated());
+        $this->automationSteps->update($stepId, $request->validated());
 
         return redirect()->route('automations.show', $automationId);
     }

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AutomationStepStoreRequest extends FormRequest
+class AutomationStepRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +24,7 @@ class AutomationStepStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'subject' => ['required'],
             'template_id' => ['required'],
             'delay' => ['required', 'int'],
             'delay_type' => ['required'],

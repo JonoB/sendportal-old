@@ -19,6 +19,7 @@
             <table class="table">
                 <thead>
                 <tr>
+                    <th>Subject</th>
                     <th>Delay</th>
                     <th>Template</th>
                     <th>Content</th>
@@ -28,6 +29,7 @@
                 <tbody>
                 @forelse($automation->automation_steps as $step)
                     <tr>
+                        <td>{{ $step->subject }}</td>
                         <td>{{ $step->delay_string }}</td>
                         <td>
                             @if( ! $step->template)
@@ -37,13 +39,13 @@
                             @endif
                         </td>
                         <td>
-                            @if( ! $step->content == null)
+                            @if( ! $step->content)
                                 <span class="label label-danger">Not Set</span>
                             @else
                                 <a href="">View</a>
                             @endif
                         </td>
-                        <td></td>
+                        <td><a href="{{ route('automations.steps.edit', [$automation->id, $step->id]) }}">Edit</a></td>
                     </tr>
                 @empty
                     <tr>
