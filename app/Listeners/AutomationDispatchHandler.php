@@ -42,12 +42,19 @@ class AutomationDispatchHandler
 
         $this->markScheduleAsStarted($schedule);
 
+        $this->dispatchEmail($schedule);
+
         if ($nextAutomationStep = $this->getNextAutomationStep($schedule))
         {
             $this->createNextSchedule($schedule, $nextAutomationStep);
         }
 
         $this->markScheduleAsComplete($schedule);
+    }
+
+    protected function dispatchEmail(AutomationSchedule $schedule)
+    {
+        // @todo
     }
 
     protected function findSchedule(int $id)
