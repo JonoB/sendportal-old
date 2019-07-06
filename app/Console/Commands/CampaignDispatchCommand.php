@@ -288,7 +288,7 @@ class CampaignDispatchCommand extends Command
     {
         $key = "{$campaignId}:{$subscriberId}";
 
-        if (\in_array($key, $this->getSentItems(), true))
+        if (in_array($key, $this->getSentItems(), true))
         {
             return false;
         }
@@ -339,7 +339,7 @@ class CampaignDispatchCommand extends Command
     protected function markCampaignAsSent(Campaign $campaign): void
     {
         $campaign->status_id = CampaignStatus::STATUS_SENT;
-        $campaign->sent_count = \count($this->getSentItems());
+        $campaign->sent_count = count($this->getSentItems());
         $campaign->save();
     }
 }

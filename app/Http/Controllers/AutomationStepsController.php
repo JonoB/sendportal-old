@@ -34,10 +34,14 @@ class AutomationStepsController extends Controller
     /**
      * AutomationStepsController constructor.
      *
+     * @param AutomationRepositoryInterface $automations
      * @param AutomationStepEloquentRepository $automationSteps
      * @param TemplateRepositoryInterface $templates
      */
-    public function __construct(AutomationRepositoryInterface $automations, AutomationStepEloquentRepository $automationSteps, TemplateRepositoryInterface $templates)
+    public function __construct(
+        AutomationRepositoryInterface $automations,
+        AutomationStepEloquentRepository $automationSteps,
+        TemplateRepositoryInterface $templates)
     {
         $this->automations = $automations;
         $this->automationSteps = $automationSteps;

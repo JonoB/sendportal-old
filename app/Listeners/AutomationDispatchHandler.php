@@ -42,6 +42,17 @@ class AutomationDispatchHandler
 
         $this->markScheduleAsStarted($schedule);
 
+        $subscriber = $this->findSubscriber($schedule->subscriber_id);
+
+        // if the subscriber has unsubscribed, then we'll mark this schedule as complete
+        // and not create another schedule
+        if ($subscriber->unsubscribed_at)
+        {
+            $this->markScheduleAsComplete($schedule);
+
+            return;
+        }
+
         $this->dispatchEmail($schedule);
 
         if ($nextAutomationStep = $this->getNextAutomationStep($schedule))
@@ -60,6 +71,11 @@ class AutomationDispatchHandler
     protected function findSchedule(int $id)
     {
         return AutomationSchedule::with('automation_step')->find($id);
+    }
+
+    protected function findSubscriber($id)
+    {
+        return Subscriber::find($id);
     }
 
     /**
