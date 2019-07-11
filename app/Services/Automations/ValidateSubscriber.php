@@ -37,7 +37,8 @@ class ValidateSubscriber
     }
 
     /**
-     * Find the subscriber from the DB
+     * Find the subscriber from the DB. We refresh this to get a live object,
+     * instead of relying on the relationship which may have been eager loaded.
      *
      * @param $id
      * @return mixed

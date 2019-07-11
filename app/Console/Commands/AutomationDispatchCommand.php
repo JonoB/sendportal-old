@@ -52,6 +52,7 @@ class AutomationDispatchCommand extends Command
     {
         return AutomationSchedule::where('scheduled_at', '<=', now())
             ->whereNull('started_at')
+            ->take(10000)
             ->get();
     }
 }

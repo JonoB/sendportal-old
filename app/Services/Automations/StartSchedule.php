@@ -14,6 +14,8 @@ class StartSchedule
      */
     public function handle(AutomationSchedule $schedule, $next)
     {
+        $schedule->load('automation_step.automation');
+
         $this->markScheduleAsStarted($schedule);
 
         return $next($schedule);

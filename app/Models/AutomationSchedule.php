@@ -8,6 +8,11 @@ class AutomationSchedule extends BaseModel
 
     public function automation_step()
     {
-        return $this->belongsTo(AutomationStep::class)->orderBy('delay_seconds');
+        return $this->belongsTo(AutomationStep::class);
+    }
+
+    public function subscriber()
+    {
+        return $this->belongsTo(Subscriber::class);
     }
 }
