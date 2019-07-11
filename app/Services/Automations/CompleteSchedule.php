@@ -25,7 +25,7 @@ class CompleteSchedule
      * @param AutomationSchedule $schedule
      * @return AutomationSchedule
      */
-    protected function markScheduleAsComplete(AutomationSchedule $schedule)
+    protected function markScheduleAsComplete(AutomationSchedule $schedule): void
     {
         $schedule->completed_at = now();
         $schedule->save();

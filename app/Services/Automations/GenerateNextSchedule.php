@@ -31,9 +31,9 @@ class GenerateNextSchedule
      * Find the next automation step
      *
      * @param AutomationSchedule $schedule
-     * @return mixed
+     * @return AutomationStep|null
      */
-    protected function getNextAutomationStep(AutomationSchedule $schedule)
+    protected function getNextAutomationStep(AutomationSchedule $schedule): ?AutomationStep
     {
         return AutomationStep::orderBy('delay_seconds')
             ->where('automation_id', $schedule->automation_step->automation_id)
@@ -47,9 +47,9 @@ class GenerateNextSchedule
      *
      * @param AutomationSchedule $schedule
      * @param AutomationStep $nextAutomationStep
-     * @return mixed
+     * @return AutomationSchedule|null
      */
-    protected function createNextSchedule(AutomationSchedule $schedule, AutomationStep $nextAutomationStep)
+    protected function createNextSchedule(AutomationSchedule $schedule, AutomationStep $nextAutomationStep): ?AutomationSchedule
     {
         $subscriber = Subscriber::find($schedule->subscriber_id);
         $nextScheduledAt = Carbon::parse($subscriber->created_at)->addSeconds($nextAutomationStep->delay_seconds);

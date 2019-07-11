@@ -30,7 +30,7 @@ class ValidateSubscriber
         {
             $this->markScheduleAsComplete($schedule);
 
-            throw new \Exception('Subscriber has unsubscribed:' . $subscriber->id);
+            throw new \Exception('Subscriber is not subscribed:' . $subscriber->id);
         }
 
         return $next($schedule);
@@ -42,7 +42,7 @@ class ValidateSubscriber
      * @param $id
      * @return mixed
      */
-    protected function findSubscriber($id)
+    protected function findSubscriber($id): ?Subscriber
     {
         return Subscriber::find($id);
     }
@@ -53,7 +53,7 @@ class ValidateSubscriber
      * @param AutomationSchedule $schedule
      * @return AutomationSchedule
      */
-    protected function markScheduleAsComplete(AutomationSchedule $schedule)
+    protected function markScheduleAsComplete(AutomationSchedule $schedule): AutomationSchedule
     {
         $schedule->completed_at = now();
         $schedule->save();
