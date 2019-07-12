@@ -15,6 +15,10 @@ Route::middleware(['auth'])->group(function ()
 
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
+    // Deliveries
+    Route::get('deliveries', ['as' => 'deliveries.index', 'uses' => 'DeliveriesController@index']);
+    Route::get('deliveries/draft', ['as' => 'deliveries.draft', 'uses' => 'DeliveriesController@draft']);
+
     // Automations
     Route::resource('automations', 'AutomationsController');
     Route::resource('automations.steps', 'AutomationStepsController')->except([

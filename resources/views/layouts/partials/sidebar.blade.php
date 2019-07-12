@@ -18,7 +18,7 @@
             </li>
             <li class="nav-item {{ request()->is('campaigns*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('campaigns.index') }}">
-                    <i class="fas fa-paper-plane mr-2"></i><span>Campaigns</span>
+                    <i class="fas fa-envelope mr-2"></i><span>Campaigns</span>
                 </a>
             </li>
             <li class="nav-item {{ request()->is('automations*') ? 'active' : '' }}">
@@ -39,6 +39,11 @@
             <li class="nav-item {{ request()->is('segments*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('segments.index') }}">
                     <i class="far fa-list mr-2"></i> <span>Segments</span>
+                </a>
+            </li>
+            <li class="nav-item {{ request()->is('deliveries*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('deliveries.index') }}">
+                    <i class="far fa-paper-plane mr-2"></i> <span>Deliveries</span>
                 </a>
             </li>
             <li class="nav-item {{ request()->is('providers*') ? 'active' : '' }}">
