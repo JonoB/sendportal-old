@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\AutomationDispatch;
+use App\Events\AutomationDispatchEvent;
 use App\Models\AutomationSchedule;
 use App\Services\Automations\CompleteSchedule;
 use App\Services\Automations\DeliverSchedule;
@@ -16,10 +16,10 @@ class AutomationDispatchHandler
     /**
      * Handle the event.
      *
-     * @param  AutomationDispatch  $event
+     * @param  AutomationDispatchEvent  $event
      * @return void
      */
-    public function handle(AutomationDispatch $event)
+    public function handle(AutomationDispatchEvent $event)
     {
         if ( ! $schedule = $this->findSchedule($event->automationSchedule->id))
         {

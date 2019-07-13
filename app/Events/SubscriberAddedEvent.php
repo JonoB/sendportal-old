@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\AutomationSchedule;
+use App\Models\Subscriber;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -11,20 +11,20 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class AutomationDispatch
+class SubscriberAddedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $automationSchedule;
+    public $subscriber;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(AutomationSchedule $automationSchedule)
+    public function __construct(Subscriber $subscriber)
     {
-        $this->automationSchedule = $automationSchedule;
+        $this->subscriber = $subscriber;
     }
 
     /**

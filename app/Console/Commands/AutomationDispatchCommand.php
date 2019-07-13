@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Events\AutomationDispatch;
+use App\Events\AutomationDispatchEvent;
 use App\Models\AutomationSchedule;
 use App\Models\AutomationStep;
 use Illuminate\Console\Command;
@@ -44,7 +44,7 @@ class AutomationDispatchCommand extends Command
         {
             $this->info('Dispatching schedule ID:' . $schedule->id);
 
-            event(new AutomationDispatch($schedule));
+            event(new AutomationDispatchEvent($schedule));
         }
     }
 

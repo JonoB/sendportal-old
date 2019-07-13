@@ -24,7 +24,7 @@ class SubscriberRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|max:255',
+            'email' => 'required|email|max:255|unique:subscribers,email,' . $this->subscriber,
             'first_name' => 'required|max:255',
             'last_name' => 'max:255',
             'segments' => 'array'

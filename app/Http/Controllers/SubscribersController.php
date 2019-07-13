@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SubscriberAddedEvent;
 use App\Http\Requests\SubscriberRequest;
 use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\SubscriberRepositoryInterface;
@@ -89,7 +90,9 @@ class SubscribersController extends Controller
      */
     public function store(SubscriberRequest $request)
     {
-        $this->subscriberRepository->store($request->all());
+        $subscriber = $this->subscriberRepository->store($request->all());
+
+        event(new SubscriberAddedEvent($subscriber));
 
         return redirect()->route('subscribers.index');
     }

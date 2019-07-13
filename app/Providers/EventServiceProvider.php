@@ -13,8 +13,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\AutomationDispatch' => [
+        'App\Events\AutomationDispatchEvent' => [
             'App\Listeners\AutomationDispatchHandler',
+        ],
+        'App\Events\SubscriberAddedEvent' => [
+            'App\Listeners\SubscriberAddedHandler',
         ],
     ];
 

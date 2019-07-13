@@ -5,11 +5,14 @@ namespace App\Services\Automations;
 use App\Models\AutomationSchedule;
 use App\Models\AutomationStep;
 use App\Models\Subscriber;
+use App\Traits\ScheduledAt;
 use Carbon\Carbon;
 use Closure;
 
 class GenerateNextSchedule
 {
+    use ScheduledAt;
+
     /**
      * Create the next automation step if there is one
      *
@@ -52,7 +55,7 @@ class GenerateNextSchedule
     protected function createNextSchedule(AutomationSchedule $schedule, AutomationStep $nextAutomationStep): ?AutomationSchedule
     {
         $subscriber = Subscriber::find($schedule->subscriber_id);
-        $nextScheduledAt = Carbon::parse($subscriber->created_at)->addSeconds($nextAutomationStep->delay_seconds);
+        $nextScheduledAt = $this->calculateNextScheduledAt($subscriber->created_at, $nextAutomationStep->delay_seconds);
 
         return AutomationSchedule::create([
             'subscriber_id' => $schedule->subscriber_id,
