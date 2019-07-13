@@ -33,14 +33,14 @@
                         <td>{{ $step->delay_string }}</td>
                         <td>
                             @if( ! $step->template)
-                                <span class="label label-danger">Not Set</span>
+                                <span class="badge badge-danger">Not Set</span>
                             @else
                                 {{ $step->template->name }}
                             @endif
                         </td>
                         <td>
                             @if( ! $step->content)
-                                <span class="label label-danger">Not Set</span>
+                                <span class="badge badge-danger">Not Set</span>
                             @else
                                 <a href="">View</a>
                             @endif

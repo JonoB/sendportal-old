@@ -53,7 +53,7 @@
                             <td>{{ $subscriber->full_name }}</td>
                             <td>
                                 @foreach($subscriber->segments as $segment)
-                                    <span class="label label-default">{{ $segment->name }}</span>
+                                    <span class="badge badge-secondary">{{ $segment->name }}</span>
                                 @endforeach
                             </td>
                             <td><span title="{{ $subscriber->created_at }}">{{ $subscriber->created_at->diffForHumans() }}</span></td>
