@@ -5,7 +5,7 @@ namespace App\Services\Automations;
 use App\Models\AutomationSchedule;
 use App\Models\Delivery;
 
-class DeliverSchedule
+class CreateDelivery
 {
     /**
      * Check that the subscriber is still active
