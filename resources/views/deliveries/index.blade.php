@@ -29,7 +29,11 @@
                             <td><a href="{{ route('subscribers.show', $delivery->subscriber_id) }}">{{ $delivery->recipient_email }}</a></td>
                             <td>
                                 @if ( ! $delivery->sent_at)
-                                    <a href="" class="btn btn-xs btn-light">Send now</a>
+                                    <form action="{{ route('deliveries.send') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $delivery->id }}">
+                                        <button type="submit" class="btn btn-xs btn-light">Send now</button>
+                                    </form>
                                 @endif
                             </td>
                         </tr>

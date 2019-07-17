@@ -18,19 +18,17 @@
 
 @stop
 
-@section('js')
+@push('js')
     <script>
 
         var url = '{{ route('providers.ajax', 1) }}';
 
-        $(function()
-        {
+        $(function() {
             var type_id = $('select[name="type_id"]').val();
 
             createFields(type_id);
 
-            $('#id-field-type_id').on('change', function()
-            {
+            $('#id-field-type_id').on('change', function() {
                 createFields(this.value);
             });
         });
@@ -39,8 +37,7 @@
         {
             url = url.substring(0, url.length - 1) + providerTypeId;
 
-            $.get(url, function(result)
-            {
+            $.get(url, function(result) {
                 $('#provider-fields').html('');
 
                 $.each(result, function(name, field)
@@ -60,4 +57,4 @@
         }
 
     </script>
-@endsection
+@endpush

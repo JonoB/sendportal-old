@@ -6,7 +6,7 @@ use App\Interfaces\CampaignContentServiceInterface;
 use App\Models\Campaign;
 use App\Models\Subscriber;
 
-class CampaignContentService implements CampaignContentServiceInterface
+class MergeContent implements CampaignContentServiceInterface
 {
     /**
      * @var Campaign

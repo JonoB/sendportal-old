@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Deliveries;
 
 use App\Factories\MailAdapterFactory;
-use App\Interfaces\CampaignDispatchInterface;
+use App\Interfaces\DeliveryDispatchInterface;
 use Illuminate\Support\Facades\Log;
 
-class CampaignDispatchService implements CampaignDispatchInterface
+class DeliveryDispatchService implements DeliveryDispatchInterface
 {
     /**
      * @var MailAdapterFactory
@@ -47,7 +47,7 @@ class CampaignDispatchService implements CampaignDispatchInterface
     }
 
     /**
-     * Dispatch the campaign via the given mail service
+     * Dispatch the email via the given mailService
      *
      * @param string $mailService
      * @param string $fromEmail

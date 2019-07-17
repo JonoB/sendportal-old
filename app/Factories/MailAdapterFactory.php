@@ -27,10 +27,7 @@ class MailAdapterFactory
     /**
      * @param ProviderRepositoryInterface $providerRepo
      */
-    public function __construct
-    (
-        ProviderRepositoryInterface $providerRepo
-    )
+    public function __construct(ProviderRepositoryInterface $providerRepo)
     {
         $this->providerRepo = $providerRepo;
     }
@@ -39,7 +36,6 @@ class MailAdapterFactory
      * Get a mail adapter instance by name.
      *
      * @param  string $name
-     *
      * @return MailAdapterInterface
      */
     public function store($name)
@@ -51,7 +47,6 @@ class MailAdapterFactory
      * Get a mail adapter instance.
      *
      * @param  string $adapter
-     *
      * @return MailAdapterInterface
      */
     public function adapter($adapter)
@@ -63,7 +58,6 @@ class MailAdapterFactory
      * Attempt to get the adapter from the local cache.
      *
      * @param  string $name
-     *
      * @return MailAdapterInterface
      */
     protected function get($name)
@@ -75,9 +69,7 @@ class MailAdapterFactory
      * Resolve the given adapter.
      *
      * @param  string $name
-     *
      * @return MailAdapterInterface
-     *
      * @throws \InvalidArgumentException
      */
     protected function resolve($name)
@@ -88,17 +80,14 @@ class MailAdapterFactory
         {
             return $this->{$adapterMethod}();
         }
-        else
-        {
-            throw new \InvalidArgumentException("Mail adapter [{$name}] is not supported.");
-        }
+
+        throw new \InvalidArgumentException("Mail adapter [{$name}] is not supported.");
     }
 
     /**
      * Return an AWS SesMailAdapter
      *
      * @param null
-     *
      * @return MailAdapterInterface
      */
     public function createAwssqsAdapter()
@@ -116,7 +105,6 @@ class MailAdapterFactory
      * Return a SendgridMailAdapter
      *
      * @param null
-     *
      * @return MailAdapterInterface
      */
     public function createSendgridAdapter()
@@ -134,7 +122,6 @@ class MailAdapterFactory
      * Return a MailgunMailAdapter
      *
      * @param null
-     *
      * @return MailAdapterInterface
      */
     public function createMailgunAdapter()
@@ -152,7 +139,6 @@ class MailAdapterFactory
      * Return a PostmarkMailAdapter
      *
      * @param null
-     *
      * @return MailAdapterInterface
      */
     public function createPostmarkAdapter()

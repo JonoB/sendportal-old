@@ -18,6 +18,7 @@ Route::middleware(['auth'])->group(function ()
     // Deliveries
     Route::get('deliveries', ['as' => 'deliveries.index', 'uses' => 'DeliveriesController@index']);
     Route::get('deliveries/draft', ['as' => 'deliveries.draft', 'uses' => 'DeliveriesController@draft']);
+    Route::post('deliveries/send', ['as' => 'deliveries.send', 'uses' => 'DeliveriesController@send']);
 
     // Automations
     Route::resource('automations', 'AutomationsController');
