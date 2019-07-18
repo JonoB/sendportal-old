@@ -3,9 +3,10 @@
 namespace App\Services\Automations;
 
 use App\Models\AutomationSchedule;
-use App\Models\Delivery;
+use App\Models\AutomationStep;
+use App\Models\Message;
 
-class CreateDelivery
+class CreateMessage
 {
     /**
      * Check that the subscriber is still active
@@ -27,9 +28,9 @@ class CreateDelivery
      */
     protected function dispatch(AutomationSchedule $schedule): void
     {
-        Delivery::create([
+        Message::create([
             'subscriber_id' => $schedule->subscriber_id,
-            'source' => 'automation',
+            'source' => AutomationStep::class,
             'source_id' => $schedule->id,
             'recipient_email' => $schedule->subscriber->email,
             'subject' => $schedule->automation_step->subject,

@@ -73,7 +73,7 @@ class AwsWebhooksController extends Controller
         $method = 'handle' . studly_case(str_slug($eventType, ''));
 
         // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/event-publishing-retrieving-sns-examples.html#event-publishing-retrieving-sns-open
-        // Bounce, Complaint, Delivery, Send Email, Reject Event, Open Event, Click Event
+        // Bounce, Complaint, Message, Send Email, Reject Event, Open Event, Click Event
         if (method_exists($this, $method))
         {
             $this->{$method}($messageId, $event);

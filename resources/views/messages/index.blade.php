@@ -6,7 +6,7 @@
 
 @section('content')
 
-    @include('deliveries.partials.nav')
+    @include('messages.partials.nav')
 
     <div class="card">
         <div class="card-table">
@@ -20,18 +20,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($deliveries as $delivery)
+                    @forelse($messages as $message)
                         <tr>
                             <td>
-                                {{ $delivery->created_at }}
+                                {{ $message->created_at }}
                             </td>
-                            <td>{{ $delivery->subject }}</td>
-                            <td><a href="{{ route('subscribers.show', $delivery->subscriber_id) }}">{{ $delivery->recipient_email }}</a></td>
+                            <td>{{ $message->subject }}</td>
+                            <td><a href="{{ route('subscribers.show', $message->subscriber_id) }}">{{ $message->recipient_email }}</a></td>
                             <td>
-                                @if ( ! $delivery->sent_at)
-                                    <form action="{{ route('deliveries.send') }}" method="post">
+                                @if ( ! $message->sent_at)
+                                    <form action="{{ route('messages.send') }}" method="post">
                                         @csrf
-                                        <input type="hidden" name="id" value="{{ $delivery->id }}">
+                                        <input type="hidden" name="id" value="{{ $message->id }}">
                                         <button type="submit" class="btn btn-xs btn-light">Send now</button>
                                     </form>
                                 @endif
@@ -40,14 +40,14 @@
                     @empty
                         <tr>
                             <td colspan="100%">
-                                <h5 class="text-center text-muted">There are no deliveries yet</h5>
+                                <h5 class="text-center text-muted">There are no messages</h5>
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
 
-            {!! $deliveries->links() !!}
+            {!! $messages->links() !!}
         </div>
     </div>
 @endsection

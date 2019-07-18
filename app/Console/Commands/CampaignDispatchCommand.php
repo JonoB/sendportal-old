@@ -13,7 +13,7 @@ use App\Models\Segment;
 use App\Models\Subscriber;
 use App\Models\Campaign;
 use App\Models\CampaignStatus;
-use App\Services\Deliveries\DispatchDelivery;
+use App\Services\Messages\DispatchMessage;
 use App\Services\DeliveryDispatchService;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -74,7 +74,7 @@ class CampaignDispatchCommand extends Command
      * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
      * @param SubscriberRepositoryInterface $subscriberRepository
      * @param CampaignRepositoryInterface $campaignRepository
-     * @param DispatchDelivery $dispatchDeliveryService
+     * @param DispatchMessage $dispatchDeliveryService
      * @param CampaignContentServiceInterface $campaignContentService
      * @param EmailRepositoryInterface $emailRepository
      */
@@ -83,7 +83,7 @@ class CampaignDispatchCommand extends Command
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
         SubscriberRepositoryInterface $subscriberRepository,
         CampaignRepositoryInterface $campaignRepository,
-        DispatchDelivery $dispatchDeliveryService,
+        DispatchMessage $dispatchDeliveryService,
         CampaignContentServiceInterface $campaignContentService,
         EmailRepositoryInterface $emailRepository
     )

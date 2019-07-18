@@ -2,14 +2,14 @@
 
 namespace App\Repositories;
 
-use App\Models\Delivery;
+use App\Models\Message;
 
-class DeliveryEloquentRepository extends BaseEloquentRepository
+class MessageEloquentRepository extends BaseEloquentRepository
 {
     /**
      * @var string
      */
-    protected $modelName = Delivery::class;
+    protected $modelName = Message::class;
 
     protected function applyFilters($instance, array $filters = [])
     {

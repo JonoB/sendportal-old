@@ -27,7 +27,7 @@ use App\Repositories\SubscriberEloquentRepository;
 use App\Repositories\TagEloquentRepository;
 use App\Repositories\TemplateEloquentRepository;
 use App\Services\Content\MergeContent;
-use App\Services\Deliveries\DispatchDelivery;
+use App\Services\Messages\DispatchMessage;
 use App\Services\EmailWebhookService;
 use App\Services\CampaignReportService;
 
@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CampaignReportServiceInterface::class, CampaignReportService::class);
         $this->app->bind(CampaignContentServiceInterface::class, MergeContent::class);
         $this->app->bind(CampaignLinksRepositoryInterface::class, CampaignLinksEloquentRepository::class);
-        $this->app->bind(DeliveryDispatchInterface::class, DispatchDelivery::class);
+        $this->app->bind(DeliveryDispatchInterface::class, DispatchMessage::class);
         $this->app->bind(CampaignRepositoryInterface::class, CampaignEloquentRepository::class);
         $this->app->bind(TagRepositoryInterface::class, TagEloquentRepository::class);
         $this->app->bind(TemplateRepositoryInterface::class, TemplateEloquentRepository::class);

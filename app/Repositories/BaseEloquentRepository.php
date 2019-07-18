@@ -168,7 +168,7 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      */
     public function find($id, array $relations = [])
     {
-        $this->instance = $this->getQueryBuilder()->with($relations)->findOrFail($id);
+        $this->instance = $this->getQueryBuilder()->with($relations)->find($id);
 
         return $this->instance;
     }

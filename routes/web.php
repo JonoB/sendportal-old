@@ -15,10 +15,10 @@ Route::middleware(['auth'])->group(function ()
 
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
-    // Deliveries
-    Route::get('deliveries', ['as' => 'deliveries.index', 'uses' => 'DeliveriesController@index']);
-    Route::get('deliveries/draft', ['as' => 'deliveries.draft', 'uses' => 'DeliveriesController@draft']);
-    Route::post('deliveries/send', ['as' => 'deliveries.send', 'uses' => 'DeliveriesController@send']);
+    // Messages
+    Route::get('messages', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
+    Route::get('messages/draft', ['as' => 'messages.draft', 'uses' => 'MessagesController@draft']);
+    Route::post('messages/send', ['as' => 'messages.send', 'uses' => 'MessagesController@send']);
 
     // Automations
     Route::resource('automations', 'AutomationsController');

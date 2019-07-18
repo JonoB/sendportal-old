@@ -23,7 +23,7 @@
             </li>
             <li class="nav-item {{ request()->is('automations*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('automations.index') }}">
-                    <i class="far fa-sync-alt mr-2"></i> <span>Automation</span>
+                    <i class="far fa-sync-alt mr-2"></i> <span>Automations</span>
                 </a>
             </li>
             <li class="nav-item {{ request()->is('templates*') ? 'active' : '' }}">
@@ -41,9 +41,9 @@
                     <i class="far fa-list mr-2"></i> <span>Segments</span>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('deliveries*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('deliveries.index') }}">
-                    <i class="far fa-paper-plane mr-2"></i> <span>Deliveries</span>
+            <li class="nav-item {{ request()->is('messages*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('messages.index') }}">
+                    <i class="far fa-paper-plane mr-2"></i> <span>Messages</span>
                 </a>
             </li>
             <li class="nav-item {{ request()->is('providers*') ? 'active' : '' }}">

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Delivery extends BaseModel
+class Message extends BaseModel
 {
     protected $guarded = [];
 

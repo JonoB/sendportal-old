@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -29,4 +30,15 @@ class Automation extends BaseModel
         return $this->hasOne(AutomationStep::class)
             ->orderBy('delay_seconds');
     }
+
+    /**
+     * Get the provider
+     *
+     * @return BelongsTo
+     */
+    public function provider(): ?BelongsTo
+    {
+        return $this->belongsTo(Provider::class);
+    }
+
 }

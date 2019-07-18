@@ -5,7 +5,7 @@ namespace App\Listeners;
 use App\Events\AutomationDispatchEvent;
 use App\Models\AutomationSchedule;
 use App\Services\Automations\CompleteSchedule;
-use App\Services\Automations\CreateDelivery;
+use App\Services\Automations\CreateMessage;
 use App\Services\Automations\GenerateNextSchedule;
 use App\Services\Automations\ValidateSubscriber;
 use App\Services\Automations\StartSchedule;
@@ -34,7 +34,7 @@ class AutomationDispatchHandler
         $pipes = [
             StartSchedule::class,
             ValidateSubscriber::class,
-            CreateDelivery::class,
+            CreateMessage::class,
             GenerateNextSchedule::class,
             CompleteSchedule::class,
         ];
