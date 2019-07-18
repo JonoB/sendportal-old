@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Content;
 
 use App\Interfaces\CampaignContentServiceInterface;
 use App\Models\Campaign;

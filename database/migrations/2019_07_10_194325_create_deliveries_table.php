@@ -22,7 +22,14 @@ class CreateDeliveriesTable extends Migration
             $table->string('subject');
             $table->string('from_name');
             $table->string('from_email');
+            $table->string('message_id')->nullable();
+            $table->string('ip')->nullable();
+            $table->unsignedInteger('open_count')->default(0);
+            $table->unsignedInteger('click_count')->default(0);
             $table->timestamp('sent_at')->nullable();
+            $table->timestamp('delivered_at')->nullable();
+            $table->timestamp('opened_at')->nullable();
+            $table->timestamp('clicked_at')->nullable();
             $table->timestamps();
         });
     }

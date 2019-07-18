@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\DeliveryDispatchInterface;
 use App\Repositories\DeliveryEloquentRepository;
+use App\Services\Deliveries\DispatchDelivery;
 use App\Services\Deliveries\MarkDeliverySent;
 use Illuminate\Http\Request;
 
@@ -15,11 +15,11 @@ class DeliveriesController extends Controller
     protected $deliveryRepo;
 
     /**
-     * @var DeliveryDispatchInterface
+     * @var DispatchDelivery
      */
     private $dispatchService;
 
-    public function __construct(DeliveryEloquentRepository $deliveryRepo, DeliveryDispatchInterface $dispatchService)
+    public function __construct(DeliveryEloquentRepository $deliveryRepo, DispatchDelivery $dispatchService)
     {
         $this->deliveryRepo = $deliveryRepo;
         $this->dispatchService = $dispatchService;
@@ -45,14 +45,14 @@ class DeliveriesController extends Controller
 
         if ($delivery->sent_at)
         {
-            return redirect()->route('deliveries.index')->withErrors(['errors', 'The selected message has already been sent']);
+            return redirect()->route('deliveries.index')->withErrors(['The selected message has already been sent']);
         }
 
         //$mailService = strtolower(str_replace(' ', '', $campaign->provider->type->name));
 
         $mailService = 'mailgun';
 
-        $messageId = $this->dispatchService->send(
+        $messageId = $this->dispatchService->handle(
             $mailService,
             $delivery->from_email,
             $delivery->recipient_email,

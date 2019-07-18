@@ -13,6 +13,7 @@ use App\Models\Segment;
 use App\Models\Subscriber;
 use App\Models\Campaign;
 use App\Models\CampaignStatus;
+use App\Services\Deliveries\DispatchDelivery;
 use App\Services\DeliveryDispatchService;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -43,7 +44,7 @@ class CampaignDispatchCommand extends Command
     /**
      * @var DeliveryDispatchService
      */
-    protected $campaignDispatchService;
+    protected $dispatchDeliveryService;
 
     /**
      * @var ContentUrlServiceInterface
@@ -73,7 +74,7 @@ class CampaignDispatchCommand extends Command
      * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
      * @param SubscriberRepositoryInterface $subscriberRepository
      * @param CampaignRepositoryInterface $campaignRepository
-     * @param DeliveryDispatchInterface $campaignDispatchService
+     * @param DispatchDelivery $dispatchDeliveryService
      * @param CampaignContentServiceInterface $campaignContentService
      * @param EmailRepositoryInterface $emailRepository
      */
@@ -82,7 +83,7 @@ class CampaignDispatchCommand extends Command
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
         SubscriberRepositoryInterface $subscriberRepository,
         CampaignRepositoryInterface $campaignRepository,
-        DeliveryDispatchInterface $campaignDispatchService,
+        DispatchDelivery $dispatchDeliveryService,
         CampaignContentServiceInterface $campaignContentService,
         EmailRepositoryInterface $emailRepository
     )
@@ -92,7 +93,7 @@ class CampaignDispatchCommand extends Command
         $this->campaignSubscriberRepository = $campaignSubscriberRepository;
         $this->subscriberRepo = $subscriberRepository;
         $this->campaignRepo = $campaignRepository;
-        $this->campaignDispatchService = $campaignDispatchService;
+        $this->dispatchDeliveryService = $dispatchDeliveryService;
         $this->campaignContentService = $campaignContentService;
         $this->emailRepository = $emailRepository;
     }
@@ -217,7 +218,7 @@ class CampaignDispatchCommand extends Command
     {
         $mailService = strtolower(str_replace(' ', '', $campaign->provider->type->name));
 
-        $messageId = $this->campaignDispatchService->send(
+        $messageId = $this->dispatchDeliveryService->send(
             $mailService,
             $campaign->from_email,
             $subscriber->email,

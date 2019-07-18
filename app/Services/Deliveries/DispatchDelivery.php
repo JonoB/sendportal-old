@@ -6,7 +6,7 @@ use App\Factories\MailAdapterFactory;
 use App\Interfaces\DeliveryDispatchInterface;
 use Illuminate\Support\Facades\Log;
 
-class DeliveryDispatchService implements DeliveryDispatchInterface
+class DispatchDelivery
 {
     /**
      * @var MailAdapterFactory
@@ -32,7 +32,7 @@ class DeliveryDispatchService implements DeliveryDispatchInterface
      *
      * @return string
      */
-    public function send($mailService, $fromEmail, $toEmail, $subject, $content): string
+    public function handle($mailService, $fromEmail, $toEmail, $subject, $content): string
     {
         try
         {

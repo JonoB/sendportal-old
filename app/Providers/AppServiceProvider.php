@@ -26,9 +26,9 @@ use App\Repositories\SegmentEloquentRepository;
 use App\Repositories\SubscriberEloquentRepository;
 use App\Repositories\TagEloquentRepository;
 use App\Repositories\TemplateEloquentRepository;
-use App\Services\Deliveries\DeliveryDispatchService;
+use App\Services\Content\MergeContent;
+use App\Services\Deliveries\DispatchDelivery;
 use App\Services\EmailWebhookService;
-use App\Services\MergeContent;
 use App\Services\CampaignReportService;
 
 use Illuminate\Support\ServiceProvider;
@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CampaignReportServiceInterface::class, CampaignReportService::class);
         $this->app->bind(CampaignContentServiceInterface::class, MergeContent::class);
         $this->app->bind(CampaignLinksRepositoryInterface::class, CampaignLinksEloquentRepository::class);
-        $this->app->bind(DeliveryDispatchInterface::class, DeliveryDispatchService::class);
+        $this->app->bind(DeliveryDispatchInterface::class, DispatchDelivery::class);
         $this->app->bind(CampaignRepositoryInterface::class, CampaignEloquentRepository::class);
         $this->app->bind(TagRepositoryInterface::class, TagEloquentRepository::class);
         $this->app->bind(TemplateRepositoryInterface::class, TemplateEloquentRepository::class);
