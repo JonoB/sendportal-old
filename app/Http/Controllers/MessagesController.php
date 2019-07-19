@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\MessageEloquentRepository;
+use App\Services\Content\MergeContent;
 use App\Services\Messages\DispatchMessage;
-use App\Services\Messages\MarkMessageSent;
-use App\Services\Messages\ResolveProvider;
-use Illuminate\Http\Request;
+use Illuminate\Routing\Pipeline;
 
 class MessagesController extends Controller
 {
@@ -20,10 +19,27 @@ class MessagesController extends Controller
      */
     protected $dispatchMessage;
 
-    public function __construct(MessageEloquentRepository $deliveryRepo, DispatchMessage $dispatchMessage)
+    /**
+     * @var MergeContent
+     */
+    protected $mergeContent;
+
+    /**
+     * MessagesController constructor
+     *
+     * @param MessageEloquentRepository $messageRepo
+     * @param DispatchMessage $dispatchMessage
+     * @param MergeContent $mergeContent
+     */
+    public function __construct(
+        MessageEloquentRepository $messageRepo,
+        DispatchMessage $dispatchMessage,
+        MergeContent $mergeContent
+    )
     {
-        $this->messageRepo = $deliveryRepo;
+        $this->messageRepo = $messageRepo;
         $this->dispatchMessage = $dispatchMessage;
+        $this->mergeContent = $mergeContent;
     }
 
     /**
@@ -57,7 +73,7 @@ class MessagesController extends Controller
      */
     public function send()
     {
-        if ( ! $message = $this->messageRepo->find(request('id')))
+        if ( ! $message = $this->messageRepo->find(request('id', ), ['subscriber']))
         {
             return redirect()->back()->withErrors('Unable to locate that message');
         }
@@ -67,7 +83,9 @@ class MessagesController extends Controller
             return redirect()->back()->withErrors('The selected message has already been sent');
         }
 
-        $this->dispatchMessage->handle($message);
+        $content = $this->mergeContent->handle($message);
+
+        $this->dispatchMessage->handle($message, $content);
 
         return redirect()->route('messages.draft');
     }

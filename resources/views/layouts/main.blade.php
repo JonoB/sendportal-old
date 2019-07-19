@@ -1,3 +1,5 @@
+
+
 <div class="main-wrapper col p-0 min-vh-100">
 
     <!-- Modal -->
@@ -30,6 +32,9 @@
     @include('layouts.partials.header')
 
     <div class="main-content pl-4-half pr-4-half pb-4-half">
+
+        <h1>@yield('heading')</h1>
+
 
         @if( ! in_array(request()->route()->getName(), [
             'login',

@@ -28,6 +28,7 @@ class AutomationStepRequest extends FormRequest
             'template_id' => ['required'],
             'delay' => ['required', 'int'],
             'delay_type' => ['required'],
+            'content' => ['required'],
         ];
     }
 }

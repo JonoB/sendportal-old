@@ -3,8 +3,9 @@
 namespace App\Services\Messages;
 
 use App\Factories\MailAdapterFactory;
-use App\Models\AutomationStep;
+use App\Models\AutomationSchedule;
 use App\Models\Message;
+use App\Repositories\AutomationScheduleEloquentRepository;
 use App\Repositories\AutomationStepEloquentRepository;
 use App\Repositories\MessageEloquentRepository;
 
@@ -24,40 +25,42 @@ class DispatchMessage
     /**
      * @var AutomationStepEloquentRepository
      */
-    protected $automationStepRepo;
+    protected $automationScheduleRepo;
 
     /**
      * DispatchMessage constructor
      *
      * @param MailAdapterFactory $mailAdapter
      * @param MessageEloquentRepository $messageRepo
-     * @param AutomationStepEloquentRepository $automationStepRepo
+     * @param AutomationScheduleEloquentRepository $automationScheduleRepo
      */
     public function __construct(
         MailAdapterFactory $mailAdapter,
         MessageEloquentRepository $messageRepo,
-        AutomationStepEloquentRepository $automationStepRepo
+        AutomationScheduleEloquentRepository $automationScheduleRepo
     )
     {
         $this->mailAdapter = $mailAdapter;
         $this->messageRepo = $messageRepo;
-        $this->automationStepRepo = $automationStepRepo;
+        $this->automationScheduleRepo = $automationScheduleRepo;
     }
 
     /**
      * Send the message
      *
      * @param Message $message
+     * @param string $content
      * @return mixed
+     * @throws \Exception
      */
-    public function handle(Message $message)
+    public function handle(Message $message, $content)
     {
         if ( ! $this->isValidMessage($message))
         {
             return false;
         }
 
-        return $this->dispatch($message);
+        $this->dispatch($message, $content);
     }
 
     /**
@@ -79,32 +82,45 @@ class DispatchMessage
      * is set on the model instance in a previous step of the pipeline
      *
      * @param Message $message
+     * @param string $content
      * @return bool
+     * @throws \Exception
      */
-    protected function dispatch(Message $message): bool
+    protected function dispatch(Message $message, string $content): bool
     {
-        $messageId = $this->mailAdapter->adapter($message->provider)
-            ->send($message->from_email, $message->recipient_email, $message->subject, $message->content);
+        $provider = $this->resolveProvider($message);
+
+        $messageId = $this->mailAdapter->adapter($provider)
+            ->send($message->from_email, $message->recipient_email, $message->subject, $content);
 
         return $this->markMessageAsSent($message, $messageId);
     }
 
     /**
-     * Execute the database query
+     * Resolve the provider from the message
      *
      * @param Message $message
+     * @return string
      * @throws \Exception
      */
-    protected function resolveProviderFromMessage(Message $message): void
+    protected function resolveProvider(Message $message): string
     {
-        if ($message->source == AutomationStep::class)
+        if ($message->source != AutomationSchedule::class)
         {
-            $automationStep = $this->automationStepRepo->find($message->source_id, ['automation.provider']);
-
-            return strtolower(str_replace(' ', '', $automationStep->automation->provider->name));
+            throw new \Exception('Unable to resolve source for message ID ' . $message->id);
         }
 
-        throw new \Exception('Unable resolve provider for message ID ' . $message->id);
+        if ( ! $automationSchedule = $this->automationScheduleRepo->find($message->source_id, ['automation_step.automation.provider']))
+        {
+            throw new \Exception('Unable to resolve automation schedule for message ID ' . $message->id);
+        }
+
+        if ( ! $provider = $automationSchedule->automation_step->automation->provider->name)
+        {
+            throw new \Exception('Unable to resolve provider for message ID ' . $message->id);
+        }
+
+        return strtolower(str_replace(' ', '', $automationSchedule->automation_step->automation->provider->name));
     }
 
     /**

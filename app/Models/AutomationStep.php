@@ -4,13 +4,13 @@ namespace App\Models;
 
 class AutomationStep extends BaseModel
 {
+    protected $guarded = [];
+
     protected static $frequencies = [
         'minutes' => 'Minute(s)',
         'hours' => 'Hour(s)',
         'days' => 'Day(s)',
     ];
-
-    protected $guarded = [];
 
     public static function boot()
     {

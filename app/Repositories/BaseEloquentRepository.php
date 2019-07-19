@@ -286,12 +286,6 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     {
         $data = $this->setBooleanFields($data);
 
-        // validate the data
-        if ( ! $this->validateData($data))
-        {
-            return false;
-        }
-
         $this->instance->fill($data);
         $this->instance->save();
 
@@ -356,9 +350,8 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     /**
      * Return a new query builder instance
      *
-     * Implementation differs in BaseTenantRepo
-     *
-     * @return object
+     * @return mixed
+     * @throws \Exception#
      */
     public function getQueryBuilder()
     {
@@ -368,7 +361,8 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     /**
      * Returns new model instance
      *
-     * @return object
+     * @return mixed
+     * @throws \Exception
      */
     public function getNewInstance()
     {
@@ -486,46 +480,6 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     public function getOrderDirection()
     {
         return $this->orderDirection;
-    }
-
-    /**
-     * Validate post data
-     *
-     * @param array $data
-     * @return bool
-     */
-    protected function validateData(array $data)
-    {
-        if ( ! $this->validator)
-        {
-            return true;
-        }
-
-        if ( ! $this->instance)
-        {
-            throw new \DomainException('Unable to validate as instance has not yet been instantiated.');
-        }
-
-        $validator = new $this->validator($data);
-        if ($validator->passes($this->instance->id))
-        {
-            return true;
-        }
-
-        $this->validationErrors = $validator->getErrors();
-
-        return false;
-    }
-
-    /**
-     * Set repository validator
-     *
-     * @param string $validator
-     * @return void
-     */
-    public function setValidator($validator)
-    {
-        $this->validator = $validator;
     }
 
     /**

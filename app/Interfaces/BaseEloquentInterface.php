@@ -117,28 +117,6 @@ interface BaseEloquentInterface extends BaseInterface
     public function destroy($id);
 
     /**
-     * Checks whether the model has any errors
-     *
-     * @return boolean
-     */
-    public function hasErrors();
-
-    /**
-     * Returns model validation error messages
-     *
-     * @return array
-     */
-    public function getErrors();
-
-    /**
-     * Set repository validator
-     *
-     * @param string $validator
-     * @return void
-     */
-    public function setValidator($validator);
-
-    /**
      * Get count of records
      *
      * @param null

@@ -2,44 +2,71 @@
 
 namespace App\Services\Content;
 
-use App\Interfaces\CampaignContentServiceInterface;
-use App\Models\Campaign;
+use App\Models\AutomationSchedule;
+use App\Models\Message;
 use App\Models\Subscriber;
+use App\Repositories\AutomationScheduleEloquentRepository;
+use App\Repositories\AutomationStepEloquentRepository;
 
-class MergeContent implements CampaignContentServiceInterface
+class MergeContent
 {
-    /**
-     * @var Campaign
-     */
-    protected $campaign;
-
     /**
      * @var string
      */
     protected $unsubscribeReplacementTag = '{{ unsubscribe_url }}';
 
     /**
-     * Set the campaign and create base content ready for subscriber merging
-     *
-     * @param Campaign $campaign
-     *
-     * @return void
+     * @var AutomationStepEloquentRepository
      */
-    public function setCampaign(Campaign $campaign): void
+    protected $automationScheduleRepo;
+
+    /**
+     * MergeContent constructor
+     *
+     * @param AutomationScheduleEloquentRepository $automationScheduleRepo
+     */
+    public function __construct(AutomationScheduleEloquentRepository $automationScheduleRepo)
     {
-        $this->campaign = $campaign;
+        $this->automationScheduleRepo = $automationScheduleRepo;
     }
 
     /**
-     * Merge open tracking image and subscriber tags into the content
+     * Get the content for the message
      *
-     * @param Subscriber $subscriber
-     *
-     * @return string
+     * @param Message $message
+     * @return mixed
+     * @throws \Exception
      */
-    public function getMergedContent(Subscriber $subscriber): string
+    public function handle(Message $message)
     {
-        return $this->mergeTags($this->campaign->full_content, $subscriber);
+        return $this->resolveContent($message);
+    }
+
+    /**
+     * Resolve the content
+     *
+     * @param Message $message
+     * @return string
+     * @throws \Exception
+     */
+    protected function resolveContent(Message $message): string
+    {
+        if ($message->source != AutomationSchedule::class)
+        {
+            throw new \Exception('Unable to resolve source for message ID ' . $message->id);
+        }
+
+        if ( ! $schedule = $this->automationScheduleRepo->find($message->source_id, ['automation_step']))
+        {
+            throw new \Exception('Unable to resolve automation step for message ID ' . $message->id);
+        }
+
+        if ( ! $content = $schedule->automation_step->content)
+        {
+            throw new \Exception('Unable to resolve content for automation step ' . $schedule->automation_step_id);
+        }
+
+       return $this->mergeTags($content, $message->subscriber);
     }
 
     /**
@@ -52,7 +79,9 @@ class MergeContent implements CampaignContentServiceInterface
      */
     protected function mergeTags(string $content, Subscriber $subscriber): string
     {
-        return $this->mergeUnsubscribeLink($this->mergeSubscriberTags($content, $subscriber), $subscriber);
+        $content = $this->mergeSubscriberTags($content, $subscriber);
+
+        return $this->mergeUnsubscribeLink($content, $subscriber);
     }
 
     /**
@@ -71,7 +100,7 @@ class MergeContent implements CampaignContentServiceInterface
             'last_name' => $subscriber->last_name,
         ];
 
-        // NOTE(mystery person): regex doesn't seem to work here - I think it may be due to all the tags and inverted commas in html?
+        // NOTE: regex doesn't seem to work here - I think it may be due to all the tags and inverted commas in html?
         foreach ($tags as $key => $value)
         {
             $content = normalize_tags($content, $key);

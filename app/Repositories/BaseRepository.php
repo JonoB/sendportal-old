@@ -29,6 +29,7 @@ abstract class BaseRepository
         }
         return false;
     }
+
     /**
      * Return active user model
      *
@@ -37,26 +38,6 @@ abstract class BaseRepository
     public function getActiveUser()
     {
         return \App\User::getUser();
-    }
-
-    /**
-     * Returns model validation error messages
-     *
-     * @return array
-     */
-    public function getErrors()
-    {
-        return $this->validationErrors;
-    }
-
-    /**
-     * Checks whether the model has any errors
-     *
-     * @return bool
-     */
-    public function hasErrors()
-    {
-        return count($this->validationErrors) > 0;
     }
 
     /**

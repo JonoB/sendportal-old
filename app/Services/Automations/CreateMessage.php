@@ -3,7 +3,6 @@
 namespace App\Services\Automations;
 
 use App\Models\AutomationSchedule;
-use App\Models\AutomationStep;
 use App\Models\Message;
 
 class CreateMessage
@@ -30,7 +29,7 @@ class CreateMessage
     {
         Message::create([
             'subscriber_id' => $schedule->subscriber_id,
-            'source' => AutomationStep::class,
+            'source' => AutomationSchedule::class,
             'source_id' => $schedule->id,
             'recipient_email' => $schedule->subscriber->email,
             'subject' => $schedule->automation_step->subject,
