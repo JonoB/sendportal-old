@@ -121,7 +121,7 @@ class FormServiceProvider extends ServiceProvider
 
         Form::macro('fieldWrapper', function ($name, $label, $element)
         {
-            $out = '<div class="form-group form-group-' . $name;
+            $out = '<div class="form-group row form-group-' . $name;
             $out .= Form::fieldError($name) . '">';
             $out .= Form::fieldLabel($name, $label);
             $out .= '<div class="col-sm-10">';

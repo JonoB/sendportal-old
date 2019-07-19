@@ -1,7 +1,7 @@
-@section('css')
+@push('css')
     <link rel="stylesheet" href="{{ asset('css/codemirror/codemirror.css') }}">
     <link rel="stylesheet" href="{{ asset('css/codemirror/themes/monokai.css') }}">
-@endsection
+@endpush
 
 <div class="template-editor-container">
     <div class="form-group">

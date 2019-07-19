@@ -12,6 +12,7 @@
     <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') . '?m=' . filemtime(public_path('css/app.css')) }}" rel="stylesheet">
 
+    @stack('css')
 </head>
 <body>
 
