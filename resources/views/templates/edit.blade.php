@@ -3,7 +3,7 @@
 @section('title', "Edit Template : {$template->name}")
 
 @section('heading')
-    Edit Template : {{ $template->name }}
+    {{ $template->name }}
 @stop
 
 @section('content')

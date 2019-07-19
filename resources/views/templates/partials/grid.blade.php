@@ -1,6 +1,6 @@
 <div class="row">
     @foreach($templates as $template)
-        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+        <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card">
                 <div class="card-header card-header-accent">
                     <div class="card-header-inner">
