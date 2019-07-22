@@ -15,12 +15,15 @@ class SubscriberAddedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    /**
+     * @var Subscriber
+     */
     public $subscriber;
 
     /**
-     * Create a new event instance.
+     * SubscriberAddedEvent constructor
      *
-     * @return void
+     * @param Subscriber $subscriber
      */
     public function __construct(Subscriber $subscriber)
     {

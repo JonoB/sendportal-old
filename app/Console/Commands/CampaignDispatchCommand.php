@@ -13,6 +13,7 @@ use App\Models\Segment;
 use App\Models\Subscriber;
 use App\Models\Campaign;
 use App\Models\CampaignStatus;
+use App\Services\Content\MergeContent;
 use App\Services\Messages\DispatchMessage;
 use App\Services\DeliveryDispatchService;
 use Illuminate\Console\Command;
@@ -84,7 +85,7 @@ class CampaignDispatchCommand extends Command
         SubscriberRepositoryInterface $subscriberRepository,
         CampaignRepositoryInterface $campaignRepository,
         DispatchMessage $dispatchDeliveryService,
-        CampaignContentServiceInterface $campaignContentService,
+        MergeContent $campaignContentService,
         EmailRepositoryInterface $emailRepository
     )
     {

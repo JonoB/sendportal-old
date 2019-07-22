@@ -55,7 +55,7 @@ class SubscribersController extends Controller
      *
      * @return SubscriberResource
      */
-    public function store(SubscriberStoreRequest $request )
+    public function store(SubscriberStoreRequest $request)
     {
         $subscriber = $this->apiService->store($request->validated());
 

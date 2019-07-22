@@ -63,7 +63,7 @@ class SubscriberAddedHandler
             ],
             [
                 'scheduled_at' => $this->calculateNextScheduledAt($subscriber->created_at, $automationStep->delay_seconds),
-            ],
+            ]
         );
     }
 }
