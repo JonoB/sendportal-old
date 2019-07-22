@@ -53,11 +53,11 @@
                     $('.template-preview iframe').attr('srcdoc', codeMirror.getValue());
                     elContent.removeClass('d-none');
                     elPreview.addClass('d-none');
-                    elButton.text('Design');
+                    elButton.text('Show Design');
                 } else {
                     elContent.addClass('d-none');
                     elPreview.removeClass('d-none');
-                    elButton.text('Preview');
+                    elButton.text('Show Preview');
                 }
             });
         });
