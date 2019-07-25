@@ -29,6 +29,7 @@
                             <td><a href="{{ route('subscribers.show', $message->subscriber_id) }}">{{ $message->recipient_email }}</a></td>
                             <td>
                                 @if ( ! $message->sent_at)
+                                    <a href="{{ route('messages.show', $message->id) }}" class="btn btn-xs btn-light">Preview</a>
                                     <form action="{{ route('messages.send') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="id" value="{{ $message->id }}">

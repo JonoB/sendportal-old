@@ -67,9 +67,26 @@ class MessagesController extends Controller
     }
 
     /**
+     * Show a single message
+     *
+     * @param int $messageId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
+     */
+    public function show(int $messageId)
+    {
+        $message = $this->messageRepo->find($messageId);
+
+        $content = $this->mergeContent->handle($message);
+
+        return view('messages.show', compact('content', 'message'));
+    }
+
+    /**
      * Send a message
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
     public function send()
     {

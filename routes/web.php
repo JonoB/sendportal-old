@@ -18,6 +18,7 @@ Route::middleware(['auth'])->group(function ()
     // Messages
     Route::get('messages', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
     Route::get('messages/draft', ['as' => 'messages.draft', 'uses' => 'MessagesController@draft']);
+    Route::get('messages/{id}/show', ['as' => 'messages.show', 'uses' => 'MessagesController@show']);
     Route::post('messages/send', ['as' => 'messages.send', 'uses' => 'MessagesController@send']);
 
     // Automations
@@ -49,15 +50,14 @@ Route::middleware(['auth'])->group(function ()
     Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
     Route::get('campaigns/{id}/report', ['as' => 'campaigns.report', 'uses' => 'CampaignReportsController@report']);
 
-
     // Templates
-    Route::resource('templates', 'TemplatesController')
-        ->except(['show']);
+    Route::resource('templates', 'TemplatesController')->except(['show']);
 
     Route::get('unsubscribe/{subscriberHash}', 'SubscriptionsController@unsubscribe')->name('subscriptions.unsubscribe');
     Route::get('subscribe/{subscriberHash}', 'SubscriptionsController@subscribe')->name('subscriptions.subscribe');
     Route::put('subscriptions/{subscriberId}', 'SubscriptionsController@update')->name('subscriptions.update');
 
+    // Providers
     Route::get('providers', ['as' => 'providers.index', 'uses' => 'ProvidersController@index']);
     Route::get('providers/create', ['as' => 'providers.create', 'uses' => 'ProvidersController@create']);
     Route::get('providers/type/{id}', ['as' => 'providers.ajax', 'uses' => 'ProvidersController@providersTypeAjax']);
@@ -65,4 +65,10 @@ Route::middleware(['auth'])->group(function ()
     Route::get('providers/{id}/edit', ['as' => 'providers.edit', 'uses' => 'ProvidersController@edit']);
     Route::post('providers/{id}', ['as' => 'providers.update', 'uses' => 'ProvidersController@update']);
     Route::delete('providers/{id}', ['as' => 'providers.delete', 'uses' => 'ProvidersController@delete']);
+
+    // Ajax
+    Route::namespace('Ajax')->prefix('ajax')->group(function ()
+    {
+        Route::post('segments/store', 'SegmentsController@store')->name('segments.store');
+    });
 });
