@@ -22,7 +22,7 @@ class CreateMessagesTable extends Migration
             $table->string('subject');
             $table->string('from_name');
             $table->string('from_email');
-            $table->string('message_id')->nullable();
+            $table->string('message_id')->index()->nullable();
             $table->string('ip')->nullable();
             $table->unsignedInteger('open_count')->default(0);
             $table->unsignedInteger('click_count')->default(0);
