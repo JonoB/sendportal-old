@@ -39,6 +39,7 @@
                         <th>Name</th>
                         <th>Segments</th>
                         <th>Created</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -57,6 +58,13 @@
                                 @endforeach
                             </td>
                             <td><span title="{{ $subscriber->created_at }}">{{ $subscriber->created_at->diffForHumans() }}</span></td>
+                            <td>
+                                @if($subscriber->unsubscribed_at)
+                                    <span class="badge badge-danger">Unsubscribed</span>
+                                @else
+                                    <span class="badge badge-success">Subscribed</span>
+                                @endif
+                            </td>
                             <td><a href="{{ route('subscribers.edit', $subscriber->id) }}">Edit</a></td>
                         </tr>
                     @empty

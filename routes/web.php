@@ -69,6 +69,6 @@ Route::middleware(['auth'])->group(function ()
     // Ajax
     Route::namespace('Ajax')->prefix('ajax')->group(function ()
     {
-        Route::post('segments/store', 'SegmentsController@store')->name('segments.store');
+        Route::post('segments/store', 'SegmentsController@store')->name('ajax.segments.store');
     });
 });

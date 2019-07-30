@@ -71,9 +71,12 @@ class MergeContent
             throw new \Exception('Unable to resolve template for automation step ' . $schedule->automation_step_id);
         }
 
-        $customContent = $this->mergeTags($content, $message->subscriber);
+        // merge template and custom content
+        $mergedContent = str_ireplace(['{{content}}', '{{ content }}'], $content, $template->content);
 
-        return str_ireplace(['{{content}}', '{{ content }}'], $customContent, $template->content);
+        // merge tags into content
+        return  $this->mergeTags($mergedContent, $message->subscriber);
+
     }
 
     /**

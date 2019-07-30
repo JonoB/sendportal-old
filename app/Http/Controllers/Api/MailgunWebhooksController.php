@@ -16,9 +16,7 @@ class MailgunWebhooksController extends Controller
     /**
      * @param EmailWebhookServiceInterface $emailWebhookService
      */
-    public function __construct(
-        EmailWebhookServiceInterface $emailWebhookService
-    )
+    public function __construct(EmailWebhookServiceInterface $emailWebhookService)
     {
         $this->emailWebhookService = $emailWebhookService;
     }
@@ -65,6 +63,47 @@ class MailgunWebhooksController extends Controller
     }
 
     /**
+     * Handle an email delivery event.
+     *
+     * @param string $messageId
+     * @param array $content
+     */
+    protected function handleDelivered(string $messageId, array $content)
+    {
+        $timestamp = $this->resolveTimestamp($content);
+
+        $this->emailWebhookService->handleDelivery($messageId, $timestamp);
+    }
+
+    /**
+     * Handle an email open event.
+     *
+     * @param string $messageId
+     * @param array $content
+     */
+    protected function handleOpened(string $messageId, array $content)
+    {
+        $ipAddress = array_get($content, 'event-data.ip');
+        $timestamp = $this->resolveTimestamp($content);
+
+        $this->emailWebhookService->handleOpen($messageId, $timestamp, $ipAddress);
+    }
+
+    /**
+     * Handle an email click event.
+     *
+     * @param string $messageId
+     * @param array $content
+     */
+    protected function handleClicked(string $messageId, array $content)
+    {
+        $url = array_get($content, 'event-data.url');
+        $timestamp = $this->resolveTimestamp($content);
+
+        $this->emailWebhookService->handleClick($messageId, $timestamp, $url);
+    }
+
+    /**
      * Handle an email complained event.
      *
      * @param string $messageId
@@ -92,55 +131,28 @@ class MailgunWebhooksController extends Controller
     }
 
     /**
-     * Handle an email delivery event.
-     *
-     * @param string $messageId
-     * @param array $content
-     */
-    protected function handleDelivered(string $messageId, array $content)
-    {
-        $timestamp = Carbon::createFromTimestamp(array_get($content, 'signature.timestamp'));
-
-        $this->emailWebhookService->handleDelivery($messageId, $timestamp);
-    }
-
-    /**
-     * Handle an email click event.
-     *
-     * @param string $messageId
-     * @param array $content
-     */
-    protected function handleClicked(string $messageId, array $content)
-    {
-        $url = array_get($content, 'event-data.url');
-        $this->emailWebhookService->handleClick($messageId, $url);
-    }
-
-    /**
-     * Handle an email open event.
-     *
-     * @param string $messageId
-     * @param array $content
-     */
-    protected function handleOpened(string $messageId, array $content)
-    {
-        $ipAddress = array_get($content, 'event-data.ip');
-        $timestamp = Carbon::createFromTimestamp(array_get($content, 'signature.timestamp'));
-
-        $this->emailWebhookService->handleOpen($messageId, $timestamp, $ipAddress);
-    }
-
-    /**
      * Prepend/append crocodiles to message ID.
      *
      * @param string $messageId
-     *
      * @return string
      */
     protected function formatMessageId(string $messageId)
     {
-        return $messageId[0] == '<' ?
-            $messageId :
-            $messageId = '<' . $messageId . '>';
+        $messageId = $messageId[0] == '<'
+            ? $messageId
+            : $messageId = '<' . $messageId . '>';
+
+        return trim($messageId);
+    }
+
+    /**
+     * Resolve the timestamp
+     *
+     * @param array $payload
+     * @return Carbon
+     */
+    protected function resolveTimestamp($payload)
+    {
+        return Carbon::createFromTimestamp(array_get($payload, 'event-data.timestamp'));
     }
 }

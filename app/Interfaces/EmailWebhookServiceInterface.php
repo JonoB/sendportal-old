@@ -12,7 +12,7 @@ interface EmailWebhookServiceInterface
      * @param $link
      * @return mixed
      */
-    public function handleClick($messageId, $link);
+    public function handleClick($messageId, Carbon $timestamp, $link);
 
     /**
      * @param $messageId

@@ -6,12 +6,20 @@
 
 @section('content')
 
+    <script>
+        function resizeTextArea(element) {
+            newHeight = element.contentWindow.document .body.scrollHeight;
+            element.height = (newHeight) + "px";
+        }
+
+    </script>
+
     <div class="card mb-5">
         <div class="card-header card-header-accent">
             <div class="card-header-inner">
                 <div class="float-right">
                     @if ($message->sent_at)
-                        Sent {{ $message->sent_at->diffForHumans() }}
+                        Sent <span title="{{ $message->sent_at }}">{{ $message->sent_at->diffForHumans() }}</span>
                     @else
                         <form action="{{ route('messages.send') }}" method="post">
                             @csrf
@@ -36,26 +44,17 @@
                 </tr>
                 <tr>
                     <td><b>From:</b></td>
-                    <td>{{ $message->from_name }} &lt;{{ $message->from_email }}</td>
+                    <td>{{ $message->from_name }} &lt;{{ $message->from_email }}&gt;</td>
                 </tr>
                 </tbody>
             </table>
 
             <hr>
 
-            <iframe id="iframe-content" width="100%" height="100%" scrolling="no" frameborder="0" srcdoc="{{ $content }}"></iframe>
+            <iframe width="100%" height="100%" scrolling="no" frameborder="0" srcdoc="{{ $content }}" onload="resizeTextArea(this)"></iframe>
         </div>
     </div>
 
 @endsection
-
-@push('js')
-    <script>
-        $(function() {
-            newheight = document.getElementById('iframe-content').contentWindow.document .body.scrollHeight;
-            document.getElementById('iframe-content').height = (newheight) + "px";
-        });
-    </script>
-@endpush
 
 
