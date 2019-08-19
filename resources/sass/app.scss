@@ -9,14 +9,20 @@
 @import 'tables.scss';
 // @import 'toastr.scss';
 
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i&display=swap');
+// @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i&display=swap');
+
+@import url('https://rsms.me/inter/inter.css');
+
+@supports (font-variation-settings: normal) {
+  html { font-family: 'Inter var', sans-serif; }
+}
 
 html {
   height: 100%;
 }
 
 body {
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: $font-size-base;
   height: 100%;
   overflow-x: hidden;

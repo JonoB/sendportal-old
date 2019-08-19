@@ -11,11 +11,6 @@ use App\Repositories\AutomationStepEloquentRepository;
 class MergeContent
 {
     /**
-     * @var string
-     */
-    protected $unsubscribeReplacementTag = '{{ unsubscribe_url }}';
-
-    /**
      * @var AutomationStepEloquentRepository
      */
     protected $automationScheduleRepo;
@@ -89,9 +84,29 @@ class MergeContent
      */
     protected function mergeTags(string $content, Subscriber $subscriber): string
     {
+        $content = $this->normaliseTags($content);
+
         $content = $this->mergeSubscriberTags($content, $subscriber);
 
         return $this->mergeUnsubscribeLink($content, $subscriber);
+    }
+
+    protected function normaliseTags($content)
+    {
+        $tags = [
+            'email',
+            'first_name',
+            'last_name',
+            'unsubscribe_url',
+        ];
+
+        // NOTE: regex doesn't seem to work here - I think it may be due to all the tags and inverted commas in html?
+        foreach ($tags as $tag)
+        {
+            $content = normalize_tags($content, $tag);
+        }
+
+        return $content;
     }
 
     /**
@@ -110,16 +125,11 @@ class MergeContent
             'last_name' => $subscriber->last_name,
         ];
 
-        // NOTE: regex doesn't seem to work here - I think it may be due to all the tags and inverted commas in html?
-        foreach ($tags as $key => $value)
+        foreach ($tags as $key => $replace)
         {
-            $content = normalize_tags($content, $key);
+            $search =  '{{' . $key . '}}';
 
-            $search = [
-                '{{' . $key . '}}'
-            ];
-
-            $content = str_ireplace($search, $value, $content);
+            $content = str_ireplace($search, $replace, $content);
         }
 
         return $content;
@@ -137,6 +147,6 @@ class MergeContent
     {
         $route = route('subscriptions.unsubscribe', $subscriber->hash);
 
-        return str_ireplace($this->unsubscribeReplacementTag, $route, $content);
+        return str_ireplace(['{{ unsubscribe_url }}', '{{unsubscribe_url}}'], $route, $content);
     }
 }
