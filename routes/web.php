@@ -72,3 +72,5 @@ Route::middleware(['auth'])->group(function ()
         Route::post('segments/store', 'SegmentsController@store')->name('ajax.segments.store');
     });
 });
+
+Route::get('/home', 'HomeController@index')->name('home');
