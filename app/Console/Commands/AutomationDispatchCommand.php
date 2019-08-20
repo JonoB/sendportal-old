@@ -40,12 +40,22 @@ class AutomationDispatchCommand extends Command
      */
     public function handle()
     {
+        $count = 0;
+
         foreach ($this->getAutomationSchedules() as $schedule)
         {
-            $this->info('Dispatching schedule ID:' . $schedule->id);
+            $message = 'Dispatching schedule id=' . $schedule->id;
+
+            $this->info($message);
+            \Log::info($message);
+            $count++;
 
             event(new AutomationDispatchEvent($schedule));
         }
+
+        $message = 'Dispatched messages count=' . $count;
+        $this->info($message);
+        \Log::info($message);
     }
 
     protected function getAutomationSchedules()
