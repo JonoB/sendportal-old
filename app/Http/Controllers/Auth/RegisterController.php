@@ -2,24 +2,19 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Models\Invitation;
+use App\Models\Team;
+use App\Models\User;
+use App\Services\Teams\AcceptInvitation;
+use App\Services\Teams\CreateTeam;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
     use RegistersUsers;
 
     /**
@@ -30,13 +25,28 @@ class RegisterController extends Controller
     protected $redirectTo = '/';
 
     /**
-     * Create a new controller instance.
+     * @var CreateTeam
+     */
+    private $createTeam;
+
+    /**
+     * @var AcceptInvitation
+     */
+    private $acceptInvitation;
+
+    /**
+     * RegisterController constructor
      *
+     * @param CreateTeam $createTeam
+     * @param AcceptInvitation $acceptInvitation
      * @return void
      */
-    public function __construct()
+    public function __construct(CreateTeam $createTeam, AcceptInvitation $acceptInvitation)
     {
         $this->middleware('guest');
+
+        $this->acceptInvitation = $acceptInvitation;
+        $this->createTeam = $createTeam;
     }
 
     /**
@@ -48,6 +58,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
+            'company_name' => ['required_without:invitation', 'string', 'max:255'],
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
@@ -62,10 +73,35 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        return \DB::transaction(function() use ($data) {
+
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+            ]);
+
+            if ($token = request('invitation'))
+            {
+                // attach user to invited team
+                $invitation = Invitation::where('token', $token)->first();
+
+                $this->acceptInvitation->handle($user, $invitation);
+            }
+            else
+            {
+                // create a new team and attach as owner
+                $this->createTeam->handle($user, $data, Team::ROLE_OWNER);
+            }
+
+            \Auth::login($user, true);
+
+            if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail())
+            {
+                $user->sendEmailVerificationNotification();
+            }
+
+            return $user;
+        });
     }
 }

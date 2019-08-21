@@ -1,8 +1,144 @@
 <?php
 
+use App\Models\User;
+use Carbon\Carbon;
+
+/**
+ * Get active user
+ *
+ * @return \Illuminate\Contracts\Auth\Authenticatable|null
+ */
 function user()
 {
-    return \Illuminate\Support\Facades\Auth::user();
+    return auth()->user();
+}
+
+/**
+ * Get the current team
+ *
+ * @return mixed
+ */
+function currentTeam()
+{
+    if ($user = user())
+    {
+        return $user->currentTeam;
+    }
+
+    return null;
+}
+
+/**
+ * Get the current team ID
+ *
+ * @return mixed
+ */
+function currentTeamId()
+{
+    if ($teamId = config('current_team_id'))
+    {
+        return $teamId;
+    }
+
+    elseif (currentTeam())
+    {
+        return currentTeam()->id;
+    }
+
+    return null;
+}
+
+/**
+ * Display a given date in the active user's timezone.
+ *
+ * @param $date
+ * @param string $timezone
+ * @return Carbon
+ */
+function displayDate($date, string $timezone = null): Carbon
+{
+    if ( ! $timezone)
+    {
+        $timezone = user()->timezone;
+    }
+
+    return Carbon::parse($date)->copy()->setTimezone($timezone);
+}
+
+/**
+ * Return a date adjusted for a timezone
+ *
+ * @param Carbon $date
+ * @param string $timezone
+ * @return Carbon
+ */
+function timezoneDate(Carbon $date, string $timezone): Carbon
+{
+    $offset = getTimezoneOffset($date, $timezone);
+
+    return $date->copy()->subSeconds($offset);
+}
+
+/**
+ * Return the start of day adjusted for a timezone
+ *
+ * @param $date
+ * @param $timezone
+ * @return Carbon
+ */
+function timezoneStartOfDay($date, $timezone): Carbon
+{
+    $start = startOfDay($date);
+
+    return timezoneDate($start, $timezone);
+}
+
+/**
+ * Return the start of day adjusted for a timezone
+ *
+ * @param $date
+ * @param $timezone
+ * @return Carbon
+ */
+function timezoneEndOfDay($date, $timezone): Carbon
+{
+    $start = endOfDay($date);
+
+    return timezoneDate($start, $timezone);
+}
+
+/**
+ * Return timezone offset as absolute integer in seconds
+ *
+ * @param $date
+ * @param null $tz
+ * @return int
+ */
+function getTimezoneOffset($date, $tz): int
+{
+    return Carbon::parse($date)->copy()->timezone($tz)->format('Z');
+}
+
+/**
+ * Return the start of the day
+ *
+ * @param $date
+ * @return Carbon
+ */
+function startOfDay($date): Carbon
+{
+    return Carbon::parse($date)->copy()->startOfDay();
+}
+
+/**
+ * Return the end of the day
+ *
+ * @param $date
+ * @return Carbon
+ */
+function endOfDay($date): Carbon
+{
+    return Carbon::parse($date)->copy()->endOfDay();
 }
 
 if ( ! function_exists('assetUrl'))

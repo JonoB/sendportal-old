@@ -56,5 +56,13 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+
+        // tenant middleware
+        'hasSubscription' => \App\Http\Middleware\HasSubscription::class,
+        'hasTeam' => \App\Http\Middleware\VerifyUserHasTeam::class,
+        'ownsCurrentTeam' => \App\Http\Middleware\OwnsCurrentTeam::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        'vend' => \App\Http\Middleware\VerifyVendIntegration::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 }
