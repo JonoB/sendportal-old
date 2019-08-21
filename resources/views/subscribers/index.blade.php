@@ -1,4 +1,4 @@
-@extends('common.template')
+@extends('layouts.app')
 
 @section('title', 'Subscribers')
 
@@ -30,14 +30,16 @@
 @endsection
 
 @section('content')
-    <div class="box box-primary">
-        <div class="box-body no-padding">
-            <table class="table table-bordered table-responsive">
+    <div class="card">
+        <div class="card-table">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th>Name</th>
                         <th>Email</th>
+                        <th>Name</th>
                         <th>Segments</th>
+                        <th>Created</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -46,14 +48,22 @@
                         <tr>
                             <td>
                                 <a href="{{ route('subscribers.show', $subscriber->id) }}">
-                                    {{ $subscriber->full_name }}
+                                    {{ $subscriber->email }}
                                 </a>
                             </td>
-                            <td><a href="mailto:{{ $subscriber->email }}">{{ $subscriber->email }}</a></td>
+                            <td>{{ $subscriber->full_name }}</td>
                             <td>
                                 @foreach($subscriber->segments as $segment)
-                                    <span class="label label-default">{{ $segment->name }}</span>
+                                    <span class="badge badge-secondary">{{ $segment->name }}</span>
                                 @endforeach
+                            </td>
+                            <td><span title="{{ $subscriber->created_at }}">{{ $subscriber->created_at->diffForHumans() }}</span></td>
+                            <td>
+                                @if($subscriber->unsubscribed_at)
+                                    <span class="badge badge-danger">Unsubscribed</span>
+                                @else
+                                    <span class="badge badge-success">Subscribed</span>
+                                @endif
                             </td>
                             <td><a href="{{ route('subscribers.edit', $subscriber->id) }}">Edit</a></td>
                         </tr>

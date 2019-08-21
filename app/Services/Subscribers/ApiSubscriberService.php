@@ -2,6 +2,7 @@
 
 namespace App\Services\Subscribers;
 
+use App\Events\SubscriberAddedEvent;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Models\Subscriber;
 
@@ -43,6 +44,8 @@ class ApiSubscriberService
 
         $subscriber = $this->subscribers->store(array_except($data, ['segments']));
 
+        event(new SubscriberAddedEvent($subscriber));
+
         $this->handleSegments($data, $subscriber);
 
         return $subscriber;
@@ -60,7 +63,7 @@ class ApiSubscriberService
     {
         if ( ! empty($data['segments']))
         {
-            $subscriber->segments()->attach($data['segments']);
+            $subscriber->segments()->attach($data['segments']); // @todo JB I think that this should be sync instead of attach?
         }
 
         return $subscriber;

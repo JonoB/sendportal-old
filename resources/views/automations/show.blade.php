@@ -1,4 +1,4 @@
-@extends('common.template')
+@extends('layouts.app')
 
 @section('title', $automation->name)
 
@@ -8,44 +8,44 @@
 
 @section('actions')
     <a class="btn btn-primary btn-sm btn-flat"
-        href="{{ route('automations.emails.create', ['automation' => $automation->id]) }}"><i class="fa fa-plus"></i>Create Automation Step
+        href="{{ route('automations.steps.create', ['automation' => $automation->id]) }}"><i class="fa fa-plus"></i>Create Automation Step
     </a>
 @endsection
 
 @section('content')
 
-    <div class="box box-primary">
-        <div class="box-body no-padding">
-            <table class="table table-bordered table-responsive">
+    <div class="card">
+        <div class="card-table">
+            <table class="table">
                 <thead>
                 <tr>
-                    <th>Email Subject</th>
-                    <th>From Name</th>
-                    <th>From Email</th>
+                    <th>Subject</th>
+                    <th>Delay</th>
                     <th>Template</th>
+                    <th>Content</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                @forelse($automation->emails as $email)
+                @forelse($automation->automation_steps as $step)
                     <tr>
-                        <td>{{ $email->subject }}</td>
-                        <td>{{ $email->from_name }}</td>
-                        <td>{{ $email->from_email }}</td>
+                        <td>{{ $step->subject }}</td>
+                        <td>{{ $step->delay_string }}</td>
                         <td>
-                            @if($email->template == null)
-                                <span class="label label-danger">Not Set</span>
+                            @if( ! $step->template)
+                                <span class="badge badge-danger">Not Set</span>
                             @else
-                                {{ $email->template->name }}
+                                {{ $step->template->name }}
                             @endif
                         </td>
                         <td>
-                            @if($email->content == null)
-                                <a href="#">
-                                    Edit Content
-                                </a>
+                            @if( ! $step->content)
+                                <span class="badge badge-danger">Not Set</span>
+                            @else
+                                <a href="">View</a>
                             @endif
                         </td>
+                        <td><a href="{{ route('automations.steps.edit', [$automation->id, $step->id]) }}">Edit</a></td>
                     </tr>
                 @empty
                     <tr>

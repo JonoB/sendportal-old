@@ -8,7 +8,7 @@ use App\Models\Campaign;
 interface GenerateOpenTrackingImageInterface
 {
     /**
-     * Generate the tracking image for emails
+     * Generate the tracking image for steps
      *
      * @param string $campaignId
      * @param string $subscriberId

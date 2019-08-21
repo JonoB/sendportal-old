@@ -20,14 +20,4 @@ class Template extends BaseModel
     {
         return $this->hasMany(Email::class);
     }
-
-    /**
-     * Whether the template is currently being used by any emails
-     *
-     * @return bool
-     */
-    public function getIsInUseAttribute(): bool
-    {
-        return $this->emails()->count() > 0;
-    }
 }

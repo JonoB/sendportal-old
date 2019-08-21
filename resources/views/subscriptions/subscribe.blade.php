@@ -1,13 +1,15 @@
-<div class="container">
-    <h1>Subscribe</h1>
-    <p>Enable mailings in the future.</p>
+@extends('layouts.subscriptions')
 
-    {!! Form::open(['route' => ['subscriptions.update', $subscriber->id], 'method' => 'PUT']) !!}
+@section('content')
+    <div class="text-center">
+        <h1>Resubscribe</h1>
+        <p>Add <b>{{ $subscriber->email }}</b> to this email list?</p>
 
-    {!! Form::hidden('is_unsubscribed', 0) !!}
-
-    {!! Form::submitButton('Subscribe') !!}
-
-    {!! Form::close() !!}
-
-</div>
+        <form action="{{ route('subscriptions.update', $subscriber->id) }}" method="post">
+            @csrf
+            <input type="hidden" name="_method" value="put">
+            <input type="hidden" name="unsubscribed" value="0">
+            <button type="submit" class="btn btn-sm btn-primary">Resubscribe now</button>
+        </form>
+    </div>
+@endsection

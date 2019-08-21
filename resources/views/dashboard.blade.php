@@ -1,3 +1,3 @@
-@extends('common.template')
+@extends('layouts.app')
 
 @section('title', 'Dashboard')

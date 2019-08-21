@@ -1,11 +1,14 @@
-<div class="row">
-    <div class="col-sm-6">
-        {!! Form::textField('name', 'Template Name') !!}
-    </div>
-</div>
+
+{!! Form::textField('name', 'Template Name') !!}
 
 @include('templates.partials.editor')
 
-<button class="btn btn-primary" type="submit">Save Template</button>
+<div class="form-group row">
+    <div class="offset-sm-2 col-sm-4">
+        <a href="#" class="btn btn-sm btn-secondary btn-preview">Show Preview</a>
+        <button class="btn btn-primary btn-sm" type="submit">Save Template</button>
+    </div>
+</div>
+
 
 {!! Form::close() !!}

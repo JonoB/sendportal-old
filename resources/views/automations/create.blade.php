@@ -1,4 +1,4 @@
-@extends('common.template')
+@extends('layouts.app')
 
 @section('title', 'New Automation')
 
@@ -8,8 +8,13 @@
 
 @section('content')
 
-    {!! Form::open(['route' => 'automations.store', 'class' => 'form-horizontal']) !!}
+    <div class="card">
+        <div class="card-body">
+            {!! Form::open(['route' => 'automations.store', 'class' => 'form-horizontal']) !!}
 
-    @include('automations.partials.form')
+            @include('automations.partials.form')
+        </div>
+    </div>
+
 
 @stop

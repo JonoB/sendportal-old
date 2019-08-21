@@ -1,0 +1,99 @@
+@import 'variables.scss';
+
+//
+// Reset Bootstrap outline
+// --------------------------------------------------
+.btn:focus {
+  box-shadow: none;
+}
+
+.btn-primary:not(:disabled):not(.disabled).active:focus, .btn-primary:not(:disabled):not(.disabled):active:focus, .show>.btn-primary.dropdown-toggle:focus {
+  box-shadow: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: $dark-blue;
+  border-color: $dark-blue;
+  color: $smoke-blue;
+
+  .badge {
+    color: #BDDBFF;
+  }
+
+  &:hover {
+    background-color: lighten($dark-blue, 10%);
+    border-color: lighten($dark-blue, 10%);
+  }
+}
+
+.btn-secondary {
+  background-color: #EDF2F5;
+  border-color: darken(#EDF2F5, 0%);
+  color: $dark-blue;
+
+  &:hover {
+    background-color: darken(#EDF2F5, 3%);
+    border-color: darken(#EDF2F5, 3%);
+    color: $dark-blue;
+  }
+}
+
+.btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle {
+  background-color: darken(#EDF2F5, 3%);
+  border-color: darken(#EDF2F5, 3%);
+  color: $dark-blue;
+}
+
+.btn-light {
+  color: #495057;
+  background-color: #f5f6f8;
+  border: 1px solid darken(#f5f6f8, 3%);
+
+  &:hover {
+    color: darken(#495057, 4%);
+    background-color: darken(#f5f6f8, 5%);
+    border: 1px solid darken(#f5f6f8, 6%);
+  }
+
+}
+
+.btn-filter {
+  padding: .26rem 1rem !important;
+}
+
+.btn-light:not(:disabled):not(.disabled).active, .btn-light:not(:disabled):not(.disabled):active, .show>.btn-light.dropdown-toggle {
+  color: darken(#495057, 1%);
+  background-color: darken(#F8F9FA, 1%);
+  border-color: #dae0e5;
+}
+
+.btn-outline-primary {
+  color: $dark-blue;
+  border-color: $dark-blue;
+}
+
+.btn-xs {
+  padding: .4rem .4rem;
+  font-size: .7rem;
+  line-height: .5;
+  border-radius: .2rem;
+}
+
+.btn-group-sm>.btn, .btn-sm {
+  padding: .4rem 1rem;
+  line-height: 1.5;
+}
+
+.btn-dark {
+  color: #fff;
+  background-color: $dark-blue;
+  border-color: $dark-blue;
+
+  &:hover {
+    background-color: lighten($dark-blue, 10%);
+  }
+}

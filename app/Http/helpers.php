@@ -1,5 +1,10 @@
 <?php
 
+function user()
+{
+    return \Illuminate\Support\Facades\Auth::user();
+}
+
 if ( ! function_exists('assetUrl'))
 {
 
@@ -175,7 +180,9 @@ if ( ! function_exists('normalize_tags'))
 {
     /**
      * Normalize a tag
-     * @param  string $tag
+     *
+     * @param string $content
+     * @param string $tag
      * @return string
      */
     function normalize_tags(string $content, string $tag)

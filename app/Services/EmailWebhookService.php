@@ -3,38 +3,28 @@
 namespace App\Services;
 
 use App\Interfaces\EmailWebhookServiceInterface;
+use App\Models\AutomationSchedule;
+use App\Models\AutomationStep;
 use App\Models\Campaign;
 use App\Models\CampaignLink;
+use App\Models\MessageUrl;
 use App\Models\UnsubscribeEventType;
 use Carbon\Carbon;
 
 class EmailWebhookService implements EmailWebhookServiceInterface
 {
 
+    // automation_step->click_count
+    // automation_step->open_count
+    // automation_step_urls->click_count
     /**
      * @param $messageId
-     * @param $link
-     * @return mixed
+     * @param Carbon $timestamp
      */
-    public function handleClick($messageId, $link)
+    public function handleDelivery($messageId, Carbon $timestamp)
     {
-        $campaignSubscriber = \DB::table('campaign_subscriber')->where('message_id', $messageId)->first();
-        \DB::table('campaign_subscriber')->where('message_id', $messageId)->increment('click_count');
-
-        if ( ! $campaignSubscriber->click_count)
-        {
-            \DB::table('emails')
-                ->where('mailable_id', $campaignSubscriber->campaign_id)
-                ->where('mailable_type', Campaign::class)
-                ->increment('click_count');
-        }
-
-        CampaignLink::updateOrCreate([
-            'identifier' => md5($campaignSubscriber->campaign_id . '_' . $link),
-        ], [
-            'link' => $link,
-            'campaign_id' => $campaignSubscriber->campaign_id,
-            'click_count' => \DB::raw('click_count+1')
+        \DB::table('messages')->where('message_id', $messageId)->whereNull('delivered_at')->update([
+            'delivered_at' => $timestamp
         ]);
     }
 
@@ -45,31 +35,44 @@ class EmailWebhookService implements EmailWebhookServiceInterface
      */
     public function handleOpen($messageId, Carbon $timestamp, $ipAddress)
     {
-        $campaignSubscriber = \DB::table('campaign_subscriber')->where('message_id', $messageId)->first();
-        \DB::table('campaign_subscriber')->where('message_id', $messageId)->increment('open_count');
-
-        if ( ! $campaignSubscriber->open_count)
-        {
-            \DB::table('emails')
-                ->where('mailable_id', $campaignSubscriber->campaign_id)
-                ->where('mailable_type', Campaign::class)
-                ->increment('open_count');
-        }
-
-        \DB::table('campaign_subscriber')->where('message_id', $messageId)->whereNull('opened_at')->update([
+        \DB::table('messages')->where('message_id', $messageId)->whereNull('opened_at')->update([
             'opened_at' => $timestamp,
             'ip' => $ipAddress
         ]);
+
+        $automationStep = $this->resolveAutomationStepFromMessage($messageId);
+
+        \DB::table('automation_steps')->where('id', $automationStep->id)->increment('open_count');
     }
 
     /**
      * @param $messageId
-     * @param Carbon $timestamp
+     * @param $timestamp
+     * @param $url
+     * @return mixed
      */
-    public function handleDelivery($messageId, Carbon $timestamp)
+    public function handleClick($messageId, Carbon $timestamp, $url)
     {
-        \DB::table('campaign_subscriber')->where('message_id', $messageId)->whereNull('delivered_at')->update([
-            'delivered_at' => $timestamp
+        \Log::info($messageId);
+
+        \DB::table('messages')->where('message_id', $messageId)->whereNull('clicked_at')->update([
+            'clicked_at' => $timestamp,
+        ]);
+
+        $automationStep = $this->resolveAutomationStepFromMessage($messageId);
+
+        \DB::table('automation_steps')->where('id', $automationStep->id)->increment('click_count');
+
+        $source = AutomationStep::class;
+        $sourceId = $automationStep->id;
+
+        MessageUrl::updateOrCreate([
+            'hash' => md5($source . '_' . $sourceId . '_' . $url),
+        ], [
+            'source' => $source,
+            'source_id' => $sourceId,
+            'url' => $url,
+            'click_count' => \DB::raw('click_count+1')
         ]);
     }
 
@@ -95,7 +98,7 @@ class EmailWebhookService implements EmailWebhookServiceInterface
      */
     protected function unsubscribe($messageId, $typeId)
     {
-        $subscriberId = \DB::table('campaign_subscriber')->where('message_id', $messageId)->value('subscriber_id');
+        $subscriberId = \DB::table('messages')->where('message_id', $messageId)->value('subscriber_id');
 
         if ( ! $subscriberId)
         {
@@ -107,5 +110,19 @@ class EmailWebhookService implements EmailWebhookServiceInterface
             'unsubscribe_event_id' => $typeId,
             'updated_at' => now()
         ]);
+    }
+
+    protected function resolveAutomationStepFromMessage($messageId)
+    {
+        $message = \DB::table('messages')->where('message_id', $messageId)->first();
+
+        if ($message->source != AutomationSchedule::class)
+        {
+            throw new \Exception('Unable to resolve source for message ID ' . $message->id);
+        }
+
+        $automationSchedule = \DB::table('automation_schedules')->where('id', $message->source_id)->first();
+
+        return \DB::table('automation_steps')->where('id', $automationSchedule->automation_step_id)->first();
     }
 }

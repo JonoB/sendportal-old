@@ -2,17 +2,43 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
 class Automation extends BaseModel
 {
     protected $guarded = [];
 
-    public function segment()
+    /**
+     * Get all automation steps
+     *
+     * @return HasMany
+     */
+    public function automation_steps(): ?HasMany
     {
-        return $this->belongsTo(Segment::class);
+        return $this->hasMany(AutomationStep::class)->orderBy('delay_seconds');
     }
 
-    public function emails()
+    /**
+     * Return the first automation step
+     *
+     * @return AutomationStep|null
+     */
+    public function first_automation_step(): ?HasOne
     {
-        return $this->morphMany(Email::class, 'mailable');
+        return $this->hasOne(AutomationStep::class)
+            ->orderBy('delay_seconds');
     }
+
+    /**
+     * Get the provider
+     *
+     * @return BelongsTo
+     */
+    public function provider(): ?BelongsTo
+    {
+        return $this->belongsTo(Provider::class);
+    }
+
 }

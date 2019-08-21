@@ -1,4 +1,4 @@
-@extends('common.template')
+@extends('layouts.app')
 
 @section('heading')
     Update : {{ $providerType->name }} settings

@@ -7,13 +7,15 @@ use App\Interfaces\EmailRepositoryInterface;
 use App\Interfaces\SubscriberRepositoryInterface;
 use App\Interfaces\ContentUrlServiceInterface;
 use App\Interfaces\CampaignContentServiceInterface;
-use App\Interfaces\CampaignDispatchInterface;
+use App\Interfaces\DeliveryDispatchInterface;
 use App\Interfaces\CampaignRepositoryInterface;
 use App\Models\Segment;
 use App\Models\Subscriber;
 use App\Models\Campaign;
 use App\Models\CampaignStatus;
-use App\Services\CampaignDispatchService;
+use App\Services\Content\MergeContent;
+use App\Services\Messages\DispatchMessage;
+use App\Services\DeliveryDispatchService;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
@@ -41,9 +43,9 @@ class CampaignDispatchCommand extends Command
     protected $campaignRepo;
 
     /**
-     * @var CampaignDispatchService
+     * @var DeliveryDispatchService
      */
-    protected $campaignDispatchService;
+    protected $dispatchDeliveryService;
 
     /**
      * @var ContentUrlServiceInterface
@@ -73,7 +75,7 @@ class CampaignDispatchCommand extends Command
      * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
      * @param SubscriberRepositoryInterface $subscriberRepository
      * @param CampaignRepositoryInterface $campaignRepository
-     * @param CampaignDispatchInterface $campaignDispatchService
+     * @param DispatchMessage $dispatchDeliveryService
      * @param CampaignContentServiceInterface $campaignContentService
      * @param EmailRepositoryInterface $emailRepository
      */
@@ -82,8 +84,8 @@ class CampaignDispatchCommand extends Command
         CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
         SubscriberRepositoryInterface $subscriberRepository,
         CampaignRepositoryInterface $campaignRepository,
-        CampaignDispatchInterface $campaignDispatchService,
-        CampaignContentServiceInterface $campaignContentService,
+        DispatchMessage $dispatchDeliveryService,
+        MergeContent $campaignContentService,
         EmailRepositoryInterface $emailRepository
     )
     {
@@ -92,7 +94,7 @@ class CampaignDispatchCommand extends Command
         $this->campaignSubscriberRepository = $campaignSubscriberRepository;
         $this->subscriberRepo = $subscriberRepository;
         $this->campaignRepo = $campaignRepository;
-        $this->campaignDispatchService = $campaignDispatchService;
+        $this->dispatchDeliveryService = $dispatchDeliveryService;
         $this->campaignContentService = $campaignContentService;
         $this->emailRepository = $emailRepository;
     }
@@ -217,7 +219,7 @@ class CampaignDispatchCommand extends Command
     {
         $mailService = strtolower(str_replace(' ', '', $campaign->provider->type->name));
 
-        $messageId = $this->campaignDispatchService->send(
+        $messageId = $this->dispatchDeliveryService->send(
             $mailService,
             $campaign->from_email,
             $subscriber->email,
@@ -288,7 +290,7 @@ class CampaignDispatchCommand extends Command
     {
         $key = "{$campaignId}:{$subscriberId}";
 
-        if (\in_array($key, $this->getSentItems(), true))
+        if (in_array($key, $this->getSentItems(), true))
         {
             return false;
         }
@@ -339,7 +341,7 @@ class CampaignDispatchCommand extends Command
     protected function markCampaignAsSent(Campaign $campaign): void
     {
         $campaign->status_id = CampaignStatus::STATUS_SENT;
-        $campaign->sent_count = \count($this->getSentItems());
+        $campaign->sent_count = count($this->getSentItems());
         $campaign->save();
     }
 }

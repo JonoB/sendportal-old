@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::middleware('auth:api')->name('api.')->group(function()
+Route::name('api.')->group(function()
 {
     Route::apiResource('subscribers', 'SubscribersController');
     Route::apiResource('segments', 'SegmentsController');

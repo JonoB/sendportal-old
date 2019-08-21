@@ -1,0 +1,56 @@
+Arguments: 
+  /usr/bin/node /usr/bin/yarn
+
+PATH: 
+  /home/vagrant/.composer/vendor/bin:/usr/local/go/bin:/home/vagrant/.rbenv/plugins/ruby-build/bin:/home/vagrant/.rbenv/shims:/home/vagrant/.rbenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/vagrant/.dotnet/tools:/home/vagrant/.composer/vendor/bin:/usr/share/nginx/spark-installer
+
+Yarn version: 
+  1.13.0
+
+Node version: 
+  8.15.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/axios: ESOCKETTIMEDOUT
+      at ClientRequest.<anonymous> (/usr/lib/node_modules/yarn/lib/cli.js:130024:19)
+      at Object.onceWrapper (events.js:313:30)
+      at emitNone (events.js:106:13)
+      at ClientRequest.emit (events.js:208:7)
+      at TLSSocket.emitTimeout (_http_client.js:721:34)
+      at Object.onceWrapper (events.js:313:30)
+      at emitNone (events.js:106:13)
+      at TLSSocket.emit (events.js:208:7)
+      at TLSSocket.Socket._onTimeout (net.js:422:8)
+      at ontimeout (timers.js:498:11)
+
+npm manifest: 
+  {
+    "private": true,
+    "scripts": {
+      "dev": "npm run development",
+      "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+      "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+      "watch-poll": "npm run watch -- --watch-poll",
+      "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+      "prod": "npm run production",
+      "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    },
+    "devDependencies": {
+      "axios": "^0.15.3",
+      "bootstrap-sass": "^3.3.7",
+      "cross-env": "^3.2.3",
+      "jquery": "^3.1.1",
+      "laravel-mix": "0.*",
+      "lodash": "^4.17.4",
+      "vue": "^2.1.10"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

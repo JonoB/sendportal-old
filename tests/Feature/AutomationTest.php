@@ -232,9 +232,9 @@ class AutomationTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $this->post(route('automations.emails.store', [$automation->id]), $emailData);
+        $this->post(route('automations.steps.store', [$automation->id]), $emailData);
 
-        $this->assertDatabaseHas('emails', $emailData);
+        $this->assertDatabaseHas('steps', $emailData);
     }
 
     /** @test */
@@ -251,10 +251,10 @@ class AutomationTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $response = $this->post(route('automations.emails.store', [$automation->id]), $emailData);
+        $response = $this->post(route('automations.steps.store', [$automation->id]), $emailData);
 
         $response->assertSessionHasErrors('subject');
-        $this->assertDatabaseMissing('emails', $emailData);
+        $this->assertDatabaseMissing('steps', $emailData);
     }
 
     /** @test */
@@ -271,10 +271,10 @@ class AutomationTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $response = $this->post(route('automations.emails.store', [$automation->id]), $emailData);
+        $response = $this->post(route('automations.steps.store', [$automation->id]), $emailData);
 
         $response->assertSessionHasErrors('template_id');
-        $this->assertDatabaseMissing('emails', $emailData);
+        $this->assertDatabaseMissing('steps', $emailData);
     }
 
     /** @test */
@@ -291,10 +291,10 @@ class AutomationTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $response = $this->post(route('automations.emails.store', [$automation->id]), $emailData);
+        $response = $this->post(route('automations.steps.store', [$automation->id]), $emailData);
 
         $response->assertSessionHasErrors('from_email');
-        $this->assertDatabaseMissing('emails', $emailData);
+        $this->assertDatabaseMissing('steps', $emailData);
     }
 
     /** @test */
@@ -311,10 +311,10 @@ class AutomationTest extends TestCase
             'from_name' => 'Seymour Greentests',
         ];
 
-        $response = $this->post(route('automations.emails.store', [$automation->id]), $emailData);
+        $response = $this->post(route('automations.steps.store', [$automation->id]), $emailData);
 
         $response->assertSessionHasErrors('from_email');
-        $this->assertDatabaseMissing('emails', $emailData);
+        $this->assertDatabaseMissing('steps', $emailData);
     }
 
     /** @test */
@@ -331,9 +331,9 @@ class AutomationTest extends TestCase
             'from_name' => null,
         ];
 
-        $response = $this->post(route('automations.emails.store', [$automation->id]), $emailData);
+        $response = $this->post(route('automations.steps.store', [$automation->id]), $emailData);
 
         $response->assertSessionHasErrors('from_name');
-        $this->assertDatabaseMissing('emails', $emailData);
+        $this->assertDatabaseMissing('steps', $emailData);
     }
 }

@@ -16,18 +16,4 @@ interface BaseInterface
      * @return \App\User
      */
     public function getActiveUser();
-
-    /**
-     * Returns model validation error messages
-     *
-     * @return array
-     */
-    public function getErrors();
-
-    /**
-     * Checks whether the model has any errors
-     *
-     * @return bool
-     */
-    public function hasErrors();
 }

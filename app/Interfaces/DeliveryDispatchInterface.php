@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface CampaignDispatchInterface
+interface DeliveryDispatchInterface
 {
     /**
      * Send the campaign

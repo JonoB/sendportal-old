@@ -16,10 +16,9 @@ class CreateAutomationTable extends Migration
         Schema::create('automations', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->unsignedInteger('segment_id');
+            $table->string('from_name');
+            $table->string('from_email');
             $table->timestamps();
-
-            $table->foreign('segment_id')->references('id')->on('segments');
         });
     }
 

@@ -1,4 +1,4 @@
-@extends('common.template')
+@extends('layouts.app')
 
 @section('title', 'Segments')
 
@@ -14,9 +14,9 @@
 
 @section('content')
 
-    <div class="box box-primary">
-        <div class="box-body no-padding">
-            <table class="table table-bordered table-responsive">
+    <div class="card">
+        <div class="card-table">
+            <table class="table">
                 <thead>
                 <tr>
                     <th>Name</th>

@@ -64,18 +64,20 @@ class SubscriptionsController extends Controller
     {
         $subscriber = $this->subscribers->find((int)$subscriberId);
 
-        $isUnsubscribed = (bool)$request->get('is_unsubscribed');
+        $unsubscribed = (bool)$request->get('unsubscribed');
 
         $this->subscribers->update($subscriber->id, [
-            'unsubscribed_at' => $isUnsubscribed ? Carbon::now() : null,
-            'unsubscribe_event_id' => $isUnsubscribed ? UnsubscribeEventType::MANUAL_BY_SUBSCRIBER : null
+            'unsubscribed_at' => $unsubscribed ? Carbon::now() : null,
+            'unsubscribe_event_id' => $unsubscribed ? UnsubscribeEventType::MANUAL_BY_SUBSCRIBER : null
         ]);
 
-        if ($isUnsubscribed)
+        if ($unsubscribed)
         {
-            return redirect()->route('subscriptions.subscribe', $subscriber->hash);
+            return redirect()->route('subscriptions.subscribe', $subscriber->hash)
+                ->with('success', 'You have been removed from the mailing list.');
         }
 
-        return redirect()->route('subscriptions.unsubscribe', $subscriber->hash);
+        return redirect()->route('subscriptions.unsubscribe', $subscriber->hash)
+            ->with('success', 'You have been added to the mailing list.');
     }
 }
