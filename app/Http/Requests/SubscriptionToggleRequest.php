@@ -24,7 +24,7 @@ class SubscriptionToggleRequest extends FormRequest
     public function rules()
     {
         return [
-            'is_unsubscribed' => ['boolean', 'required']
+            'unsubscribed' => ['boolean', 'required']
         ];
     }
 }

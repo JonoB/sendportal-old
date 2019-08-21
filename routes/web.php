@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Route;
 // Auth
 Auth::routes();
 
+// Subscriptions
+Route::get('unsubscribe/{subscriberHash}', 'SubscriptionsController@unsubscribe')->name('subscriptions.unsubscribe');
+Route::get('subscribe/{subscriberHash}', 'SubscriptionsController@subscribe')->name('subscriptions.subscribe');
+Route::put('subscriptions/{subscriberId}', 'SubscriptionsController@update')->name('subscriptions.update');
+
 // App
 Route::middleware(['auth'])->group(function ()
 {
@@ -53,10 +58,6 @@ Route::middleware(['auth'])->group(function ()
     // Templates
     Route::resource('templates', 'TemplatesController')->except(['show']);
 
-    Route::get('unsubscribe/{subscriberHash}', 'SubscriptionsController@unsubscribe')->name('subscriptions.unsubscribe');
-    Route::get('subscribe/{subscriberHash}', 'SubscriptionsController@subscribe')->name('subscriptions.subscribe');
-    Route::put('subscriptions/{subscriberId}', 'SubscriptionsController@update')->name('subscriptions.update');
-
     // Providers
     Route::get('providers', ['as' => 'providers.index', 'uses' => 'ProvidersController@index']);
     Route::get('providers/create', ['as' => 'providers.create', 'uses' => 'ProvidersController@create']);
@@ -72,5 +73,3 @@ Route::middleware(['auth'])->group(function ()
         Route::post('segments/store', 'SegmentsController@store')->name('ajax.segments.store');
     });
 });
-
-Route::get('/home', 'HomeController@index')->name('home');
