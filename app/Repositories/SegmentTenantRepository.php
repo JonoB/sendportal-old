@@ -2,22 +2,16 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\SegmentRepositoryInterface;
 use App\Models\Segment;
 
-class SegmentEloquentRepository extends BaseEloquentRepository implements SegmentRepositoryInterface
+class SegmentTenantRepository extends BaseTenantRepository
 {
     protected $modelName = Segment::class;
 
     /**
-     * Update the model instance
-     *
-     * @param int $id
-     * @param array $data
-     *
-     * @return Segment
+     * {@inheritDoc}
      */
-    public function update($id, array $data)
+    public function update($teamId, $id, array $data)
     {
         $this->instance = $this->find($id);
 
@@ -29,12 +23,11 @@ class SegmentEloquentRepository extends BaseEloquentRepository implements Segmen
     }
 
     /**
-     * Syn subscribers
+     * Sync subscribers
      *
      * @param Segment $segment
      * @param array $subscribers
-     *
-     * @return bool
+     * @return array
      */
     public function syncSubscribers(Segment $segment, array $subscribers = [])
     {

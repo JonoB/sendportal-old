@@ -2,10 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\SubscriberRepositoryInterface;
 use App\Models\Subscriber;
 
-class SubscriberEloquentRepository extends BaseEloquentRepository implements SubscriberRepositoryInterface
+class SubscriberTenantRepository extends BaseTenantRepository
 {
     /**
      * @var string
@@ -47,8 +46,8 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
     /**
      * Sync Segments to a Subscriber.
      *
-     * @param  Subscriber $subscriber
-     * @param  array      $segments
+     * @param Subscriber $subscriber
+     * @param array $segments
      * @return mixed
      */
     public function syncSegments(Subscriber $subscriber, array $segments = [])
@@ -57,12 +56,9 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
     }
 
     /**
-     * Create a new record
-     *
-     * @param array $data The input data
-     * @return Subscriber model instance
+     * {@inheritDoc}
      */
-    public function store(array $data)
+    public function store($teamId, array $data)
     {
         $this->instance = $this->executeStore(array_except($data, ['segments']));
 
@@ -72,13 +68,9 @@ class SubscriberEloquentRepository extends BaseEloquentRepository implements Sub
     }
 
     /**
-     * Update the Subscriber
-     *
-     * @param int $id The model id
-     * @param array $data The input data
-     * @return Subscriber model instance
+     * {@inheritDoc}
      */
-    public function update($id, array $data)
+    public function update($teamId, $id, array $data)
     {
         $this->instance = $this->find($id);
 

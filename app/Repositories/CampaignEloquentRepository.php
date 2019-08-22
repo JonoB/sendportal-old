@@ -6,17 +6,16 @@ use App\Interfaces\CampaignRepositoryInterface;
 use App\Models\Campaign;
 use App\Models\CampaignStatus;
 
-class CampaignEloquentRepository extends BaseEloquentRepository implements CampaignRepositoryInterface
+class CampaignTenantRepository extends BaseTenantRepository implements CampaignRepositoryInterface
 {
     protected $modelName = Campaign::class;
 
     /**
      * @return mixed
      */
-    public function queuedCampaigns()
-
+    public function queuedCampaigns($teamId)
     {
-        return $this->getQueryBuilder()
+        return $this->getQueryBuilder($teamId)
             ->where('status_id', CampaignStatus::STATUS_QUEUED)
             ->with('segments')
             ->get();

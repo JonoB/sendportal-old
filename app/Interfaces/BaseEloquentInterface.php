@@ -1,8 +1,7 @@
 <?php namespace App\Interfaces;
 
-interface BaseEloquentInterface extends BaseInterface
+interface BaseEloquentInterface
 {
-
     /**
      * Return all items
      *

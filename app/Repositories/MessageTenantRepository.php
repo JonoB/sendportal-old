@@ -4,13 +4,13 @@ namespace App\Repositories;
 
 use App\Models\Message;
 
-class MessageEloquentRepository extends BaseEloquentRepository
+class MessageTenantRepository extends BaseTenantRepository
 {
-    /**
-     * @var string
-     */
     protected $modelName = Message::class;
 
+    /**
+     * {@inheritDoc}
+     */
     protected function applyFilters($instance, array $filters = [])
     {
         return $this->applySentFilter($instance, $filters);

@@ -2,7 +2,7 @@
 
 use App\Interfaces\BaseEloquentInterface;
 
-abstract class BaseEloquentRepository extends BaseRepository implements BaseEloquentInterface
+class BaseEloquentRepository implements BaseEloquentInterface
 {
     /**
      * Model name

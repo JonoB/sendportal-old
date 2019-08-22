@@ -8,7 +8,7 @@ use App\Http\Requests\CampaignRequest;
 use App\Interfaces\CampaignSubscriberRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Models\CampaignStatus;
-use App\Repositories\ProviderEloquentRepository;
+use App\Repositories\ProviderTenantRepository;
 use App\Services\CampaignReportService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -27,7 +27,7 @@ class AutomationsController extends Controller
     private $automationRepository;
 
     /**
-     * @var ProviderEloquentRepository
+     * @var ProviderTenantRepository
      */
     private $providerRepository;
 
@@ -40,7 +40,7 @@ class AutomationsController extends Controller
     public function __construct(
         SegmentRepositoryInterface $segmentRepository,
         AutomationRepositoryInterface $automationRepository,
-        ProviderEloquentRepository $providerRepository
+        ProviderTenantRepository $providerRepository
     )
     {
         $this->segmentRepository = $segmentRepository;

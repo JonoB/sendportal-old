@@ -6,7 +6,7 @@ use App\Interfaces\ProviderRepositoryInterface;
 use App\Models\Provider;
 use App\Models\ProviderType;
 
-class ProviderEloquentRepository extends BaseEloquentRepository implements ProviderRepositoryInterface
+class ProviderTenantRepository extends BaseTenantRepository implements ProviderRepositoryInterface
 {
 
     /**
