@@ -51,17 +51,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(SubscriberRepositoryInterface::class, SubscriberEloquentRepository::class);
-        $this->app->bind(SegmentRepositoryInterface::class, SegmentEloquentRepository::class);
         $this->app->bind(CampaignSubscriberRepositoryInterface::class, CampaignSubscriberEloquentRepository::class);
         $this->app->bind(CampaignReportServiceInterface::class, CampaignReportService::class);
         $this->app->bind(CampaignContentServiceInterface::class, MergeContent::class);
         $this->app->bind(CampaignLinksRepositoryInterface::class, CampaignLinksEloquentRepository::class);
         $this->app->bind(DeliveryDispatchInterface::class, DispatchMessage::class);
         $this->app->bind(CampaignRepositoryInterface::class, CampaignEloquentRepository::class);
-        $this->app->bind(TagRepositoryInterface::class, TagEloquentRepository::class);
-        $this->app->bind(TemplateRepositoryInterface::class, TemplateEloquentRepository::class);
-        $this->app->bind(ProviderRepositoryInterface::class, ProviderEloquentRepository::class);
         $this->app->bind(AutomationRepositoryInterface::class, AutomationEloquentRepository::class);
         $this->app->bind(EmailRepositoryInterface::class, EmailEloquentRepository::class);
         $this->app->bind(EmailWebhookServiceInterface::class, EmailWebhookService::class);

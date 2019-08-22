@@ -1,22 +1,18 @@
 <?php namespace App\Repositories;
 
-use App\Interfaces\BaseEloquentInterface;
+use App\Interfaces\BaseTenantInterface;
 
-abstract class BaseEloquentRepository extends BaseRepository implements BaseEloquentInterface
+abstract class BaseTenantRepository implements BaseTenantInterface
 {
     /**
-     * Model name
-     *
      * @var string
      */
     protected $modelName;
 
     /**
-     * Current Object instance
-     *
-     * @var object
+     * @var string
      */
-    protected $instance;
+    protected $tenantKey = 'team_id';
 
     /**
      * Order Options
@@ -42,14 +38,16 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     /**
      * Return all records
      *
+     * @param int $teamId
      * @param string $orderBy
      * @param array $relations
      * @param array $parameters
      * @return mixed
+     * @throws \Exception
      */
-    public function all($orderBy = 'id', array $relations = [], array $parameters = [])
+    public function all($teamId, $orderBy = 'id', array $relations = [], array $parameters = [])
     {
-        $instance = $this->getQueryBuilder();
+        $instance = $this->getQueryBuilder($teamId);
 
         $this->parseOrder($orderBy);
 
@@ -63,15 +61,17 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     /**
      * Return paginated items
      *
+     * @param int $teamId
      * @param string $orderBy
      * @param array $relations
      * @param int $paginate
      * @param array $parameters
      * @return mixed
+     * @throws \Exception
      */
-    public function paginate($orderBy = 'name', array $relations = [], $paginate = 25, array $parameters = [])
+    public function paginate($teamId, $orderBy = 'name', array $relations = [], $paginate = 25, array $parameters = [])
     {
-        $instance = $this->getQueryBuilder();
+        $instance = $this->getQueryBuilder($teamId);
 
         $this->parseOrder($orderBy);
 
@@ -85,7 +85,7 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     /**
      * Apply parameters, which can be extended in child classes for filtering
      *
-     * @param $query
+     * @param $instance
      * @param array $filters
      * @return mixed
      */
@@ -97,54 +97,57 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     /**
      * Get many records by a field and value
      *
+     * @param int $teamId
      * @param string $field
-     * @param string $value
+     * @param mixed $value
      * @param array $relations
      * @return mixed
+     * @throws \Exception
      */
-    public function getBy($field, $value, array $relations = [])
+    public function getBy($teamId, $field, $value, array $relations = [])
     {
-        $instance = $this->getQueryBuilder();
-
-        return $instance->with($relations)->where($field, $value)->get();
+        return $this->getQueryBuilder($teamId)
+            ->with($relations)
+            ->where($field, $value)
+            ->get();
     }
 
     /**
      * List all records
      *
+     * @param int $teamId
      * @param string $fieldName
      * @param string $fieldId
      * @return mixed
+     * @throws \Exception
      */
-    public function pluck($fieldName = 'name', $fieldId = 'id')
+    public function pluck($teamId, $fieldName = 'name', $fieldId = 'id')
     {
-        $instance = $this->getQueryBuilder();
-
-        return $instance
+        return $this->getQueryBuilder($teamId)
             ->orderBy($fieldName)
             ->pluck($fieldName, $fieldId)
             ->all();
     }
 
     /**
-     * List all records
+     * List all records matching a field's value
      *
+     * @param int $teamId
      * @param string $field
-     * @param string|array $value
+     * @param mixed $value
      * @param string $listFieldName
      * @param string $listFieldId
      * @return mixed
+     * @throws \Exception
      */
-    public function pluckBy($field, $value, $listFieldName = 'name', $listFieldId = 'id')
+    public function pluckBy($teamId, $field, $value, $listFieldName = 'name', $listFieldId = 'id')
     {
-        $instance = $this->getQueryBuilder();
-
         if ( ! is_array($value))
         {
             $value = [$value];
         }
 
-        return $instance
+        return $this->getQueryBuilder($teamId)
             ->whereIn($field, $value)
             ->orderBy($listFieldName)
             ->pluck($listFieldName, $listFieldId)
@@ -154,120 +157,135 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     /**
      * Find a single record
      *
+     * @param int $teamId
      * @param int $id
      * @param array $relations
      * @return mixed
+     * @throws \Exception
      */
-    public function find($id, array $relations = [])
+    public function find($teamId, $id, array $relations = [])
     {
-        $this->instance = $this->getQueryBuilder()->with($relations)->find($id);
-
-        return $this->instance;
+        return $this->getQueryBuilder($teamId)->with($relations)->find($id);
     }
 
     /**
      * Find a single record by a field and value
      *
+     * @param int $teamId
      * @param string $field
-     * @param string $value
+     * @param mixed $value
      * @param array $relations
      * @return mixed
+     * @throws \Exception
      */
-    public function findBy($field, $value, array $relations = [])
+    public function findBy($teamId, $field, $value, array $relations = [])
     {
-        $this->instance = $this->getQueryBuilder()->with($relations)->where($field, $value)->first();
-
-        return $this->instance;
+        return $this->getQueryBuilder($teamId)
+            ->with($relations)
+            ->where($field, $value)
+            ->first();
     }
 
     /**
      * Find a single record by multiple fields
      *
+     * @param int $teamId
      * @param array $data
      * @param array $relations
      * @return mixed
+     * @throws \Exception
      */
-    public function findByMany(array $data, array $relations = [])
+    public function findByMany($teamId, array $data, array $relations = [])
     {
-        $model = $this->getQueryBuilder()->with($relations);
+        $model = $this->getQueryBuilder($teamId)->with($relations);
 
         foreach ($data as $key => $value)
         {
             $model->where($key, $value);
         }
 
-        $this->instance = $model->first();
-
-        return $this->instance;
+        return $model->first();
     }
 
     /**
      * Find multiple models
      *
+     * @param int $teamId
      * @param array $ids
      * @param array $relations
-     * @return object
+     * @return mixed
+     * @throws \Exception
      */
-    public function getWhereIn(array $ids, array $relations = [])
+    public function getWhereIn($teamId, array $ids, array $relations = [])
     {
-        $this->instance = $this->getQueryBuilder()->with($relations)->whereIn('id', $ids)->get();
-
-        return $this->instance;
+        return $this->getQueryBuilder($teamId)
+            ->with($relations)
+            ->whereIn('id', $ids)->get();
     }
 
     /**
      * Create a new record
      *
-     * @param array $data The input data
-     * @return object model instance
+     * @param int $teamId
+     * @param array $data
+     * @return mixed
+     * @throws \Exception
      */
-    public function store(array $data)
+    public function store($teamId, array $data)
     {
-        $this->instance = $this->getNewInstance();
+        $this->checkTenantData($data);
 
-        return $this->executeSave($data);
+        $instance = $this->getNewInstance();
+
+        return $this->executeSave($teamId, $data, $instance);
     }
 
     /**
      * Update the model instance
      *
-     * @param int $id The model id
-     * @param array $data The input data
-     * @return object model instance
+     * @param int $teamId
+     * @param int $id
+     * @param array $data
+     * @return mixed
+     * @throws \Exception
      */
-    public function update($id, array $data)
+    public function update($teamId, $id, array $data)
     {
-        $this->instance = $this->find($id);
+        $this->checkTenantData($data);
 
-        return $this->executeSave($data);
+        $instance = $this->find($id);
+
+        return $this->executeSave($teamId, $data, $instance);
     }
 
     /**
      * Save the model
      *
-     * NB - check BaseTenantRepo if any changes
-     * are made here
-     *
+     * @param int $teamId
      * @param array $data
+     * @param mixed $instance
      * @return mixed
      */
-    protected function executeSave(array $data)
+    protected function executeSave($teamId, array $data, $instance)
     {
-        $data = $this->setBooleanFields($data);
+        $data = $this->setBooleanFields($instance, $data);
 
-        $this->instance->fill($data);
-        $this->instance->save();
+        $instance->fill($data);
+        $instance->{$this->getTenantKey()} = $teamId;
+        $instance->save();
 
-        return $this->instance;
+        return $instance;
     }
 
     /**
      * Delete a record
      *
-     * @param int $id Model id
-     * @return object model instance
+     * @param int $teamId
+     * @param int $id
+     * @return mixed
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy($teamId, $id)
     {
         $instance = $this->find($id);
 
@@ -275,29 +293,15 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     }
 
     /**
-     * Set the model's boolean fields from the input data
+     * Count of all records
      *
-     * @param array $data
-     * @return array
+     * @param int $teamId
+     * @return mixed
+     * @throws \Exception
      */
-    protected function setBooleanFields(array $data)
+    public function count($teamId)
     {
-        foreach ($this->getModelBooleanFields() as $booleanField)
-        {
-            $data[$booleanField] = array_get($data, $booleanField, 0);
-        }
-
-        return $data;
-    }
-
-    /**
-     * Retrieve the boolean fields from the model
-     *
-     * @return array
-     */
-    protected function getModelBooleanFields()
-    {
-        return $this->instance->getBooleanFields();
+        return $this->getNewInstance($teamId)->count();
     }
 
     /**
@@ -319,12 +323,14 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     /**
      * Return a new query builder instance
      *
+     * @param int $teamId
      * @return mixed
-     * @throws \Exception#
+     * @throws \Exception
      */
-    public function getQueryBuilder()
+    public function getQueryBuilder($teamId)
     {
-        return $this->getNewInstance()->newQuery();
+        return $this->getNewInstance()->newQuery()
+            ->where('team_id', $teamId);
     }
 
     /**
@@ -338,53 +344,6 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
         $model = $this->getModelName();
 
         return new $model;
-    }
-
-    /**
-     * Resolve order by
-     *
-     * @param string $orderBy
-     * @return void
-     */
-    protected function resolveOrder($orderBy)
-    {
-        if ( ! \Input::get('sort_by'))
-        {
-            $this->parseOrder($orderBy);
-            return;
-        }
-
-        $this->resolveDirection();
-        $this->resolveOrderBy($orderBy);
-    }
-
-    /**
-     * Resolve direction
-     * @return void
-     */
-    protected function resolveDirection()
-    {
-        $direction = strtolower(\Input::get('direction', 'asc'));
-
-        if ( ! in_array($direction, ['asc', 'desc']))
-        {
-            $direction = 'asc';
-        }
-
-        $this->setOrderDirection($direction);
-    }
-
-    /**
-     * Resolve order by
-     * @return void
-     */
-    protected function resolveOrderBy($column)
-    {
-        $orderBy = \Input::get('sort_by');
-
-        $orderBy = array_get($this->orderOptions, $orderBy, $column);
-
-        $this->setOrderBy($orderBy);
     }
 
     /**
@@ -452,13 +411,56 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
     }
 
     /**
-     * Get count of records
+     * Set the tenant key when saving data
      *
-     * @param null
-     * @return integer
+     * @param array $data
+     * @throws \Exception If Tenant value is found in data.
+     * @return mixed
      */
-    public function count()
+    protected function checkTenantData(array $data)
     {
-        return $this->getNewInstance()->count();
+        if (isset($data[$this->getTenantKey()]))
+        {
+            throw new \Exception('Tenant value should not be provided in data.');
+        }
+    }
+
+    /**
+     * Returns tenant key
+     *
+     * @return string
+     */
+    protected function getTenantKey()
+    {
+        return $this->tenantKey;
+    }
+
+
+    /**
+     * Set the model's boolean fields from the input data
+     *
+     * @param mixed $instance
+     * @param array $data
+     * @return array
+     */
+    protected function setBooleanFields($instance, array $data)
+    {
+        foreach ($this->getModelBooleanFields($instance) as $booleanField)
+        {
+            $data[$booleanField] = array_get($data, $booleanField, 0);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Retrieve the boolean fields from the model
+     *
+     * @param mixed $instance
+     * @return array
+     */
+    protected function getModelBooleanFields($instance)
+    {
+        return $instance->getBooleanFields();
     }
 }
