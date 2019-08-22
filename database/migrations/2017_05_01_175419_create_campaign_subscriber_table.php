@@ -21,11 +21,13 @@ class CreateCampaignSubscriberTable extends Migration
             $table->string('ip')->nullable();
             $table->smallInteger('open_count')->default(0);
             $table->smallInteger('click_count')->default(0);
+            $table->timestamp('delivered_at')->nullable();
             $table->timestamp('opened_at')->nullable();
             $table->timestamps();
 
             $table->foreign('subscriber_id')->references('id')->on('subscribers');
             $table->foreign('campaign_id')->references('id')->on('campaigns');
+
         });
     }
 

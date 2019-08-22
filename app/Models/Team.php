@@ -74,7 +74,8 @@ class Team extends BaseModel
     {
         return $this->belongsToMany(User::class, 'team_users')
             ->orderBy('name')
-            ->withPivot('role');
+            ->withPivot('role')
+            ->withTimestamps();
     }
 
     /**

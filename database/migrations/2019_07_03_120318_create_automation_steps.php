@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AutomationSteps extends Migration
+class CreateAutomationSteps extends Migration
 {
     /**
      * Run the migrations.
@@ -22,6 +22,8 @@ class AutomationSteps extends Migration
             $table->unsignedInteger('delay_seconds')->index();
             $table->string('subject')->nullable();
             $table->text('content')->nullable();
+            $table->unsignedInteger('open_count')->default(0);
+            $table->unsignedInteger('click_count')->default(0);
             $table->timestamps();
 
             $table->foreign('automation_id')->references('id')->on('automations');

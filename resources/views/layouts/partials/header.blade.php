@@ -67,7 +67,7 @@
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-versions">
                             <a class="dropdown-item px-3" href="{{ route('profile.edit') }}"><i
                                         class="fas fa-user mr-2 fc-gray-300"></i>My Profile</a>
-                            <a class="dropdown-item px-3" href="{{ route('subscriptions.index') }}"><i class="fas fa-credit-card-front mr-2 fc-gray-300"></i>Billing</a>
+                            <a class="dropdown-item px-3" href=""><i class="fas fa-credit-card-front mr-2 fc-gray-300"></i>Billing</a>
                             <a class="dropdown-item px-3" href="/teams"><i
                                         class="fas fa-layer-plus mr-2 fc-gray-300"></i>My Companies</a>
                             <div class="dropdown-divider"></div>

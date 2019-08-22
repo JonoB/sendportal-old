@@ -6,6 +6,7 @@
 
 @section('content')
 
+
     {!! Form::open(['method' => 'post', 'route' => 'providers.store', 'class' => 'form-horizontal']) !!}
 
     {!! Form::textField('name', 'Name') !!}

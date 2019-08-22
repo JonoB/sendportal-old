@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // Auth
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 // Subscriptions
 Route::get('unsubscribe/{subscriberHash}', 'SubscriptionsController@unsubscribe')->name('subscriptions.unsubscribe');
@@ -12,8 +12,13 @@ Route::get('subscribe/{subscriberHash}', 'SubscriptionsController@subscribe')->n
 Route::put('subscriptions/{subscriberId}', 'SubscriptionsController@update')->name('subscriptions.update');
 
 // App
-Route::middleware(['auth'])->group(function ()
+Route::middleware(['auth', 'verified'])->group(function()
 {
+    // Profile
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('', 'Auth\ProfileController@edit')->name('edit');
+        Route::put('', 'Auth\ProfileController@update')->name('update');
+    });
     Route::get('/logout', ['as' => 'dashboard', 'uses' => 'Auth\LoginController@logout']);
 
     Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);

@@ -6,7 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Models\UnsubscribeEventType;
 
-class AddUnsubscribedTablesColumns extends Migration
+class CreateUnsubscribedTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,8 +15,7 @@ class AddUnsubscribedTablesColumns extends Migration
      */
     public function up()
     {
-        Schema::create('unsubscribe_event_types', function(Blueprint $table)
-        {
+        Schema::create('unsubscribe_event_types', function(Blueprint $table) {
             $table->increments('id');
             $table->string('name');
         });
@@ -24,7 +23,8 @@ class AddUnsubscribedTablesColumns extends Migration
         $types = [
             UnsubscribeEventType::BOUNCE => 'Bounce',
             UnsubscribeEventType::COMPLAINT => 'Complaint',
-            UnsubscribeEventType::MANUAL_BY_ADMIN => 'Manual',
+            UnsubscribeEventType::MANUAL_BY_ADMIN => 'Manual by Admin',
+            UnsubscribeEventType::MANUAL_BY_SUBSCRIBER => 'Manual by Subscriber',
         ];
 
         foreach($types as $id => $name)
@@ -34,19 +34,6 @@ class AddUnsubscribedTablesColumns extends Migration
                 'name' => $name
             ]);
         }
-
-        Schema::table('subscribers', function(Blueprint $table)
-        {
-            $table->timestamp('unsubscribed_at')->nullable()->after('meta');
-            $table->unsignedInteger('unsubscribe_event_id')->nullable()->after('unsubscribed_at');
-
-            $table->foreign('unsubscribe_event_id')->references('id')->on('unsubscribe_event_types');
-        });
-
-        Schema::table('campaign_subscriber', function(Blueprint $table)
-        {
-            $table->timestamp('delivered_at')->nullable()->after('click_count');
-        });
     }
 
     /**

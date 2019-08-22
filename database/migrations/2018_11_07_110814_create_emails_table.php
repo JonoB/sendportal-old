@@ -15,6 +15,7 @@ class CreateEmailsTable extends Migration
     {
         Schema::create('steps', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('team_id');
             $table->unsignedInteger('mailable_id')->index();
             $table->string('mailable_type');
             $table->unsignedInteger('template_id')->nullable();
@@ -26,6 +27,8 @@ class CreateEmailsTable extends Migration
             $table->mediumInteger('open_count')->nullable()->default(0);
             $table->mediumInteger('click_count')->nullable()->default(0);
             $table->timestamps();
+
+            $table->foreign('team_id')->references('id')->on('teams');
         });
     }
 

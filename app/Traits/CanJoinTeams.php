@@ -24,7 +24,9 @@ trait CanJoinTeams
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'team_users')
-            ->withPivot(['role'])->orderBy('name', 'asc');
+            ->orderBy('name', 'asc')
+            ->withPivot(['role'])
+            ->withTimestamps();
     }
 
     /**
