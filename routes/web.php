@@ -78,3 +78,15 @@ Route::middleware(['auth', 'verified'])->group(function()
         Route::post('segments/store', 'SegmentsController@store')->name('ajax.segments.store');
     });
 });
+
+Route::group(['middleware' => ['auth', 'verified']], function ()
+{
+    Route::namespace('Subscriptions')->prefix('subscriptions')->name('subscriptions.')->group(function ()
+    {
+        Route::get('/', 'SubscriptionsController@index')->name('index');
+    });
+
+    Route::resource('teams', 'TeamsController');
+    Route::get('teams/{team}/switch', 'TeamsController@switch')->name('teams.switch');
+    Route::post('teams/invitations/{invitation}/accept', 'Teams\PendingInvitationController@accept')->name('teams.invitations.accept');
+});
