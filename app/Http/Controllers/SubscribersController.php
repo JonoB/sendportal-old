@@ -4,16 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Events\SubscriberAddedEvent;
 use App\Http\Requests\SubscriberRequest;
-use App\Interfaces\SegmentRepositoryInterface;
-use App\Interfaces\SubscriberRepositoryInterface;
-use App\Interfaces\TagRepositoryInterface;
+use App\Repositories\SegmentTenantRepository;
+use App\Repositories\SubscriberTenantRepository;
 use Illuminate\Http\RedirectResponse;
 use Rap2hpoutre\FastExcel\FastExcel;
 
 class SubscribersController extends Controller
 {
     /**
-     * @var SubscriberInterface
+     * @var SubscriberTenantRepository
      */
     protected $subscriberRepository;
 
@@ -21,11 +20,9 @@ class SubscribersController extends Controller
      * SubscribersController constructor.
      *
      * SubscribersController constructor.
-     * @param SubscriberRepositoryInterface $subscriberRepository
+     * @param SubscriberTenantRepository $subscriberRepository
      */
-    public function __construct(
-        SubscriberRepositoryInterface $subscriberRepository
-    )
+    public function __construct(SubscriberTenantRepository $subscriberRepository)
     {
         $this->subscriberRepository = $subscriberRepository;
     }
@@ -33,11 +30,12 @@ class SubscribersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
      */
     public function index()
     {
-        $subscribers = $this->subscriberRepository->paginate('first_name', ['segments'], 50, request()->all());
+        $subscribers = $this->subscriberRepository->paginate(currentTeamId(), 'first_name', ['segments'], 50, request()->all());
 
         return view('subscribers.index', compact('subscribers'));
     }
@@ -73,11 +71,13 @@ class SubscribersController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param SegmentTenantRepository $segmentRepository
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
      */
-    public function create(SegmentRepositoryInterface $segmentRepository)
+    public function create(SegmentTenantRepository $segmentRepository)
     {
-        $segments = $segmentRepository->all();
+        $segments = $segmentRepository->all(currentTeamId());
 
         return view('subscribers.create', compact('segments'));
     }
@@ -85,12 +85,13 @@ class SubscribersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  SubscriberRequest $request
+     * @param SubscriberRequest $request
      * @return RedirectResponse
+     * @throws \Exception
      */
     public function store(SubscriberRequest $request)
     {
-        $subscriber = $this->subscriberRepository->store($request->all());
+        $subscriber = $this->subscriberRepository->store(currentTeamId(), $request->all());
 
         event(new SubscriberAddedEvent($subscriber));
 
@@ -100,12 +101,13 @@ class SubscribersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
      */
     public function show($id)
     {
-        $subscriber = $this->subscriberRepository->find($id);
+        $subscriber = $this->subscriberRepository->find(currentTeamId(), $id);
 
         return view('subscribers.show', compact('subscriber'));
     }
@@ -113,12 +115,14 @@ class SubscribersController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @param SegmentTenantRepository $segmentRepository
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
      */
-    public function edit($id, TagRepositoryInterface $tagRepository, SegmentRepositoryInterface $segmentRepository)
+    public function edit($id, SegmentTenantRepository $segmentRepository)
     {
-        $subscriber = $this->subscriberRepository->find($id, ['segments']);
+        $subscriber = $this->subscriberRepository->find(currentTeamId(), $id, ['segments']);
 
         $data = [
             'subscriber' => $subscriber,
@@ -133,12 +137,13 @@ class SubscribersController extends Controller
      * Update the specified resource in storage.
      *
      * @param SubscriberRequest $request
-     * @param int $id
+     * @param $id
      * @return RedirectResponse
+     * @throws \Exception
      */
     public function update(SubscriberRequest $request, $id)
     {
-        $this->subscriberRepository->update($id, $request->all());
+        $this->subscriberRepository->update(currentTeamId(), $id, $request->all());
 
         return redirect()->route('subscribers.index');
     }

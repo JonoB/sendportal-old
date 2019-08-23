@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubscriptionToggleRequest;
-use App\Interfaces\SubscriberRepositoryInterface;
+use App\Repositories\SubscriberTenantRepository;
 use App\Models\UnsubscribeEventType;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -12,14 +12,14 @@ use Illuminate\View\View;
 class SubscriptionsController extends Controller
 {
     /**
-     * @var SubscriberRepositoryInterface
+     * @var SubscriberTenantRepository
      */
     protected $subscribers;
 
     /**
-     * @param SubscriberRepositoryInterface $subscribers
+     * @param SubscriberTenantRepository $subscribers
      */
-    public function __construct(SubscriberRepositoryInterface $subscribers)
+    public function __construct(SubscriberTenantRepository $subscribers)
     {
         $this->subscribers = $subscribers;
     }

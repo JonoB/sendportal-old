@@ -60,11 +60,15 @@ class SubscriberTenantRepository extends BaseTenantRepository
      */
     public function store($teamId, array $data)
     {
-        $this->instance = $this->executeStore(array_except($data, ['segments']));
+        $this->checkTenantData($data);
 
-        $this->syncSegments($this->instance, array_get($data, 'segments', []));
+        $instance = $this->getNewInstance();
 
-        return $this->instance;
+        $subscriber = $this->executeSave($teamId, array_except($data, ['segments']), $instance);
+
+        $this->syncSegments($instance, array_get($data, 'segments', []));
+
+        return $subscriber;
     }
 
     /**
@@ -72,12 +76,14 @@ class SubscriberTenantRepository extends BaseTenantRepository
      */
     public function update($teamId, $id, array $data)
     {
-        $this->instance = $this->find($id);
+        $this->checkTenantData($data);
 
-        $this->executeUpdate($id, array_except($data, ['segments']));
+        $instance = $this->find($teamId, $id);
+
+        $subscriber = $this->executeSave($teamId, array_except($data, ['segments']), $instance);
 
         $this->syncSegments($this->instance, array_get($data, 'segments', []));
 
-        return $this->instance;
+        return $subscriber;
     }
 }

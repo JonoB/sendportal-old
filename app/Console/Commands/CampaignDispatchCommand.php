@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Interfaces\CampaignSubscriberRepositoryInterface;
+use App\Interfaces\CampaignSubscriberTenantRepository;
 use App\Interfaces\EmailRepositoryInterface;
-use App\Interfaces\SubscriberRepositoryInterface;
+use App\Repositories\SubscriberTenantRepository;
 use App\Interfaces\ContentUrlServiceInterface;
 use App\Interfaces\CampaignContentServiceInterface;
 use App\Interfaces\DeliveryDispatchInterface;
@@ -33,7 +33,7 @@ class CampaignDispatchCommand extends Command
     protected $description = 'Dispatch all campaigns waiting in the queue';
 
     /**
-     * @var SubscriberRepositoryInterface
+     * @var SubscriberTenantRepository
      */
     protected $subscriberRepo;
 
@@ -53,7 +53,7 @@ class CampaignDispatchCommand extends Command
     protected $campaignContentService;
 
     /**
-     * @var CampaignSubscriberRepositoryInterface
+     * @var CampaignSubscriberTenantRepository
      */
     protected $campaignSubscriberRepository;
 
@@ -72,8 +72,8 @@ class CampaignDispatchCommand extends Command
     /**
      * CampaignsDispatchCommand constructor.
      *
-     * @param CampaignSubscriberRepositoryInterface $campaignSubscriberRepository
-     * @param SubscriberRepositoryInterface $subscriberRepository
+     * @param CampaignSubscriberTenantRepository $campaignSubscriberRepository
+     * @param SubscriberTenantRepository $subscriberRepository
      * @param CampaignRepositoryInterface $campaignRepository
      * @param DispatchMessage $dispatchDeliveryService
      * @param CampaignContentServiceInterface $campaignContentService
@@ -81,8 +81,8 @@ class CampaignDispatchCommand extends Command
      */
 
     public function __construct(
-        CampaignSubscriberRepositoryInterface $campaignSubscriberRepository,
-        SubscriberRepositoryInterface $subscriberRepository,
+        CampaignSubscriberTenantRepository $campaignSubscriberRepository,
+        SubscriberTenantRepository $subscriberRepository,
         CampaignRepositoryInterface $campaignRepository,
         DispatchMessage $dispatchDeliveryService,
         MergeContent $campaignContentService,

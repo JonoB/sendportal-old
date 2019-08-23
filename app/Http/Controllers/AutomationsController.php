@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Interfaces\AutomationRepositoryInterface;
 use App\Interfaces\SegmentRepositoryInterface;
 use App\Http\Requests\CampaignRequest;
-use App\Interfaces\CampaignSubscriberRepositoryInterface;
+use App\Interfaces\CampaignSubscriberTenantRepository;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Models\CampaignStatus;
 use App\Repositories\ProviderTenantRepository;

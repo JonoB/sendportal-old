@@ -6,7 +6,7 @@ use App\Http\Requests\Api\SubscriberSegmentDestroyRequest;
 use App\Http\Requests\Api\SubscriberSegmentStoreRequest;
 use App\Http\Requests\Api\SubscriberSegmentUpdateRequest;
 use App\Http\Resources\Segment;
-use App\Interfaces\SubscriberRepositoryInterface;
+use App\Repositories\SubscriberTenantRepository;
 use App\Services\Subscribers\Segments\ApiSubscriberSegmentService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Segment as SegmentResource;
@@ -15,7 +15,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class SubscriberSegmentsController extends Controller
 {
     /**
-     * @var SubscriberRepositoryInterface
+     * @var SubscriberTenantRepository
      */
     protected $subscribers;
 
@@ -25,11 +25,11 @@ class SubscriberSegmentsController extends Controller
     protected $apiService;
 
     /**
-     * @param SubscriberRepositoryInterface $subscribers
+     * @param SubscriberTenantRepository $subscribers
      * @param ApiSubscriberSegmentService $apiService
      */
     public function __construct(
-        SubscriberRepositoryInterface $subscribers,
+        SubscriberTenantRepository $subscribers,
         ApiSubscriberSegmentService $apiService
     )
     {

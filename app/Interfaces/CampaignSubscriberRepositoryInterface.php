@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface CampaignSubscriberRepositoryInterface extends BaseEloquentInterface
+interface CampaignSubscriberTenantRepository extends BaseEloquentInterface
 {
     /**
      * Track opens

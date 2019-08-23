@@ -6,7 +6,7 @@ use App\Http\Requests\CampaignStoreRequest;
 use App\Http\Requests\CampaignContentRequest;
 use App\Http\Requests\CampaignTemplateUpdateRequest;
 use App\Interfaces\CampaignRepositoryInterface;
-use App\Interfaces\CampaignSubscriberRepositoryInterface;
+use App\Interfaces\CampaignSubscriberTenantRepository;
 use App\Interfaces\ProviderRepositoryInterface;
 use App\Interfaces\SegmentRepositoryInterface;
 use App\Interfaces\TemplateRepositoryInterface;
@@ -19,7 +19,7 @@ use Illuminate\View\View;
 class CampaignsController extends Controller
 {
     /**
-     * @var CampaignSubscriberRepositoryInterface
+     * @var CampaignSubscriberTenantRepository
      */
     protected $campaignSubscribers;
 
@@ -45,14 +45,14 @@ class CampaignsController extends Controller
 
     /**
      * @param CampaignRepositoryInterface $campaigns
-     * @param CampaignSubscriberRepositoryInterface $campaignSubscribers
+     * @param CampaignSubscriberTenantRepository $campaignSubscribers
      * @param TemplateRepositoryInterface $templates
      * @param SegmentRepositoryInterface $segments
      * @param ProviderRepositoryInterface $providers
      */
     public function __construct(
         CampaignRepositoryInterface $campaigns,
-        CampaignSubscriberRepositoryInterface $campaignSubscribers,
+        CampaignSubscriberTenantRepository $campaignSubscribers,
         TemplateRepositoryInterface $templates,
         SegmentRepositoryInterface $segments,
         ProviderRepositoryInterface $providers
