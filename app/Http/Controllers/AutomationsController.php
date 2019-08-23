@@ -8,7 +8,9 @@ use App\Http\Requests\CampaignRequest;
 use App\Interfaces\CampaignSubscriberTenantRepository;
 use App\Interfaces\TemplateRepositoryInterface;
 use App\Models\CampaignStatus;
+use App\Repositories\AutomationTenantRepository;
 use App\Repositories\ProviderTenantRepository;
+use App\Repositories\SegmentTenantRepository;
 use App\Services\CampaignReportService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -17,12 +19,12 @@ use Illuminate\Http\Request;
 class AutomationsController extends Controller
 {
     /**
-     * @var SegmentRepositoryInterface
+     * @var SegmentTenantRepository
      */
     private $segmentRepository;
 
     /**
-     * @var AutomationRepositoryInterface
+     * @var AutomationTenantRepository
      */
     private $automationRepository;
 
@@ -34,12 +36,12 @@ class AutomationsController extends Controller
     /**
      * AutomationsController constructor.
      *
-     * @param SegmentRepositoryInterface $segmentRepository
-     * @param AutomationRepositoryInterface $automationRepository
+     * @param SegmentTenantRepository $segmentRepository
+     * @param AutomationTenantRepository $automationRepository
      */
     public function __construct(
-        SegmentRepositoryInterface $segmentRepository,
-        AutomationRepositoryInterface $automationRepository,
+        SegmentTenantRepository $segmentRepository,
+        AutomationTenantRepository $automationRepository,
         ProviderTenantRepository $providerRepository
     )
     {
@@ -55,7 +57,7 @@ class AutomationsController extends Controller
      */
     public function index()
     {
-        $automations = $this->automationRepository->paginate();
+        $automations = $this->automationRepository->paginate(currentTeamId());
 
         return view('automations.index', compact('automations'));
     }
@@ -67,8 +69,8 @@ class AutomationsController extends Controller
      */
     public function create()
     {
-        $segments = $this->segmentRepository->pluck();
-        $providers = $this->providerRepository->pluck();
+        $segments = $this->segmentRepository->pluck(currentTeamId());
+        $providers = $this->providerRepository->pluck(currentTeamId());
 
         return view('automations.create', compact('segments', 'providers'));
     }
@@ -89,9 +91,9 @@ class AutomationsController extends Controller
             'from_email' => 'required|email',
         ]);
 
-        $automation = $this->automationRepository->store($request->all());
+        $automation = $this->automationRepository->store(currentTeamId(), $request->all());
 
-        return redirect(route('automations.show', ['id' => $automation->id]));
+        return redirect(route('automations.show', $automation->id));
     }
 
     /**
@@ -115,7 +117,7 @@ class AutomationsController extends Controller
      */
     public function show($id)
     {
-        $automation = $this->automationRepository->find($id, ['automation_steps.template']);
+        $automation = $this->automationRepository->find(currentTeamId(), $id, ['automation_steps.template']);
 
         return view('automations.show', compact('automation'));
     }

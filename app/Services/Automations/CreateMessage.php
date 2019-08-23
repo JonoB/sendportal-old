@@ -28,6 +28,7 @@ class CreateMessage
     protected function dispatch(AutomationSchedule $schedule): void
     {
         Message::create([
+            'team_id' => $schedule->automation_step->automation->team_id,
             'subscriber_id' => $schedule->subscriber_id,
             'source' => AutomationSchedule::class,
             'source_id' => $schedule->id,

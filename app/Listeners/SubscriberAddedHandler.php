@@ -3,10 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\SubscriberAddedEvent;
-use App\Models\Automation;
 use App\Models\AutomationSchedule;
 use App\Models\AutomationStep;
 use App\Models\Subscriber;
+use App\Repositories\AutomationTenantRepository;
 use App\Traits\ScheduledAt;
 use Illuminate\Support\Collection;
 
@@ -15,14 +15,24 @@ class SubscriberAddedHandler
     use ScheduledAt;
 
     /**
-     * Handle the event.
+     * @var AutomationTenantRepository
+     */
+    protected $automationRepository;
+
+    public function __construct(AutomationTenantRepository $automationRepository)
+    {
+        $this->automationRepository = $automationRepository;
+    }
+
+    /**
+     * Handle the event
      *
      * @param SubscriberAddedEvent $event
-     * @return void
+     * @throws \Exception
      */
     public function handle(SubscriberAddedEvent $event)
     {
-        if ( ! $automations = $this->getAutomations())
+        if ( ! $automations = $this->getAutomations($event->subscriber->team_id))
         {
             return;
         }
@@ -41,11 +51,13 @@ class SubscriberAddedHandler
     /**
      * Get all automations
      *
+     * @param int $teamId
      * @return Collection|null
+     * @throws \Exception
      */
-    protected function getAutomations(): ?Collection
+    protected function getAutomations(int $teamId): ?Collection
     {
-        return Automation::with('first_automation_step')->get();
+        return $this->automationRepository->all($teamId, 'id', ['automation_steps']);
     }
 
     /**

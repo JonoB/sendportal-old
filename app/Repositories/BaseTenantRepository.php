@@ -253,7 +253,7 @@ abstract class BaseTenantRepository implements BaseTenantInterface
     {
         $this->checkTenantData($data);
 
-        $instance = $this->find($id);
+        $instance = $this->find($teamId, $id);
 
         return $this->executeSave($teamId, $data, $instance);
     }

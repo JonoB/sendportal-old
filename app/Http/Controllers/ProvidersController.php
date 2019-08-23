@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\ProviderRepositoryInterface;
-use App\Models\Provider;
 use App\Http\Requests\ProviderStoreRequest;
 use App\Http\Requests\ProviderUpdateRequest;
+use App\Repositories\ProviderTenantRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
@@ -20,11 +19,11 @@ class ProvidersController extends Controller
     /**
      * ProviderController constructor.
      *
-     * @param ProviderRepositoryInterface $providerRepo
+     * @param ProviderTenantRepository $providerRepo
      */
     public function __construct
     (
-        ProviderRepositoryInterface $providerRepo
+        ProviderTenantRepository $providerRepo
     )
     {
         $this->providerRepo = $providerRepo;
@@ -37,7 +36,7 @@ class ProvidersController extends Controller
      */
     public function index()
     {
-        $providers = $this->providerRepo->all();
+        $providers = $this->providerRepo->all(currentTeamId());
 
         return view('providers.index', compact('providers'));
     }
@@ -68,7 +67,7 @@ class ProvidersController extends Controller
 
         $settings = $request->only(array_values($providerType->fields));
 
-        $this->providerRepo->store([
+        $this->providerRepo->store(currentTeamId(), [
             'name' => $request->name,
             'type_id' => $providerType->id,
             'settings' => $settings,
@@ -99,7 +98,7 @@ class ProvidersController extends Controller
      */
     public function update(ProviderUpdateRequest $request, $providerId)
     {
-        $provider = $this->providerRepo->find($providerId, ['type']);
+        $provider = $this->providerRepo->find(currentTeamId(), $providerId, ['type']);
 
         $settings = $request->only(array_values($provider->type->fields));
 

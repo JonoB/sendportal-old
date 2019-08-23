@@ -24,8 +24,8 @@ class ValidateSubscriber
 
         // if the subscriber has already unsubscribed, then we'll mark this
         // schedule as complete. By throwing an exception, we'll ensure that
-        // no further pipes are acted upon and we'll not create another schedule
-        // for this schedule
+        // no further pipes are acted upon and we'll not create the next schedule
+        // for this automation
         if ($subscriber->unsubscribed_at)
         {
             $this->markScheduleAsComplete($schedule);
@@ -56,9 +56,8 @@ class ValidateSubscriber
      */
     protected function markScheduleAsComplete(AutomationSchedule $schedule): AutomationSchedule
     {
-        $schedule->completed_at = now();
-        $schedule->save();
-
-        return $schedule;
+        return tap($schedule)->update([
+            'completed_at' => now(),
+        ]);
     }
 }
