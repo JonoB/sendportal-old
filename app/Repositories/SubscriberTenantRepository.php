@@ -82,7 +82,7 @@ class SubscriberTenantRepository extends BaseTenantRepository
 
         $subscriber = $this->executeSave($teamId, array_except($data, ['segments']), $instance);
 
-        $this->syncSegments($this->instance, array_get($data, 'segments', []));
+        $this->syncSegments($instance, array_get($data, 'segments', []));
 
         return $subscriber;
     }

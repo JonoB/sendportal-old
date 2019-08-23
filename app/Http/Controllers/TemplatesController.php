@@ -5,20 +5,21 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TemplateStoreRequest;
 use App\Http\Requests\TemplateUpdateRequest;
 use App\Interfaces\TemplateRepositoryInterface;
+use App\Repositories\TemplateTenantRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 
 class TemplatesController extends Controller
 {
     /**
-     * @var TemplateRepositoryInterface
+     * @var TemplateTenantRepository
      */
     protected $templates;
 
     /**
-     * @param TemplateRepositoryInterface $templates
+     * @param TemplateTenantRepository $templates
      */
-    public function __construct(TemplateRepositoryInterface $templates)
+    public function __construct(TemplateTenantRepository $templates)
     {
         $this->templates = $templates;
     }
@@ -30,7 +31,7 @@ class TemplatesController extends Controller
      */
     public function index()
     {
-        $templates = $this->templates->paginate('name');
+        $templates = $this->templates->paginate(currentTeamId(), 'name');
 
         return view('templates.index', compact('templates'));
     }
@@ -49,7 +50,6 @@ class TemplatesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param TemplateStoreRequest $request
-     *
      * @return RedirectResponse
      */
     public function store(TemplateStoreRequest $request)
@@ -58,7 +58,7 @@ class TemplatesController extends Controller
 
         $data['content'] = normalize_tags($data['content'], 'content');
 
-        $this->templates->store($data);
+        $this->templates->store(currentTeamId(), $data);
 
         return redirect()->route('templates.index');
     }
@@ -72,7 +72,7 @@ class TemplatesController extends Controller
      */
     public function edit($id)
     {
-        $template = $this->templates->find($id);
+        $template = $this->templates->find(currentTeamId(), $id);
 
         return view('templates.edit', compact('template'));
     }
@@ -91,7 +91,7 @@ class TemplatesController extends Controller
 
         $data['content'] = normalize_tags($data['content'], 'content');
 
-        $this->templates->update($id, $data);
+        $this->templates->update(currentTeamId(), $id, $data);
 
         return redirect()->route('templates.index');
     }
@@ -105,7 +105,7 @@ class TemplatesController extends Controller
      */
     public function destroy($id)
     {
-        $template = $this->templates->find((int)$id);
+        $template = $this->templates->find(currentTeamId(), $id);
 
         if ($template->is_in_use)
         {
@@ -114,7 +114,7 @@ class TemplatesController extends Controller
                 ->withErrors(['template' => 'Cannot delete a template that has been used.']);
         }
 
-        $this->templates->destroy($template->id);
+        $this->templates->destroy(currentTeamId(), $template->id);
 
         return redirect()
             ->back()

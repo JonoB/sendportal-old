@@ -126,7 +126,7 @@ class SubscribersController extends Controller
 
         $data = [
             'subscriber' => $subscriber,
-            'segments' => $segmentRepository->all(),
+            'segments' => $segmentRepository->all(currentTeamId()),
             'selectedSegments' => selectedOptions('segments', $subscriber)
         ];
 
