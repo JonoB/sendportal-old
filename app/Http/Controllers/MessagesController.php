@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\MessageEloquentRepository;
+use App\Repositories\MessageTenantRepository;
 use App\Services\Content\MergeContent;
 use App\Services\Messages\DispatchMessage;
-use Illuminate\Routing\Pipeline;
 
 class MessagesController extends Controller
 {
     /**
-     * @var MessageEloquentRepository
+     * @var MessageTenantRepository
      */
     protected $messageRepo;
 
@@ -27,12 +26,12 @@ class MessagesController extends Controller
     /**
      * MessagesController constructor
      *
-     * @param MessageEloquentRepository $messageRepo
+     * @param MessageTenantRepository $messageRepo
      * @param DispatchMessage $dispatchMessage
      * @param MergeContent $mergeContent
      */
     public function __construct(
-        MessageEloquentRepository $messageRepo,
+        MessageTenantRepository $messageRepo,
         DispatchMessage $dispatchMessage,
         MergeContent $mergeContent
     )
@@ -46,10 +45,11 @@ class MessagesController extends Controller
      * Show all sent messages
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
      */
     public function index()
     {
-        $messages = $this->messageRepo->paginate('sent_at', [], 25, ['sent' => true]);
+        $messages = $this->messageRepo->paginate(currentTeamId(), 'sent_at', [], 25, ['sent' => true]);
 
         return view('messages.index', compact('messages'));
     }
@@ -58,10 +58,11 @@ class MessagesController extends Controller
      * Show draft messages
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
      */
     public function draft()
     {
-        $messages = $this->messageRepo->paginate('sent_at', [], 25, ['draft' => true]);
+        $messages = $this->messageRepo->paginate(currentTeamId(), 'sent_at', [], 25, ['draft' => true]);
 
         return view('messages.index', compact('messages'));
     }
@@ -75,7 +76,7 @@ class MessagesController extends Controller
      */
     public function show(int $messageId)
     {
-        $message = $this->messageRepo->find($messageId);
+        $message = $this->messageRepo->find(currentTeamId(), $messageId);
 
         $content = $this->mergeContent->handle($message);
 
@@ -90,7 +91,7 @@ class MessagesController extends Controller
      */
     public function send()
     {
-        if ( ! $message = $this->messageRepo->find(request('id', ), ['subscriber']))
+        if ( ! $message = $this->messageRepo->find(currentTeamId(), request('id' ), ['subscriber']))
         {
             return redirect()->back()->withErrors('Unable to locate that message');
         }

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Team;
+use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -25,6 +27,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('auth:api', function(User $user, Team $team) {
+           return $user->onTeam($team);
+        });
     }
 }

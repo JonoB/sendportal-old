@@ -58,11 +58,11 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 
         // tenant middleware
-        'hasSubscription' => \App\Http\Middleware\HasSubscription::class,
-        'hasTeam' => \App\Http\Middleware\VerifyUserHasTeam::class,
-        'ownsCurrentTeam' => \App\Http\Middleware\OwnsCurrentTeam::class,
+        'onTeam' => \App\Http\Middleware\VerifyUserOnTeam::class,
+        //'hasSubscription' => \App\Http\Middleware\HasSubscription::class,
+        //'hasTeam' => \App\Http\Middleware\VerifyUserHasTeam::class,
+        //'ownsCurrentTeam' => \App\Http\Middleware\OwnsCurrentTeam::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
-        'vend' => \App\Http\Middleware\VerifyVendIntegration::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 }
