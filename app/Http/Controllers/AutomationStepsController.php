@@ -6,6 +6,10 @@ use App\Http\Requests\AutomationStepRequest;
 use App\Repositories\AutomationStepEloquentRepository;
 use App\Repositories\AutomationTenantRepository;
 use App\Repositories\TemplateTenantRepository;
+use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class AutomationStepsController extends Controller
 {
@@ -41,7 +45,10 @@ class AutomationStepsController extends Controller
         $this->templates = $templates;
     }
 
-    public function create($automationId)
+    /**
+     * @throws Exception
+     */
+    public function create(int $automationId)
     {
         $automation = $this->automations->find(currentTeamId(), $automationId);
         $templates = $this->templates->pluck(currentTeamId());
@@ -49,36 +56,37 @@ class AutomationStepsController extends Controller
         return view('automations.steps.create', compact('automation', 'templates'));
     }
 
-    public function store(AutomationStepRequest $request, $automationId)
+    /**
+     * @throws Exception
+     */
+    public function store(AutomationStepRequest $request, int $automationId)
     {
         $data = $request->validated();
-
-        // tenant check
         $this->automations->find(currentTeamId(), $automationId);
-
         $data['automation_id'] = $automationId;
-
         $this->automationSteps->store($data);
 
         return redirect()->route('automations.show', $automationId);
     }
 
-    public function edit($automationId, $stepId)
+    /**
+     * @throws Exception
+     */
+    public function edit(int $automationId, int $stepId)
     {
-        // tenant check
         $this->automations->find(currentTeamId(), $automationId);
-        
         $automationStep = $this->automationSteps->find($stepId);
         $templates = $this->templates->pluck(currentTeamId());
 
         return view('automations.steps.edit', compact('automationStep', 'templates'));
     }
 
-    public function update(AutomationStepRequest $request, $automationId, $stepId)
+    /**
+     * @throws Exception
+     */
+    public function update(AutomationStepRequest $request, int $automationId, int $stepId)
     {
-        // tenant check
         $this->automations->find(currentTeamId(), $automationId);
-
         $this->automationSteps->update($stepId, $request->validated());
 
         return redirect()->route('automations.show', $automationId);
