@@ -287,7 +287,7 @@ abstract class BaseTenantRepository implements BaseTenantInterface
      */
     public function destroy($teamId, $id)
     {
-        $instance = $this->find($id);
+        $instance = $this->find($teamId, $id);
 
         return $instance->delete();
     }

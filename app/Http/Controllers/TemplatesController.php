@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TemplateStoreRequest;
 use App\Http\Requests\TemplateUpdateRequest;
-use App\Interfaces\TemplateRepositoryInterface;
 use App\Repositories\TemplateTenantRepository;
+use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 class TemplatesController extends Controller
 {
@@ -25,9 +27,10 @@ class TemplatesController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Show a listing of the resource.
      *
-     * @return Response
+     * @return Factory|View
+     * @throws Exception
      */
     public function index()
     {
@@ -39,7 +42,7 @@ class TemplatesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return Factory|View
      */
     public function create()
     {
@@ -50,9 +53,11 @@ class TemplatesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param TemplateStoreRequest $request
+     *
      * @return RedirectResponse
+     * @throws Exception
      */
-    public function store(TemplateStoreRequest $request)
+    public function store(TemplateStoreRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
@@ -66,11 +71,12 @@ class TemplatesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param string $id
+     * @param int $id
      *
-     * @return Response
+     * @return Factory|View
+     * @throws Exception
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         $template = $this->templates->find(currentTeamId(), $id);
 
@@ -81,11 +87,12 @@ class TemplatesController extends Controller
      * Update the specified resource in storage.
      *
      * @param TemplateUpdateRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return RedirectResponse
+     * @throws Exception
      */
-    public function update(TemplateUpdateRequest $request, $id)
+    public function update(TemplateUpdateRequest $request, int $id): RedirectResponse
     {
         $data = $request->validated();
 
@@ -99,11 +106,12 @@ class TemplatesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param string $id
+     * @param int $id
      *
      * @return RedirectResponse
+     * @throws Exception
      */
-    public function destroy($id)
+    public function destroy(int $id): RedirectResponse
     {
         $template = $this->templates->find(currentTeamId(), $id);
 
