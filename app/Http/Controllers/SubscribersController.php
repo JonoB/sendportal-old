@@ -4,10 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Events\SubscriberAddedEvent;
 use App\Http\Requests\SubscriberRequest;
-use App\Repositories\SegmentTenantRepository;
 use App\Repositories\SubscriberTenantRepository;
+use Box\Spout\Common\Exception\InvalidArgumentException;
+use Box\Spout\Common\Exception\IOException;
+use Box\Spout\Common\Exception\UnsupportedTypeException;
+use Box\Spout\Writer\Exception\WriterNotOpenedException;
+use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SubscribersController extends Controller
 {
@@ -28,26 +35,27 @@ class SubscribersController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
+     * @return Factory|View
+     * @throws Exception
      */
     public function index()
     {
-        $subscribers = $this->subscriberRepository->paginate(currentTeamId(), 'first_name', ['segments'], 50, request()->all());
+        $subscribers = $this->subscriberRepository->paginate(currentTeamId(), 'first_name', [], 50, request()->all());
 
         return view('subscribers.index', compact('subscribers'));
     }
 
     /**
-     * Export Subscribers
-     *
-     * @return string|\Symfony\Component\HttpFoundation\StreamedResponse
+     * @return string|StreamedResponse
+     * @throws IOException
+     * @throws InvalidArgumentException
+     * @throws UnsupportedTypeException
+     * @throws WriterNotOpenedException
+     * @throws Exception
      */
     public function export()
     {
-        $subscribers = $this->subscriberRepository->all('id', ['segments']);
+        $subscribers = $this->subscriberRepository->all(currentTeamId(), 'id');
 
         if ( ! $subscribers->count())
         {
@@ -63,31 +71,22 @@ class SubscribersController extends Controller
                 'first_name' => $subscriber->first_name,
                 'last_name' => $subscriber->last_name,
                 'created_at' => $subscriber->created_at,
-                'segments' => $subscriber->segments->implode('name', ';')
             ];
         });
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @param SegmentTenantRepository $segmentRepository
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
+     * @return Factory|View
+     * @throws Exception
      */
-    public function create(SegmentTenantRepository $segmentRepository)
+    public function create()
     {
-        $segments = $segmentRepository->all(currentTeamId());
-
-        return view('subscribers.create', compact('segments'));
+        return view('subscribers.create');
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param SubscriberRequest $request
      * @return RedirectResponse
-     * @throws \Exception
+     * @throws Exception
      */
     public function store(SubscriberRequest $request)
     {
@@ -99,13 +98,10 @@ class SubscribersController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
+     * @return Factory|View
+     * @throws Exception
      */
-    public function show($id)
+    public function show(int $id)
     {
         $subscriber = $this->subscriberRepository->find(currentTeamId(), $id);
 
@@ -113,49 +109,28 @@ class SubscribersController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param $id
-     * @param SegmentTenantRepository $segmentRepository
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
+     * @return Factory|View
+     * @throws Exception
      */
-    public function edit($id, SegmentTenantRepository $segmentRepository)
+    public function edit(int $id)
     {
-        $subscriber = $this->subscriberRepository->find(currentTeamId(), $id, ['segments']);
+        $subscriber = $this->subscriberRepository->find(currentTeamId(), $id);
 
         $data = [
             'subscriber' => $subscriber,
-            'segments' => $segmentRepository->all(currentTeamId()),
-            'selectedSegments' => selectedOptions('segments', $subscriber)
         ];
 
         return view('subscribers.edit', $data);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param SubscriberRequest $request
-     * @param $id
      * @return RedirectResponse
-     * @throws \Exception
+     * @throws Exception
      */
-    public function update(SubscriberRequest $request, $id)
+    public function update(SubscriberRequest $request, int $id)
     {
         $this->subscriberRepository->update(currentTeamId(), $id, $request->all());
 
         return redirect()->route('subscribers.index');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        app()->abort(404, 'Not implemented');
     }
 }

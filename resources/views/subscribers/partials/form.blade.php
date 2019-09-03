@@ -5,7 +5,6 @@
 {!! Form::textField('first_name', 'First Name') !!}
 {!! Form::textField('last_name', 'Last Name') !!}
 {!! Form::textField('email', 'Email') !!}
-{!! Form::selectMultipleField('segments', 'Segments', $segments) !!}
 
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>

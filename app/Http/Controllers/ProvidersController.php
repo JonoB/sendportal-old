@@ -5,69 +5,65 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProviderStoreRequest;
 use App\Http\Requests\ProviderUpdateRequest;
 use App\Repositories\ProviderTenantRepository;
+use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class ProvidersController extends Controller
 {
-
     /**
-     * @var ProviderRepositoryInterface
+     * @var ProviderTenantRepository
      */
-    protected $providerRepo;
+    protected $providers;
 
     /**
      * ProviderController constructor.
      *
-     * @param ProviderTenantRepository $providerRepo
+     * @param ProviderTenantRepository $providers
      */
     public function __construct
     (
-        ProviderTenantRepository $providerRepo
+        ProviderTenantRepository $providers
     )
     {
-        $this->providerRepo = $providerRepo;
+        $this->providers = $providers;
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return Factory|View
+     * @throws Exception
      */
     public function index()
     {
-        $providers = $this->providerRepo->all(currentTeamId());
+        $providers = $this->providers->all(currentTeamId());
 
         return view('providers.index', compact('providers'));
     }
 
     /**
-     * Display the form for creating
-     * a provider configuration set
-     *
-     * @param null
-     * @return null
+     * @return Factory|View
      */
     public function create()
     {
-        $providerTypes = $this->providerRepo->getProviderTypes()->pluck('name', 'id');
+        $providerTypes = $this->providers->getProviderTypes()->pluck('name', 'id');
 
         return view('providers.create', compact('providerTypes'));
     }
 
     /**
-     * Store a new provider configuration set
-     *
-     * @param  ProviderStoreRequest $request
      * @return RedirectResponse
+     * @throws Exception
      */
-    public function store(ProviderStoreRequest $request)
+    public function store(ProviderStoreRequest $request): RedirectResponse
     {
-        $providerType = $this->providerRepo->findType($request->type_id);
+        $providerType = $this->providers->findType($request->type_id);
 
         $settings = $request->only(array_values($providerType->fields));
 
-        $this->providerRepo->store(currentTeamId(), [
+        $this->providers->store(currentTeamId(), [
             'name' => $request->name,
             'type_id' => $providerType->id,
             'settings' => $settings,
@@ -77,28 +73,25 @@ class ProvidersController extends Controller
     }
 
     /**
-     * @param $providerId
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
+     * @throws Exception
      */
-    public function edit($providerId)
+    public function edit(int $providerId)
     {
-        $providerTypes = $this->providerRepo->getProviderTypes()->pluck('name', 'id');
-        $provider = $this->providerRepo->find($providerId);
-
-        $providerType = $this->providerRepo->findType($provider->type_id);
-        // $settings = $this->providerRepo->findSettings($provider->type_id);
+        $providerTypes = $this->providers->getProviderTypes()->pluck('name', 'id');
+        $provider = $this->providers->find(currentTeamId(), $providerId);
+        $providerType = $this->providers->findType($provider->type_id);
 
         return view('providers.edit', compact('providerTypes', 'provider', 'providerType'));
     }
 
     /**
-     * @param Request $request
-     * @param integer $providerId
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
+     * @throws Exception
      */
-    public function update(ProviderUpdateRequest $request, $providerId)
+    public function update(ProviderUpdateRequest $request, int $providerId): RedirectResponse
     {
-        $provider = $this->providerRepo->find(currentTeamId(), $providerId, ['type']);
+        $provider = $this->providers->find(currentTeamId(), $providerId, ['type']);
 
         $settings = $request->only(array_values($provider->type->fields));
 
@@ -110,34 +103,26 @@ class ProvidersController extends Controller
     }
 
     /**
-     * @param  int $providerId
      * @return RedirectResponse
+     * @throws Exception
      */
-    public function delete($providerId)
+    public function delete(int $providerId): RedirectResponse
     {
-        $provider = $this->providerRepo->find($providerId, ['campaigns']);
+        $provider = $this->providers->find(currentTeamId(), $providerId, ['campaigns']);
 
-        if ($provider->campaigns()->count() === 0)
+        if ($provider->in_use)
         {
-            $this->providerRepo->destroy($providerId);
-
-            return redirect()->route('providers.index');
+            return redirect()->back()->withErrors("You cannot delete a provider that is currently used by a campaign or automation.");
         }
 
-        return redirect()->back()
-            ->withErrors('Can\'t delete a provider already assigned to a campaign');
+        $this->providers->destroy(currentTeamId(), $providerId);
+
+        return redirect()->route('providers.index');
     }
 
-    /**
-     * Return the fields for
-     * a given ProviderType
-     *
-     * @param integer $providerTypeId
-     * @return null
-     */
-    public function providersTypeAjax($providerTypeId)
+    public function providersTypeAjax($providerTypeId): JsonResponse
     {
-        $providerType = $this->providerRepo->findType($providerTypeId);
+        $providerType = $this->providers->findType($providerTypeId);
 
         return response()->json($providerType->fields);
     }
