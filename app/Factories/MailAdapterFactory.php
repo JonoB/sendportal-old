@@ -134,7 +134,6 @@ class MailAdapterFactory
         $config = $this->providerRepo->findSettings(ProviderType::MAILGUN);
 
         $adapter->setConfig($config);
-
         return $adapter;
     }
 

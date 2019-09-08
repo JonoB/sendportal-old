@@ -105,6 +105,6 @@ class MessagesController extends Controller
 
         $this->dispatchMessage->handle($message, $content);
 
-        return redirect()->route('messages.draft');
+        return redirect()->route('messages.draft')->with('success', 'The message was sent successfully.');
     }
 }

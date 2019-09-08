@@ -5,15 +5,12 @@ namespace App\Services;
 use App\Interfaces\EmailWebhookServiceInterface;
 use App\Models\AutomationSchedule;
 use App\Models\AutomationStep;
-use App\Models\Campaign;
-use App\Models\CampaignLink;
 use App\Models\MessageUrl;
 use App\Models\UnsubscribeEventType;
 use Carbon\Carbon;
 
 class EmailWebhookService implements EmailWebhookServiceInterface
 {
-
     // automation_step->click_count
     // automation_step->open_count
     // automation_step_urls->click_count
@@ -32,6 +29,8 @@ class EmailWebhookService implements EmailWebhookServiceInterface
      * @param $messageId
      * @param Carbon $timestamp
      * @param $ipAddress
+     *
+     * @throws \Exception
      */
     public function handleOpen($messageId, Carbon $timestamp, $ipAddress)
     {
@@ -40,8 +39,10 @@ class EmailWebhookService implements EmailWebhookServiceInterface
             'ip' => $ipAddress
         ]);
 
-        $automationStep = $this->resolveAutomationStepFromMessage($messageId);
+        // should we be updating the open count of the message at
+        // this point too or is that field now redundant? (josh)
 
+        $automationStep = $this->resolveAutomationStepFromMessage($messageId);
         \DB::table('automation_steps')->where('id', $automationStep->id)->increment('open_count');
     }
 
@@ -49,7 +50,9 @@ class EmailWebhookService implements EmailWebhookServiceInterface
      * @param $messageId
      * @param $timestamp
      * @param $url
+     *
      * @return mixed
+     * @throws \Exception
      */
     public function handleClick($messageId, Carbon $timestamp, $url)
     {
@@ -112,6 +115,12 @@ class EmailWebhookService implements EmailWebhookServiceInterface
         ]);
     }
 
+    /**
+     * @param $messageId
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     protected function resolveAutomationStepFromMessage($messageId)
     {
         $message = \DB::table('messages')->where('message_id', $messageId)->first();
