@@ -29,7 +29,6 @@ class EmailWebhookService implements EmailWebhookServiceInterface
      * @param $messageId
      * @param Carbon $timestamp
      * @param $ipAddress
-     *
      * @throws \Exception
      */
     public function handleOpen($messageId, Carbon $timestamp, $ipAddress)
@@ -50,7 +49,6 @@ class EmailWebhookService implements EmailWebhookServiceInterface
      * @param $messageId
      * @param $timestamp
      * @param $url
-     *
      * @return mixed
      * @throws \Exception
      */
@@ -117,7 +115,6 @@ class EmailWebhookService implements EmailWebhookServiceInterface
 
     /**
      * @param $messageId
-     *
      * @return mixed
      * @throws \Exception
      */
