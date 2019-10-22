@@ -16,6 +16,11 @@
                     <i class="far fa-chart-bar mr-2"></i><span>Dashboard</span>
                 </a>
             </li>
+            <li class="nav-item {{ request()->is('campaigns*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('campaigns.index') }}">
+                    <i class="far fa-sync-alt mr-2"></i><span>Campaigns</span>
+                </a>
+            </li>
             <li class="nav-item {{ request()->is('automations*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('automations.index') }}">
                     <i class="far fa-sync-alt mr-2"></i><span>Automations</span>

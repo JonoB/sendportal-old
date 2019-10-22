@@ -46,7 +46,6 @@
 @section('js')
     <script>
         $(document).ready(function() {
-
             $('.js-select-template').click(function(e) {
                 e.preventDefault();
                 $('#field-template_id').val($(this).data('template_id'));
