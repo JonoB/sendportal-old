@@ -1,22 +1,26 @@
 @extends('layouts.app')
 
 @section('heading')
-    Update : {{ $providerType->name }} settings
+    Update Provider: {{ $providerType->name }}
 @stop
 
 @section('content')
 
-    {!! Form::open(['method' => 'post', 'class' => 'form-horizontal', 'route' => ['providers.update', $provider->id]]) !!}
+    <div class="card">
+        <div class="card-body">
+            {!! Form::open(['method' => 'post', 'class' => 'form-horizontal', 'route' => ['providers.update', $provider->id]]) !!}
 
-    {!! Form::textField('name', 'Name', $provider->name) !!}
+            {!! Form::textField('name', 'Name', $provider->name) !!}
 
-    @foreach($providerType->fields as $name => $field)
+            @foreach($providerType->fields as $name => $field)
 
-        {!! Form::textField($field, $name, array_get($provider->settings, $field)) !!}
+                {!! Form::textField($field, $name, array_get($provider->settings, $field)) !!}
 
-    @endforeach
+            @endforeach
 
-    {!! Form::submitButton('Update') !!}
-    {!! Form::close() !!}
+            {!! Form::submitButton('Update') !!}
+            {!! Form::close() !!}
+        </div>
+    </div>
 
 @stop

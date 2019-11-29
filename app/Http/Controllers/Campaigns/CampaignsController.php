@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Campaigns;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CampaignStoreRequest;
 use App\Http\Requests\CampaignContentRequest;
 use App\Http\Requests\CampaignTemplateUpdateRequest;
@@ -93,10 +94,10 @@ class CampaignsController extends Controller
      */
     public function create()
     {
-        $templatesAvailable = $this->templates->count(currentTeamId());
+        $templates = $this->templates->pluck(currentTeamId());
         $providers = $this->providers->all(currentTeamId());
 
-        return view('campaigns.create', compact('templatesAvailable', 'providers'));
+        return view('campaigns.create', compact('templates', 'providers'));
     }
 
     /**
@@ -110,7 +111,7 @@ class CampaignsController extends Controller
     {
         $campaign = $this->campaigns->store(currentTeamId(), $request->validated());
 
-        return redirect()->route('campaigns.template.create', $campaign->id);
+        return redirect()->route('campaigns.content.edit', $campaign->id);
     }
 
     /**
@@ -138,8 +139,9 @@ class CampaignsController extends Controller
     {
         $campaign = $this->campaigns->find(currentTeam(), $id);
         $providers = $this->providers->all(currentTeamId());
+        $templates = $this->templates->pluck(currentTeamId());
 
-        return view('campaigns.edit', compact('campaign', 'providers'));
+        return view('campaigns.edit', compact('campaign', 'providers', 'templates'));
     }
 
     /**
@@ -282,35 +284,5 @@ class CampaignsController extends Controller
         }
 
         return redirect()->route('campaigns.status', $id);
-    }
-
-    /**
-     * Show the template selection view.
-     *
-     * @param $campaignId
-     * @return \Illuminate\Contracts\View\Factory|View
-     * @throws \Exception
-     */
-    public function selectTemplate($campaignId)
-    {
-        $campaign = $this->campaigns->find(currentTeamId(), $campaignId);
-        $templates = $this->templates->paginate(currentTeamId());
-
-        return view('campaigns.template', compact('campaign', 'templates'));
-    }
-
-    /**
-     * Update a campaign's template
-     *
-     * @param CampaignTemplateUpdateRequest $request
-     * @param int $campaignId
-     * @return RedirectResponse
-     * @throws \Exception
-     */
-    public function updateTemplate(CampaignTemplateUpdateRequest $request, int $campaignId)
-    {
-        $campaign = $this->campaigns->update(currentTeamId(), $campaignId, $request->validated());
-
-        return redirect()->route('campaigns.content.edit', $campaign->id);
     }
 }

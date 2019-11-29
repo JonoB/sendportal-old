@@ -1,18 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Campaigns;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CampaignContentRequest;
-use App\Interfaces\CampaignSubscriberTenantRepository;
 use App\Models\CampaignStatus;
 use App\Repositories\CampaignTenantRepository;
-use App\Repositories\ProviderTenantRepository;
-use App\Repositories\SegmentTenantRepository;
-use App\Repositories\TemplateTenantRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
-class CampaignsController extends Controller
+class CampaignContentController extends Controller
 {
     /**
      * @var CampaignTenantRepository
@@ -38,14 +35,9 @@ class CampaignsController extends Controller
      * @return \Illuminate\Contracts\View\Factory|RedirectResponse|View
      * @throws \Exception
      */
-    public function editContent(int $id)
+    public function edit(int $id)
     {
         $campaign = $this->campaigns->find(currentTeamId(), $id, ['template']);
-
-        if ( ! $campaign->template_id)
-        {
-            return redirect()->route('campaigns.template.create', $id);
-        }
 
         if ($campaign->sent)
         {
@@ -63,7 +55,7 @@ class CampaignsController extends Controller
      * @return RedirectResponse
      * @throws \Exception
      */
-    public function updateContent(CampaignContentRequest $request, $id)
+    public function update(CampaignContentRequest $request, $id)
     {
         $campaign = $this->campaigns->find(currentTeamId(), $id);
 

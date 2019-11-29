@@ -45,6 +45,11 @@ class CampaignStoreRequest extends FormRequest
                 'required',
                 'integer',
                 'exists:providers,id',
+            ],
+            'template_id' => [
+                'required',
+                'integer',
+                'exists:templates,id',
             ]
         ];
     }

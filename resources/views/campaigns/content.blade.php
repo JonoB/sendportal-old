@@ -20,7 +20,6 @@
                           rows="10">{{ $campaign->content ?? '' }}</textarea>
             </div>
 
-            <a href="{{ route('campaigns.template.create', $campaign->id) }}" class="btn btn-link"><i class="fa fa-arrow-left"></i> Back</a>
             <button class="btn btn-primary" type="submit">Save and continue</button>
 
             {!! Form::close() !!}

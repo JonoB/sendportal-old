@@ -50,15 +50,18 @@ Route::middleware(['auth', 'verified'])->group(function()
     Route::resource('segments', 'SegmentsController');
 
     // Campaigns
-    Route::resource('campaigns', 'CampaignsController');
-    Route::get('campaigns/{id}/template', 'CampaignsController@selectTemplate')->name('campaigns.template.create');
-    Route::put('campaigns/{id}/template', 'CampaignsController@updateTemplate')->name('campaigns.template.update');
-    Route::get('campaigns/{id}/content', 'CampaignsController@editContent')->name('campaigns.content.edit');
-    Route::put('campaigns/{id}/content', 'CampaignsController@updateContent')->name('campaigns.content.update');
-    Route::get('campaigns/{id}/confirm', 'CampaignsController@confirm')->name('campaigns.confirm');
-    Route::put('campaigns/{id}/send', 'CampaignsController@send')->name('campaigns.send');
-    Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
-    Route::get('campaigns/{id}/report', ['as' => 'campaigns.report', 'uses' => 'CampaignReportsController@report']);
+    Route::resource('campaigns', 'Campaigns\CampaignsController');
+
+    Route::prefix('campaigns')->namespace('Campaigns')->group(function() {
+
+        Route::get('{id}/confirm', 'CampaignsController@confirm')->name('campaigns.confirm');
+        Route::put('{id}/send', 'CampaignsController@send')->name('campaigns.send');
+        Route::get('{id}/status', 'CampaignsController@status')->name('campaigns.status');
+        Route::get('{id}/report', 'CampaignsController@report')->name('campaigns.report');
+
+        Route::get('{id}/content', 'CampaignContentController@edit')->name('campaigns.content.edit');
+        Route::put('{id}/content', 'CampaignContentController@update')->name('campaigns.content.update');
+    });
 
     // Templates
     Route::resource('templates', 'TemplatesController')->except(['show']);

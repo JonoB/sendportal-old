@@ -2,6 +2,7 @@
 {!! Form::textField('subject', 'Email Subject') !!}
 {!! Form::textField('from_name', 'From Name') !!}
 {!! Form::textField('from_email', 'From Email') !!}
+{!! Form::selectField('template_id', 'Template', $templates, $campaign->template_id ?? null) !!}
 
 @if ($providers->count() === 1)
     {!! Form::hidden('provider_id', $providers->first()->id) !!}
