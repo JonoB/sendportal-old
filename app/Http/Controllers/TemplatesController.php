@@ -4,33 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TemplateStoreRequest;
 use App\Http\Requests\TemplateUpdateRequest;
-use App\Interfaces\TemplateRepositoryInterface;
+use App\Repositories\TemplateTenantRepository;
+use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 class TemplatesController extends Controller
 {
     /**
-     * @var TemplateRepositoryInterface
+     * @var TemplateTenantRepository
      */
     protected $templates;
 
     /**
-     * @param TemplateRepositoryInterface $templates
+     * @param TemplateTenantRepository $templates
      */
-    public function __construct(TemplateRepositoryInterface $templates)
+    public function __construct(TemplateTenantRepository $templates)
     {
         $this->templates = $templates;
     }
 
     /**
-     * Display a listing of the resource.
+     * Show a listing of the resource.
      *
-     * @return Response
+     * @return Factory|View
+     * @throws Exception
      */
     public function index()
     {
-        $templates = $this->templates->paginate('name');
+        $templates = $this->templates->paginate(currentTeamId(), 'name');
 
         return view('templates.index', compact('templates'));
     }
@@ -38,7 +42,7 @@ class TemplatesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return Factory|View
      */
     public function create()
     {
@@ -51,14 +55,15 @@ class TemplatesController extends Controller
      * @param TemplateStoreRequest $request
      *
      * @return RedirectResponse
+     * @throws Exception
      */
-    public function store(TemplateStoreRequest $request)
+    public function store(TemplateStoreRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
         $data['content'] = normalize_tags($data['content'], 'content');
 
-        $this->templates->store($data);
+        $this->templates->store(currentTeamId(), $data);
 
         return redirect()->route('templates.index');
     }
@@ -66,13 +71,14 @@ class TemplatesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param string $id
+     * @param int $id
      *
-     * @return Response
+     * @return Factory|View
+     * @throws Exception
      */
-    public function edit($id)
+    public function edit(int $id)
     {
-        $template = $this->templates->find($id);
+        $template = $this->templates->find(currentTeamId(), $id);
 
         return view('templates.edit', compact('template'));
     }
@@ -81,17 +87,18 @@ class TemplatesController extends Controller
      * Update the specified resource in storage.
      *
      * @param TemplateUpdateRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return RedirectResponse
+     * @throws Exception
      */
-    public function update(TemplateUpdateRequest $request, $id)
+    public function update(TemplateUpdateRequest $request, int $id): RedirectResponse
     {
         $data = $request->validated();
 
         $data['content'] = normalize_tags($data['content'], 'content');
 
-        $this->templates->update($id, $data);
+        $this->templates->update(currentTeamId(), $id, $data);
 
         return redirect()->route('templates.index');
     }
@@ -99,13 +106,14 @@ class TemplatesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param string $id
+     * @param int $id
      *
      * @return RedirectResponse
+     * @throws Exception
      */
-    public function destroy($id)
+    public function destroy(int $id): RedirectResponse
     {
-        $template = $this->templates->find((int)$id);
+        $template = $this->templates->find(currentTeamId(), $id);
 
         if ($template->is_in_use)
         {
@@ -114,7 +122,7 @@ class TemplatesController extends Controller
                 ->withErrors(['template' => 'Cannot delete a template that has been used.']);
         }
 
-        $this->templates->destroy($template->id);
+        $this->templates->destroy(currentTeamId(), $template->id);
 
         return redirect()
             ->back()

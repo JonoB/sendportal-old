@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::name('api.')->group(function()
+Route::middleware(['auth:api', 'onTeam'])->name('api.')->prefix('teams/{teamId}')->group(function()
 {
     Route::apiResource('subscribers', 'SubscribersController');
     Route::apiResource('segments', 'SegmentsController');

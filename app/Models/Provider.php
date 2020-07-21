@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class Provider extends BaseModel
 {
 
@@ -18,7 +21,7 @@ class Provider extends BaseModel
      * ProviderType relationship
      *
      * @param null
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function type()
     {
@@ -28,11 +31,19 @@ class Provider extends BaseModel
     /**
      * Campaigns relationship
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function campaigns()
     {
         return $this->hasMany(Campaign::class, 'provider_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function automations()
+    {
+        return $this->hasMany(Automation::class, 'provider_id');
     }
 
     /**
@@ -50,5 +61,13 @@ class Provider extends BaseModel
     public function getSettingsAttribute($value)
     {
         return json_decode(decrypt($value), true);
+    }
+
+    /**
+     * Determine whether or not the provider is currently used by an automation or campaign.
+     */
+    public function getInUseAttribute()
+    {
+        return $this->campaigns()->count() + $this->automations()->count();
     }
 }

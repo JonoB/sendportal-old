@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SubscriberRequest;
 use App\Interfaces\SubscriberListRepositoryInterface;
-use App\Interfaces\SubscriberRepositoryInterface;
+use App\Repositories\SubscriberTenantRepository;
 use App\Interfaces\TagRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -12,7 +12,7 @@ use Illuminate\Http\Response;
 class SegmentSubscribersController extends Controller
 {
     /**
-     * @var SubscriberRepositoryInterface
+     * @var SubscriberTenantRepository
      */
     protected $subscriberRepository;
 
@@ -31,7 +31,7 @@ class SegmentSubscribersController extends Controller
      * SubscribersController constructor.
      */
     public function __construct(
-        SubscriberRepositoryInterface $subscriberRepository,
+        SubscriberTenantRepository $subscriberRepository,
         SubscriberListRepositoryInterface $subscriberLists,
         TagRepositoryInterface $tagRepository
     )

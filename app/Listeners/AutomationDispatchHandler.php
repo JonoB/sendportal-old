@@ -21,6 +21,7 @@ class AutomationDispatchHandler
      */
     public function handle(AutomationDispatchEvent $event)
     {
+        // check if the schedule still exists
         if ( ! $schedule = $this->findSchedule($event->automationSchedule->id))
         {
             return;

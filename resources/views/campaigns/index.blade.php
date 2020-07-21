@@ -20,10 +20,11 @@
                 <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Status</th>
                     <th>Sent</th>
                     <th>Opened</th>
                     <th>Clicked</th>
+                    <th>Created</th>
+                    <th>Status</th>
                     <th>Next Step</th>
                 </tr>
                 </thead>
@@ -32,17 +33,17 @@
                     <tr>
                         <td>
                             @if ($campaign->draft)
-                                @if( ! $campaign->template)
-                                    <a href="{{ route('campaigns.template.create', $campaign->id) }}">{{ $campaign->name }}</a>
-                                @else
-                                    <a href="{{ route('campaigns.content.edit', $campaign->id) }}">{{ $campaign->name }}</a>
-                                @endif
+                                <a href="{{ route('campaigns.content.edit', $campaign->id) }}">{{ $campaign->name }}</a>
                             @elseif($campaign->sent)
                                 <a href="{{ route('campaigns.report', $campaign->id) }}">{{ $campaign->name }}</a>
                             @else
                                 <a href="{{ route('campaigns.status', $campaign->id) }}">{{ $campaign->name }}</a>
                             @endif
                         </td>
+                        <td>{{ formatValue($campaign->sent_count) }}</td>
+                        <td>{{ formatRatio($campaign->open_ratio) }}</td>
+                        <td>{{ formatRatio($campaign->click_ratio) }}</td>
+                        <td><span title="{{ $campaign->created_at }}">{{ $campaign->created_at->diffForHumans() }}</span></td>
                         <td>
                             @if($campaign->status_id === \App\Models\CampaignStatus::STATUS_DRAFT)
                                 <span class="label label-default">{{ $campaign->status->name }}</span>
@@ -54,20 +55,11 @@
                                 <span class="label label-success">{{ $campaign->status->name }}</span>
                             @endif
                         </td>
-                        <td>{{ formatValue($campaign->sent_count) }}</td>
-                        <td>{{ formatRatio($campaign->open_ratio) }}</td>
-                        <td>{{ formatRatio($campaign->click_ratio) }}</td>
                         <td>
                             @if ($campaign->status_id === \App\Models\CampaignStatus::STATUS_DRAFT)
-                                @if($campaign->template_id === null)
-                                    <a href="{{ route('campaigns.template.create', $campaign->id) }}">
-                                        Select Template
-                                    </a>
-                                @else
-                                    <a href="{{ route('campaigns.content.edit', $campaign->id) }}">
-                                        Edit Content
-                                    </a>
-                                @endif
+                                <a href="{{ route('campaigns.content.edit', $campaign->id) }}">
+                                    Edit Content
+                                </a>
                             @else
                                 N/A
                             @endif

@@ -4,16 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Events\SubscriberAddedEvent;
 use App\Http\Requests\SubscriberRequest;
-use App\Interfaces\SegmentRepositoryInterface;
-use App\Interfaces\SubscriberRepositoryInterface;
-use App\Interfaces\TagRepositoryInterface;
+use App\Repositories\SubscriberTenantRepository;
+use Box\Spout\Common\Exception\InvalidArgumentException;
+use Box\Spout\Common\Exception\IOException;
+use Box\Spout\Common\Exception\UnsupportedTypeException;
+use Box\Spout\Writer\Exception\WriterNotOpenedException;
+use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SubscribersController extends Controller
 {
     /**
-     * @var SubscriberInterface
+     * @var SubscriberTenantRepository
      */
     protected $subscriberRepository;
 
@@ -21,35 +27,35 @@ class SubscribersController extends Controller
      * SubscribersController constructor.
      *
      * SubscribersController constructor.
-     * @param SubscriberRepositoryInterface $subscriberRepository
+     * @param SubscriberTenantRepository $subscriberRepository
      */
-    public function __construct(
-        SubscriberRepositoryInterface $subscriberRepository
-    )
+    public function __construct(SubscriberTenantRepository $subscriberRepository)
     {
         $this->subscriberRepository = $subscriberRepository;
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return Factory|View
+     * @throws Exception
      */
     public function index()
     {
-        $subscribers = $this->subscriberRepository->paginate('first_name', ['segments'], 50, request()->all());
+        $subscribers = $this->subscriberRepository->paginate(currentTeamId(), 'first_name', [], 50, request()->all());
 
         return view('subscribers.index', compact('subscribers'));
     }
 
     /**
-     * Export Subscribers
-     *
-     * @return string|\Symfony\Component\HttpFoundation\StreamedResponse
+     * @return string|StreamedResponse
+     * @throws IOException
+     * @throws InvalidArgumentException
+     * @throws UnsupportedTypeException
+     * @throws WriterNotOpenedException
+     * @throws Exception
      */
     public function export()
     {
-        $subscribers = $this->subscriberRepository->all('id', ['segments']);
+        $subscribers = $this->subscriberRepository->all(currentTeamId(), 'id');
 
         if ( ! $subscribers->count())
         {
@@ -65,32 +71,26 @@ class SubscribersController extends Controller
                 'first_name' => $subscriber->first_name,
                 'last_name' => $subscriber->last_name,
                 'created_at' => $subscriber->created_at,
-                'segments' => $subscriber->segments->implode('name', ';')
             ];
         });
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return Factory|View
+     * @throws Exception
      */
-    public function create(SegmentRepositoryInterface $segmentRepository)
+    public function create()
     {
-        $segments = $segmentRepository->all();
-
-        return view('subscribers.create', compact('segments'));
+        return view('subscribers.create');
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  SubscriberRequest $request
      * @return RedirectResponse
+     * @throws Exception
      */
     public function store(SubscriberRequest $request)
     {
-        $subscriber = $this->subscriberRepository->store($request->all());
+        $subscriber = $this->subscriberRepository->store(currentTeamId(), $request->all());
 
         event(new SubscriberAddedEvent($subscriber));
 
@@ -98,59 +98,39 @@ class SubscribersController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return Factory|View
+     * @throws Exception
      */
-    public function show($id)
+    public function show(int $id)
     {
-        $subscriber = $this->subscriberRepository->find($id);
+        $subscriber = $this->subscriberRepository->find(currentTeamId(), $id);
 
         return view('subscribers.show', compact('subscriber'));
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Factory|View
+     * @throws Exception
      */
-    public function edit($id, TagRepositoryInterface $tagRepository, SegmentRepositoryInterface $segmentRepository)
+    public function edit(int $id)
     {
-        $subscriber = $this->subscriberRepository->find($id, ['segments']);
+        $subscriber = $this->subscriberRepository->find(currentTeamId(), $id);
 
         $data = [
             'subscriber' => $subscriber,
-            'segments' => $segmentRepository->all(),
-            'selectedSegments' => selectedOptions('segments', $subscriber)
         ];
 
         return view('subscribers.edit', $data);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param SubscriberRequest $request
-     * @param int $id
      * @return RedirectResponse
+     * @throws Exception
      */
-    public function update(SubscriberRequest $request, $id)
+    public function update(SubscriberRequest $request, int $id)
     {
-        $this->subscriberRepository->update($id, $request->all());
+        $this->subscriberRepository->update(currentTeamId(), $id, $request->all());
 
         return redirect()->route('subscribers.index');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        app()->abort(404, 'Not implemented');
     }
 }

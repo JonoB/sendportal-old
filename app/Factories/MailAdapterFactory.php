@@ -9,6 +9,7 @@ use App\Adapters\SesMailAdapter;
 use App\Interfaces\ProviderRepositoryInterface;
 use App\Interfaces\MailAdapterInterface;
 use App\Models\ProviderType;
+use App\Repositories\ProviderTenantRepository;
 
 class MailAdapterFactory
 {
@@ -25,9 +26,11 @@ class MailAdapterFactory
     protected $providerRepo;
 
     /**
-     * @param ProviderRepositoryInterface $providerRepo
+     * MailAdapterFactory constructor
+     *
+     * @param ProviderTenantRepository $providerRepo
      */
-    public function __construct(ProviderRepositoryInterface $providerRepo)
+    public function __construct(ProviderTenantRepository $providerRepo)
     {
         $this->providerRepo = $providerRepo;
     }
@@ -131,7 +134,6 @@ class MailAdapterFactory
         $config = $this->providerRepo->findSettings(ProviderType::MAILGUN);
 
         $adapter->setConfig($config);
-
         return $adapter;
     }
 

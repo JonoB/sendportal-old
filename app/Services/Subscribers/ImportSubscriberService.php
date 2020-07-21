@@ -2,20 +2,20 @@
 
 namespace App\Services\Subscribers;
 
-use App\Interfaces\SubscriberRepositoryInterface;
+use App\Repositories\SubscriberTenantRepository;
 use App\Models\Subscriber;
 
 class ImportSubscriberService
 {
     /**
-     * @var SubscriberRepositoryInterface
+     * @var SubscriberTenantRepository
      */
     protected $subscribers;
 
     /**
-     * @param SubscriberRepositoryInterface $subscribers
+     * @param SubscriberTenantRepository $subscribers
      */
-    public function __construct(SubscriberRepositoryInterface $subscribers)
+    public function __construct(SubscriberTenantRepository $subscribers)
     {
         $this->subscribers = $subscribers;
     }

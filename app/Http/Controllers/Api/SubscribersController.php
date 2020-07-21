@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\SubscriberStoreRequest;
 use App\Http\Requests\Api\SubscriberUpdateRequest;
 use App\Http\Resources\Subscriber as SubscriberResource;
-use App\Interfaces\SubscriberRepositoryInterface;
+use App\Repositories\SubscriberTenantRepository;
 use App\Services\Subscribers\ApiSubscriberService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -14,7 +14,7 @@ use Illuminate\Http\Response;
 class SubscribersController extends Controller
 {
     /**
-     * @var SubscriberRepositoryInterface
+     * @var SubscriberTenantRepository
      */
     protected $subscribers;
 
@@ -24,11 +24,13 @@ class SubscribersController extends Controller
     protected $apiService;
 
     /**
-     * @param SubscriberRepositoryInterface $subscribers
+     * SubscribersController constructor
+     *
+     * @param SubscriberTenantRepository $subscribers
      * @param ApiSubscriberService $apiService
      */
     public function __construct(
-        SubscriberRepositoryInterface $subscribers,
+        SubscriberTenantRepository $subscribers,
         ApiSubscriberService $apiService
     )
     {
@@ -40,10 +42,11 @@ class SubscribersController extends Controller
      * Display a listing of the resource.
      *
      * @return AnonymousResourceCollection
+     * @throws \Exception
      */
     public function index()
     {
-        $subscribers = $this->subscribers->paginate('last_name');
+        $subscribers = $this->subscribers->paginate(currentTeamId(), 'last_name');
 
         return SubscriberResource::collection($subscribers);
     }
@@ -52,12 +55,12 @@ class SubscribersController extends Controller
      * Store a newly created resource in storage.
      *
      * @param SubscriberStoreRequest $request
-     *
      * @return SubscriberResource
+     * @throws \Exception
      */
     public function store(SubscriberStoreRequest $request)
     {
-        $subscriber = $this->apiService->store($request->validated());
+        $subscriber = $this->apiService->store(currentTeamId(), $request->validated());
 
         $subscriber->load('segments');
 
@@ -67,26 +70,26 @@ class SubscribersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param string $id
-     *
+     * @param $id
      * @return SubscriberResource
+     * @throws \Exception
      */
     public function show($id)
     {
-        return new SubscriberResource($this->subscribers->find($id, ['segments']));
+        return new SubscriberResource($this->subscribers->find(currentTeamId(), $id, ['segments']));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param SubscriberUpdateRequest $request
-     * @param string $id
-     *
+     * @param int $id
      * @return SubscriberResource
+     * @throws \Exception
      */
     public function update(SubscriberUpdateRequest $request, $id)
     {
-        $subscriber = $this->subscribers->update($id, $request->validated());
+        $subscriber = $this->subscribers->update(currentTeamId(), $id, $request->validated());
 
         return new SubscriberResource($subscriber);
     }
@@ -94,13 +97,13 @@ class SubscribersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param string $id
-     *
-     * @return Response
+     * @param int $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
+     * @throws \Exception
      */
     public function destroy($id)
     {
-        $this->subscribers->destroy($id);
+        $this->subscribers->destroy(currentTeamId(), $id);
 
         return response(null, 204);
     }

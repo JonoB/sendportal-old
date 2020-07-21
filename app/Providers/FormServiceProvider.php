@@ -110,8 +110,8 @@ class FormServiceProvider extends ServiceProvider
                 $res[] = e($key).'="'.e($val).'"';
             }
 
-            $out = '<div class="form-group">';
-            $out .= '<div class="col-sm-offset-2 col-sm-10">';
+            $out = '<div class="form-group row">';
+            $out .= '<div class="offset-sm-2 col-sm-10">';
             $out .= '<button type="submit" '.implode(' ', $res).'>' . $label . '</button>';
             $out .= '</div>';
             $out .= '</div>';

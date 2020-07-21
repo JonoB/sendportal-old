@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Automation;
 use App\Models\Segment;
-use App\Repositories\AutomationEloquentRepository;
-use App\Repositories\SegmentEloquentRepository;
+use App\Repositories\AutomationTenantRepository;
+use App\Repositories\SegmentTenantRepository;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -20,12 +20,12 @@ class AutomationTest extends TestCase
     private $user;
 
     /**
-     * @var SegmentEloquentRepository
+     * @var SegmentTenantRepository
      */
     private $segmentRepository;
 
     /**
-     * @var AutomationEloquentRepository
+     * @var AutomationTenantRepository
      */
     private $automationRepository;
 
@@ -34,8 +34,8 @@ class AutomationTest extends TestCase
         parent::setUp();
 
         $this->user = factory(User::class)->create();
-        $this->segmentRepository = $this->app->make(SegmentEloquentRepository::class);
-        $this->automationRepository = $this->app->make(AutomationEloquentRepository::class);
+        $this->segmentRepository = $this->app->make(SegmentTenantRepository::class);
+        $this->automationRepository = $this->app->make(AutomationTenantRepository::class);
     }
 
     /** @test */

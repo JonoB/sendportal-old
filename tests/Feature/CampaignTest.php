@@ -7,7 +7,7 @@ use App\Models\Campaign;
 use App\Models\Email;
 use App\Models\Template;
 use App\Repositories\CampaignEloquentRepository;
-use App\Repositories\SegmentEloquentRepository;
+use App\Repositories\SegmentTenantRepository;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

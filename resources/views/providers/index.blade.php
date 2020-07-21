@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Configurations')
+@section('title', 'Providers')
 
 @section('heading')
     Providers

@@ -2,22 +2,14 @@
 
 use App\Interfaces\BaseEloquentInterface;
 
-abstract class BaseEloquentRepository extends BaseRepository implements BaseEloquentInterface
+class BaseEloquentRepository implements BaseEloquentInterface
 {
-
     /**
      * Model name
      *
      * @var string
      */
     protected $modelName;
-
-    /**
-     * Validator instance
-     *
-     * @var $validator
-     */
-    protected $validator;
 
     /**
      * Current Object instance
@@ -231,17 +223,6 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      */
     public function store(array $data)
     {
-        return $this->executeStore($data);
-    }
-
-    /**
-     * Execute the store method
-     *
-     * @param array $data The input data
-     * @return object model instance
-     */
-    protected function executeStore(array $data)
-    {
         $this->instance = $this->getNewInstance();
 
         return $this->executeSave($data);
@@ -255,18 +236,6 @@ abstract class BaseEloquentRepository extends BaseRepository implements BaseEloq
      * @return object model instance
      */
     public function update($id, array $data)
-    {
-        return $this->executeUpdate($id, $data);
-    }
-
-    /**
-     * Execute the update method
-     *
-     * @param int $id The model id
-     * @param array $data The input data
-     * @return object model instance
-     */
-    protected function executeUpdate($id, array $data)
     {
         $this->instance = $this->find($id);
 

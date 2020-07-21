@@ -15,12 +15,15 @@ class AutomationDispatchEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    /**
+     * @var AutomationSchedule
+     */
     public $automationSchedule;
 
     /**
-     * Create a new event instance.
+     * AutomationDispatchEvent constructor
      *
-     * @return void
+     * @param AutomationSchedule $automationSchedule
      */
     public function __construct(AutomationSchedule $automationSchedule)
     {

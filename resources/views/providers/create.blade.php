@@ -1,20 +1,25 @@
 @extends('layouts.app')
 
 @section('heading')
-    Add configuration
+    Add Email Provider
 @stop
 
 @section('content')
 
-    {!! Form::open(['method' => 'post', 'route' => 'providers.store', 'class' => 'form-horizontal']) !!}
+    <div class="card">
+        <div class="card-body">
+            {!! Form::open(['method' => 'post', 'route' => 'providers.store', 'class' => 'form-horizontal']) !!}
 
-    {!! Form::textField('name', 'Name') !!}
-    {!! Form::selectField('type_id', 'Provider', $providerTypes) !!}
+            {!! Form::textField('name', 'Name') !!}
+            {!! Form::selectField('type_id', 'Provider', $providerTypes) !!}
 
-    <div id="provider-fields"></div>
+            <div id="provider-fields"></div>
 
-    {!! Form::submitButton('Save') !!}
-    {!! Form::close() !!}
+            {!! Form::submitButton('Save') !!}
+            {!! Form::close() !!}
+        </div>
+    </div>
+
 
 @stop
 
@@ -44,7 +49,7 @@
                 {
                     var string = '';
 
-                    string += '<div class="form-group form-group-' + field;
+                    string += '<div class="form-group row form-group-' + field;
                     string += '"><label for="id-field-' + field;
                     string += '" class="control-label col-sm-2">' + name;
                     string += '</label><div class="col-sm-10"><input id="id-field-' + field;

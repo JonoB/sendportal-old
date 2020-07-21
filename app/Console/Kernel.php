@@ -14,7 +14,9 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
-    protected $commands = [];
+    protected $commands = [
+        AutomationDispatchCommand::class,
+    ];
 
     /**
      * Define the application's command schedule.

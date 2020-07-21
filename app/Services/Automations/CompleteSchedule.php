@@ -23,7 +23,8 @@ class CompleteSchedule
      * Execute the database query
      *
      * @param AutomationSchedule $schedule
-     * @return AutomationSchedule
+     *
+     * @return void
      */
     protected function markScheduleAsComplete(AutomationSchedule $schedule): void
     {

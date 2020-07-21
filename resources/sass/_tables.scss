@@ -1,5 +1,11 @@
 @import "variables";
 
+.card-table {
+  .table {
+    margin-bottom: 0;
+  }
+}
+
 .table thead th {
   border-bottom: 1px solid $gray-200;
 }

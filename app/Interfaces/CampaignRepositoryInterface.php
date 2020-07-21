@@ -2,11 +2,10 @@
 
 namespace App\Interfaces;
 
-interface CampaignRepositoryInterface extends BaseEloquentInterface
+interface CampaignRepositoryInterface extends BaseTenantInterface
 {
-
     /**
      * @return mixed
      */
-    public function queuedCampaigns();
+    public function queuedCampaigns($teamId);
 }

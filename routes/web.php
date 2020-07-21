@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // Auth
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 // Subscriptions
 Route::get('unsubscribe/{subscriberHash}', 'SubscriptionsController@unsubscribe')->name('subscriptions.unsubscribe');
@@ -12,8 +12,13 @@ Route::get('subscribe/{subscriberHash}', 'SubscriptionsController@subscribe')->n
 Route::put('subscriptions/{subscriberId}', 'SubscriptionsController@update')->name('subscriptions.update');
 
 // App
-Route::middleware(['auth'])->group(function ()
+Route::middleware(['auth', 'verified'])->group(function()
 {
+    // Profile
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('', 'Auth\ProfileController@edit')->name('edit');
+        Route::put('', 'Auth\ProfileController@update')->name('update');
+    });
     Route::get('/logout', ['as' => 'dashboard', 'uses' => 'Auth\LoginController@logout']);
 
     Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
@@ -45,15 +50,18 @@ Route::middleware(['auth'])->group(function ()
     Route::resource('segments', 'SegmentsController');
 
     // Campaigns
-    Route::resource('campaigns', 'CampaignsController');
-    Route::get('campaigns/{id}/template', 'CampaignsController@selectTemplate')->name('campaigns.template.create');
-    Route::put('campaigns/{id}/template', 'CampaignsController@updateTemplate')->name('campaigns.template.update');
-    Route::get('campaigns/{id}/content', 'CampaignsController@editContent')->name('campaigns.content.edit');
-    Route::put('campaigns/{id}/content', 'CampaignsController@updateContent')->name('campaigns.content.update');
-    Route::get('campaigns/{id}/confirm', 'CampaignsController@confirm')->name('campaigns.confirm');
-    Route::put('campaigns/{id}/send', 'CampaignsController@send')->name('campaigns.send');
-    Route::get('campaigns/{id}/status', ['as' => 'campaigns.status', 'uses' => 'CampaignsController@status']);
-    Route::get('campaigns/{id}/report', ['as' => 'campaigns.report', 'uses' => 'CampaignReportsController@report']);
+    Route::resource('campaigns', 'Campaigns\CampaignsController');
+
+    Route::prefix('campaigns')->namespace('Campaigns')->group(function() {
+
+        Route::get('{id}/confirm', 'CampaignsController@confirm')->name('campaigns.confirm');
+        Route::put('{id}/send', 'CampaignsController@send')->name('campaigns.send');
+        Route::get('{id}/status', 'CampaignsController@status')->name('campaigns.status');
+        Route::get('{id}/report', 'CampaignsController@report')->name('campaigns.report');
+
+        Route::get('{id}/content', 'CampaignContentController@edit')->name('campaigns.content.edit');
+        Route::put('{id}/content', 'CampaignContentController@update')->name('campaigns.content.update');
+    });
 
     // Templates
     Route::resource('templates', 'TemplatesController')->except(['show']);
@@ -72,4 +80,16 @@ Route::middleware(['auth'])->group(function ()
     {
         Route::post('segments/store', 'SegmentsController@store')->name('ajax.segments.store');
     });
+});
+
+Route::group(['middleware' => ['auth', 'verified']], function ()
+{
+    Route::namespace('Subscriptions')->prefix('subscriptions')->name('subscriptions.')->group(function ()
+    {
+        Route::get('/', 'SubscriptionsController@index')->name('index');
+    });
+
+    Route::resource('teams', 'TeamsController');
+    Route::get('teams/{team}/switch', 'TeamsController@switch')->name('teams.switch');
+    Route::post('teams/invitations/{invitation}/accept', 'Teams\PendingInvitationController@accept')->name('teams.invitations.accept');
 });

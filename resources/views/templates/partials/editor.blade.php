@@ -24,7 +24,7 @@
 <div class="form-group row template-preview d-none">
     <div class="offset-sm-2 col-sm-10">
         <div class="border border-light h-100">
-            <iframe width="100%" height="100%" scrolling="yes" frameborder="0" srcdoc="{{ $template->content }}"></iframe>
+            <iframe width="100%" height="100%" scrolling="yes" frameborder="0" srcdoc="{{ $template->content ?? null }}"></iframe>
         </div>
     </div>
 </div>

@@ -29,9 +29,8 @@ class StartSchedule
      */
     protected function markScheduleAsStarted(AutomationSchedule $schedule): ?AutomationSchedule
     {
-        $schedule->started_at = now();
-        $schedule->save();
-
-        return $schedule;
+        return tap($schedule)->update([
+            'started_at' => now(),
+        ]);
     }
 }

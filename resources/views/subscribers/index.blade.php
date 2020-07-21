@@ -37,7 +37,6 @@
                     <tr>
                         <th>Email</th>
                         <th>Name</th>
-                        <th>Segments</th>
                         <th>Created</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -52,11 +51,6 @@
                                 </a>
                             </td>
                             <td>{{ $subscriber->full_name }}</td>
-                            <td>
-                                @foreach($subscriber->segments as $segment)
-                                    <span class="badge badge-secondary">{{ $segment->name }}</span>
-                                @endforeach
-                            </td>
                             <td><span title="{{ $subscriber->created_at }}">{{ $subscriber->created_at->diffForHumans() }}</span></td>
                             <td>
                                 @if($subscriber->unsubscribed_at)

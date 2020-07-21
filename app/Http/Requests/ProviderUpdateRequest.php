@@ -26,7 +26,7 @@ class ProviderUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required'],
-            'type_id' => ['required', 'integer'],
+            'type_id' => ['sometimes', 'integer'],
 
             'key' => ['required'],
             'secret' => ['required_if:type_id,' . ProviderType::AWS_SNS],

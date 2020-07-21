@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Events\AutomationDispatchEvent;
 use App\Models\AutomationSchedule;
-use App\Models\AutomationStep;
 use Illuminate\Console\Command;
 
 class AutomationDispatchCommand extends Command
@@ -22,16 +21,6 @@ class AutomationDispatchCommand extends Command
      * @var string
      */
     protected $description = 'Dispatch automations to queue workers';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * Execute the console command.
@@ -62,6 +51,7 @@ class AutomationDispatchCommand extends Command
     {
         return AutomationSchedule::where('scheduled_at', '<=', now())
             ->whereNull('started_at')
+            ->orderBy('scheduled_at')
             ->take(10000)
             ->get();
     }

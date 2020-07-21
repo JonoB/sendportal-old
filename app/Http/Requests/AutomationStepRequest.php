@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\NotEmpty;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AutomationStepRequest extends FormRequest
@@ -28,7 +29,7 @@ class AutomationStepRequest extends FormRequest
             'template_id' => ['required'],
             'delay' => ['required', 'int'],
             'delay_type' => ['required'],
-            'content' => ['required'],
+            'content' => ['required', new NotEmpty],
         ];
     }
 }

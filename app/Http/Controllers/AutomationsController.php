@@ -2,45 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\AutomationRepositoryInterface;
-use App\Interfaces\SegmentRepositoryInterface;
-use App\Http\Requests\CampaignRequest;
-use App\Interfaces\CampaignSubscriberRepositoryInterface;
-use App\Interfaces\TemplateRepositoryInterface;
-use App\Models\CampaignStatus;
-use App\Repositories\ProviderEloquentRepository;
-use App\Services\CampaignReportService;
-use Carbon\Carbon;
+use App\Repositories\AutomationTenantRepository;
+use App\Repositories\ProviderTenantRepository;
+use App\Repositories\SegmentTenantRepository;
+use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 class AutomationsController extends Controller
 {
     /**
-     * @var SegmentRepositoryInterface
+     * @var SegmentTenantRepository
      */
     private $segmentRepository;
 
     /**
-     * @var AutomationRepositoryInterface
+     * @var AutomationTenantRepository
      */
     private $automationRepository;
 
     /**
-     * @var ProviderEloquentRepository
+     * @var ProviderTenantRepository
      */
     private $providerRepository;
 
     /**
      * AutomationsController constructor.
      *
-     * @param SegmentRepositoryInterface $segmentRepository
-     * @param AutomationRepositoryInterface $automationRepository
+     * @param SegmentTenantRepository $segmentRepository
+     * @param AutomationTenantRepository $automationRepository
+     * @param ProviderTenantRepository $providerRepository
      */
     public function __construct(
-        SegmentRepositoryInterface $segmentRepository,
-        AutomationRepositoryInterface $automationRepository,
-        ProviderEloquentRepository $providerRepository
+        SegmentTenantRepository $segmentRepository,
+        AutomationTenantRepository $automationRepository,
+        ProviderTenantRepository $providerRepository
     )
     {
         $this->segmentRepository = $segmentRepository;
@@ -51,11 +50,12 @@ class AutomationsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Factory|View
+     * @throws Exception
      */
     public function index()
     {
-        $automations = $this->automationRepository->paginate();
+        $automations = $this->automationRepository->paginate(currentTeamId());
 
         return view('automations.index', compact('automations'));
     }
@@ -63,12 +63,13 @@ class AutomationsController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Factory|View
+     * @throws Exception
      */
     public function create()
     {
-        $segments = $this->segmentRepository->pluck();
-        $providers = $this->providerRepository->pluck();
+        $segments = $this->segmentRepository->pluck(currentTeamId());
+        $providers = $this->providerRepository->pluck(currentTeamId());
 
         return view('automations.create', compact('segments', 'providers'));
     }
@@ -76,11 +77,12 @@ class AutomationsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return int
+     * @return RedirectResponse
+     * @throws Exception
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required',
@@ -89,59 +91,23 @@ class AutomationsController extends Controller
             'from_email' => 'required|email',
         ]);
 
-        $automation = $this->automationRepository->store($request->all());
+        $automation = $this->automationRepository->store(currentTeamId(), $request->all());
 
-        return redirect(route('automations.show', ['id' => $automation->id]));
-    }
-
-    /**
-     * Edit the specified resource.
-     *
-     * @param  int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return redirect()->route('automations.show', $automation->id);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $automation = $this->automationRepository->find($id, ['automation_steps.template']);
-
-        return view('automations.show', compact('automation'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return Factory|View
+     * @throws Exception
      */
-    public function destroy($id)
+    public function show(int $id)
     {
-        //
+        $automation = $this->automationRepository->find(currentTeamId(), $id, ['automation_steps.template']);
+
+        return view('automations.show', compact('automation'));
     }
 }

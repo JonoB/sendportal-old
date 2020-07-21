@@ -14,21 +14,28 @@
 
     <div class="row">
         @foreach($templates as $template)
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 template-item">
-                <div class="pull-left">
-                    <h4>{{ $template->name }}</h4>
-                </div>
-                <div class="pull-right">
-                    @if ($campaign->template_id == $template->id)
-                        <span class="label label-success">Selected</span>
-                    @else
-                        <a href="#" class="btn btn-default btn-xs js-select-template" data-template_id="{{ $template->id }}">Select</a>
-                    @endif
-                </div>
-                <div class="clearfix"></div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 template-item">
+                <div class="card">
+                    <div class="card-header card-header-accent">
+                        <div class="card-header-inner">
+                            <div class="float-left">
+                                <h4>{{ $template->name }}</h4>
+                            </div>
+                            <div class="float-right">
+                                @if ($campaign->template_id == $template->id)
+                                    <span class="label label-success">Selected</span>
+                                @else
+                                    <a href="#" class="btn btn-secondary btn-xs js-select-template" data-template_id="{{ $template->id }}">Select</a>
+                                @endif
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
 
-                @include('templates.partials.griditem')
-
+                    <div class="card-body">
+                        @include('templates.partials.griditem')
+                    </div>
+                </div>
             </div>
         @endforeach
     </div>
@@ -43,15 +50,15 @@
 
 @stop
 
-@section('js')
+@push('js')
     <script>
-        $(document).ready(function() {
-
+        $(function() {
             $('.js-select-template').click(function(e) {
+                alert('what');
                 e.preventDefault();
                 $('#field-template_id').val($(this).data('template_id'));
                 $('#form-template-selector').submit();
             });
         });
     </script>
-@endsection
+@endpush

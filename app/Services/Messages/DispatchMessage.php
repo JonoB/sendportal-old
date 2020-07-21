@@ -7,7 +7,7 @@ use App\Models\AutomationSchedule;
 use App\Models\Message;
 use App\Repositories\AutomationScheduleEloquentRepository;
 use App\Repositories\AutomationStepEloquentRepository;
-use App\Repositories\MessageEloquentRepository;
+use App\Repositories\MessageTenantRepository;
 
 class DispatchMessage
 {
@@ -17,7 +17,7 @@ class DispatchMessage
     protected $mailAdapter;
 
     /**
-     * @var MessageEloquentRepository
+     * @var MessageTenantRepository
      */
 
     protected $messageRepo;
@@ -31,12 +31,12 @@ class DispatchMessage
      * DispatchMessage constructor
      *
      * @param MailAdapterFactory $mailAdapter
-     * @param MessageEloquentRepository $messageRepo
+     * @param MessageTenantRepository $messageRepo
      * @param AutomationScheduleEloquentRepository $automationScheduleRepo
      */
     public function __construct(
         MailAdapterFactory $mailAdapter,
-        MessageEloquentRepository $messageRepo,
+        MessageTenantRepository $messageRepo,
         AutomationScheduleEloquentRepository $automationScheduleRepo
     )
     {
@@ -69,10 +69,11 @@ class DispatchMessage
      *
      * @param Message $message
      * @return bool
+     * @throws \Exception
      */
     protected function isValidMessage(Message $message): bool
     {
-        $message = $this->messageRepo->find($message->id);
+        $message = $this->messageRepo->find(currentTeamId(), $message->id);
 
         return ! (bool)$message->sent_at;
     }
@@ -86,7 +87,7 @@ class DispatchMessage
      * @return bool
      * @throws \Exception
      */
-    protected function dispatch(Message $message, string $content): bool
+    protected function dispatch(Message $message, string $content): Message
     {
         $provider = $this->resolveProvider($message);
 
@@ -110,7 +111,7 @@ class DispatchMessage
             throw new \Exception('Unable to resolve source for message ID ' . $message->id);
         }
 
-        if ( ! $automationSchedule = $this->automationScheduleRepo->find($message->source_id, ['automation_step.automation.provider']))
+        if ( ! $automationSchedule = $this->automationScheduleRepo->find($message->source_id, ['automation_step.automation.provider.type']))
         {
             throw new \Exception('Unable to resolve automation schedule for message ID ' . $message->id);
         }
@@ -120,7 +121,7 @@ class DispatchMessage
             throw new \Exception('Unable to resolve provider for message ID ' . $message->id);
         }
 
-        return strtolower(str_replace(' ', '', $automationSchedule->automation_step->automation->provider->name));
+        return strtolower(str_replace(' ', '', $automationSchedule->automation_step->automation->provider->type->name));
     }
 
     /**
@@ -128,13 +129,13 @@ class DispatchMessage
      *
      * @param Message $message
      * @param $messageId
-     * @return bool
+     * @return Message
      */
-    protected function markMessageAsSent(Message $message, $messageId)
+    protected function markMessageAsSent(Message $message, $messageId): Message
     {
-        $message->message_id = $messageId;
-        $message->sent_at = now();
-
-        return $message->save();
+        return tap($message)->update([
+            'message_id' => $messageId,
+            'sent_at' => now(),
+        ]);
     }
 }

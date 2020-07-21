@@ -2,10 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\CampaignSubscriberRepositoryInterface;
+use App\Interfaces\CampaignSubscriberTenantRepository;
 use App\Models\CampaignSubscriber;
 
-class CampaignSubscriberEloquentRepository extends BaseEloquentRepository implements CampaignSubscriberRepositoryInterface
+class CampaignSubscriberEloquentRepository extends BaseEloquentRepository implements CampaignSubscriberTenantRepository
 {
     protected $modelName = CampaignSubscriber::class;
 

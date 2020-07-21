@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SegmentRequest;
 use App\Interfaces\SegmentRepositoryInterface;
-use App\Interfaces\SubscriberRepositoryInterface;
+use App\Repositories\SubscriberTenantRepository;
 use Illuminate\Http\RedirectResponse;
 
 class SegmentsController extends Controller
@@ -80,7 +80,7 @@ class SegmentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, SubscriberRepositoryInterface $subscriberRepository)
+    public function edit($id, SubscriberTenantRepository $subscriberRepository)
     {
         $segment = $this->segmentRepository->find($id, ['subscribers']);
         $subscribers = $subscriberRepository->all();
